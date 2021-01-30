@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Kite Weather</title>
+  <!-- <link rel="icon" type="image/png" href="img/favicon.png"/> -->
+
+  <!-- fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">
+
+  <!-- style -->
+  <link href="main.css" rel="stylesheet"/>
+  <link href="map.css" rel="stylesheet"/>
+
+  <!-- map api -->
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet"/>
+</head>
+
+<body id="page-top">
+  <!-- Header -->
+  <header class="section" id="header">
+      <h1 id="title">Kite Weather</h1>
+      <span id=location> Kourou</span>
+  </header>
+
+  <section id="map-section">
+    <div id="compass">
+      <div class="cardinal-grid" id="cardinals-primary">
+        <div class="cardinal-point cardinal-top"><span>N</span></div>
+        <div class="cardinal-point cardinal-right"><span>E</span></div>
+        <div class="cardinal-point cardinal-down"><span>S</span></div>
+        <div class="cardinal-point cardinal-left"><span>O</span></div>
+      </div>
+      
+      <div class="cardinal-grid" id="cardinals-secondary">
+        <div class="cardinal-point cardinal-top"><span>NO</span></div>
+        <div class="cardinal-point cardinal-right"><span>NE</span></div>
+        <div class="cardinal-point cardinal-down"><span>SE</span></div>
+        <div class="cardinal-point cardinal-left"><span>SO</span></div>
+      </div>
+      
+    <div id="map"></div>
+    </div>
+  </section>
+
+  <section class="section" id="info-section">
+    <div id="wind-info">
+      <h2>Vent</h2>
+      <div class="info-box">
+        <h3>Vitesse</h3>
+        18 kps
+        <h3>rafales</h3>
+        23 kps
+        <h3>direction</h3>
+        ENE 69°
+      </div>
+    </div>
+
+    <div id="waves-info">
+      <div class="info-box">
+        <h2>Vagues</h2>
+        <h3>hauteur</h3>
+        2.5 m
+        <h3>marée</h3>
+        descendante
+        <h3>direction</h3>
+        ENE 69°
+      </div>
+    </div>
+    
+    <div id="weather-info">
+      <div class="info-box">
+        <h2>Météo</h2>
+        <h3>temprature</h3>
+        -28°c
+        <h3>ensoleillement</h3>
+        ensoleillé
+    </div>
+  </section>
+
+  <section class="section" id="timeline-section">
+    <div id="timeline">this is a fancy timeline</div>
+  </section>
+
+
+  <script src="main.js"></script>
+  <script src="compass.js"></script>
+</body>
