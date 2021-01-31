@@ -23,30 +23,25 @@ var map = new mapboxgl.Map({
   style: 'mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe',
   center: [currLongitude, currLatitude], // starting position [lng, lat]
   zoom: 12, // starting zoom
+  maxZoom: 14.5,
+  // minZoom: 9,
+  maxBounds: [
+    [currLongitude - .5, currLatitude - .5], // Southwest coordinates
+    [currLongitude + .5, currLatitude + .5] // Northeast coordinates
+  ]
   //interactive: false
 });
 
-// map.scrollZoom.disable();
-// map.doubleClickZoom.disable();
-// map.touchZoomRotate.disable();
-// map.dragRotate.disable();
-// map.touchPitch.disable();
-map.dragPan.disable();
-
-
-var mapControlContainers = document.getElementsByClassName('mapboxgl-control-container');
-console.log(mapControlContainer); // not loaded yet at page loading time. needs to be deffered
-for (var mapControlContainer of mapControlContainers) mapControlContainer.classList.add('hidden');
-mapControlContainer.remove();
-
-map.on('move',function() {
+// stay centered on point of interest
+map.on('moveend',function() {
   console.log()
   const currCenter = map.getCenter();
-  // setTimeout(function () {
-  //   if (Math.abs(currCenter.lng - currLongitude) > eps &&  Math.abs(currCenter.lat - currLatitude) > eps)
-  //     map.setCenter([currLongitude, currLatitude])
-  // },20);
-  setCompassRotation(map.getBearing());
+  if (Math.abs(currCenter.lng - currLongitude) > eps &&  Math.abs(currCenter.lat - currLatitude) > eps) // to prevent recursion
+    map.setCenter([currLongitude, currLatitude])
 });
 
+// rotate compas
+map.on('move',function() {
+  setCompassRotation(map.getBearing());
+});
 
