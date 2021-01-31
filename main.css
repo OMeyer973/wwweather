@@ -42,9 +42,58 @@ h1 {
 }
 
 h2 {
+  margin-top: 0;
   font-size: 1.5em;
   margin-bottom: .4em;
 }
+
+h3 {
+  margin-top: 0;
+}
+
+/* portrait only ! */
+#info-section {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto auto;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+}
+
+#wind-info {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+#waves-info {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+#waves-info > h2 {
+  text-align: right;
+  margin-top: 0;
+}
+
+#sky-info {
+  grid-row: 2;
+  grid-column: 1 /  span 2;
+}
+/* end portrait only ! */
+
+.info-box {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap; 
+  background-color: grey;
+}
+
+.info-box > div {
+  margin: 1em;
+}
+
+
+
 
 /* todo rm useless */
 
