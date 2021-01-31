@@ -32,6 +32,8 @@ var map = new mapboxgl.Map({
   //interactive: false
 });
 
+map.dragPan.disable();
+
 // stay centered on point of interest
 map.on('moveend',function() {
   console.log()

@@ -18,9 +18,23 @@
 
   /*tmp*/
   background-color: red;
-  /* background-image: url('tmp/map-img.png'); */
+  background-image: url('tmp/map-img.png');
   background-size: 100%;
 }
+ #compass-ticks {
+  position: absolute;
+  width: calc(100% - 2em);
+  height: calc(100% - 2em);
+  border-radius: 100%;
+
+  background-image: url('vector/compass-ticks.svg');
+  background-size: 95%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 2;
+  pointer-events: none;
+}
+
 
 .mapboxgl-control-container {
   visibility: hidden;
@@ -35,10 +49,6 @@
   display: grid;
   grid-template-columns: 30% 40% 30%;
   grid-template-rows: 30% 40% 30%;
-}
-
-#cardinals-primary {
-  /* rotate */
 }
 
 #cardinals-secondary {
