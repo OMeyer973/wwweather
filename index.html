@@ -26,11 +26,30 @@
 <body id="page-top">
   <!-- Header -->
   <header class="section" id="header">
-      <h1 id="title">Kite Weather</h1>
-      <span id=location> Kourou</span>
+    <h1 id="title">Kite Weather</h1>
+    <div>
+      <h2 id=location> Kourou</h2>
+      French Guiana
+    </div>
   </header>
 
-  <section id="map-section">
+  <section class="section" id="day-info">
+    <div class="info-box">
+      <div>
+        <h3 id=date>lundi 8 février <br> 21:00</h3>
+      </div>
+      <div>
+        <h3>temprature</h3>
+        -28°c
+      </div>
+      <div>
+        <h3>ensoleillement</h3>
+        ensoleillé
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="map-section">
     <div id="compass">
       <div class="cardinal-grid" id="cardinals-primary">
         <div class="cardinal-point cardinal-top"><span>N</span></div>
@@ -101,13 +120,40 @@
           <h3>ensoleillement</h3>
           ensoleillé
         </div>
+      </div>
     </div>
   </section>
 
   <section class="section" id="timeline-section">
-    <div id="timeline">this is a fancy timeline</div>
+    <h2>prévisions : vent</h2>
+    lundi 8 février / 21:00
+    <div id="timeline">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </section>
 
+  <section class="section" id="footer">
+    may be inacurate
+  </section>
 
   <script src="main.js"></script>
   <script src="compass.js"></script>
