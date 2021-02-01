@@ -50,12 +50,7 @@ h3 {
   margin: 0 0 .2em 0;
 }
 
-.spacer {
-  width:1em;
-  height:1em;
-}
-
-#header {
+#header-section {
   padding: 2em 2em 0 2em;
   display:flex;
   flex-direction: row-reverse;
@@ -68,12 +63,16 @@ h3 {
   font-size: 2em;
 }
 
+#summary-section {
+  padding: 0 2em 0 2em;
+  text-align:center; 
+}
 
-#day-info {
+#day-section {
   padding-bottom: 0;
 }
 
-#day-info > .info-box {
+#day-section > .info-box {
   background: none;
 }
 
@@ -99,9 +98,17 @@ h3 {
   grid-column: 1;
 }
 
+#wind-info > .info-box {
+  border: 2px solid #e5354c;
+}
+
 #waves-info {
   grid-row: 1;
   grid-column: 2;
+}
+
+#waves-info > .info-box {
+  border: 2px solid #3a46dd;
 }
 
 #waves-info > h2 {
@@ -118,16 +125,23 @@ h3 {
 .info-box {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 
-  padding: 1em 0 0 1em;
+  padding: .8em 0 0 1em;
   background-color: var(--infoColor);
   border-radius: 1em;
 }
 
 .info-box > div {
   margin: 0 1em 1em 0;
-  flex-grow: 1;
+  flex-grow: 1;}
+
+.info-title {
+  display: block;
+}
+
+.info-value {
+  font-weight: 700;
 }
 
 /* /// TIMELINE /// */

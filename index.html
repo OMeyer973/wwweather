@@ -9,6 +9,7 @@
 
   <title>Kite Weather</title>
   <!-- <link rel="icon" type="image/png" href="img/favicon.png"/> -->
+  <script src="https://use.fontawesome.com/36da64ce36.js"></script>
 
   <!-- fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -21,20 +22,23 @@
   <!-- map api -->
   <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
   <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet"/>
+
+  <!-- icons -->
 </head>
 
 <body id="page-top">
   <!-- Header -->
-  <header class="section" id="header">
-    <h1 id="title">Kite Weather</h1>
-    <div class="spacer"></div>
+  <header class="section" id="header-section">
     <div>
-      <h2 id=location> Kourou</h2>
-      French Guiana
+      <h1 id="title">Kite Weather</h1>
+    </div>
+    <div>
+      <h2 id=location></i> Kourou</h2>
+      Guyane Française
     </div>
   </header>
 
-  <section class="section" id="day-info">
+  <section class="section" id="day-section">
     <div class="info-box">
       <div>
         <h3 id=date>lundi 8 février</h3>
@@ -42,16 +46,20 @@
         <b>(maintenant)</b>
       </div>
       <div>
-        <h3>Soleil</h3>
+        <span class="info-title">Soleil</span>
         lever 06:47 <br>
         coucher 18:41
       </div>
       <div>
-        <h3>marée</h3>
+        <span class="info-title">marée</span>
         haute 06:47, 06:47<br>
         basse 18:41, 18:41
       </div>      
     </div>
+  </section>
+
+  <section class="section" id="summary-section">
+    <h2 id="summary">Risque de pluie</h2>
   </section>
 
   <section class="section" id="map-section">
@@ -84,16 +92,16 @@
       <h2>Vent</h2>
       <div class="info-box">
         <div>
-          <h3>Vitesse</h3>
-          18 kps
+          <span class="info-title">Vitesse</span>
+          <span class="info-value">18 kps</span>
         </div>
         <div>
-          <h3>rafales</h3>
-          23 kps
+          <span class="info-title">rafales</span>
+          <span class="info-value">23 kps</span>
         </div>
         <div>
-          <h3>direction</h3>
-          ENE 69°
+          <span class="info-title">direction</span>
+          <span class="info-value">ENE 69°</span>
         </div>
       </div>
     </div>
@@ -102,16 +110,16 @@
       <h2>Vagues</h2>
       <div class="info-box">
         <div>
-          <h3>hauteur</h3>
-          2.5 m
+          <span class="info-title">hauteur</span>
+          <span class="info-value">2.5 m</span>
         </div>
         <div>
-          <h3>marée</h3>
-          descendante
+          <span class="info-title">marée</span>
+          <span class="info-value">descendante</span>
         </div>
         <div>
-          <h3>direction</h3>
-          ENE 69°
+          <span class="info-title">direction</span>
+          <span class="info-value">ENE 69°</span>
         </div>
       </div>
     </div>
@@ -120,12 +128,12 @@
       <h2>Météo</h2>
       <div class="info-box">
         <div>
-          <h3>temps</h3>
-          ensoleillé
+          <span class="info-title">temps</span>
+          <span class="info-value">ensoleillé</span>
         </div>
         <div>
-          <h3>temprature</h3>
-          -28°c
+          <span class="info-title">temprature</span>
+          <span class="info-value">-28°c</span>
         </div>
       </div>
     </div>
