@@ -17,6 +17,7 @@ html {
 body {
   max-width: 700px;
   margin: auto;
+  overflow-x: hidden;
   font-family: var(--textFont);
   color: var(--textColor);
   background-color: #fafbfc;
@@ -28,7 +29,7 @@ body {
 }
 
 h1, h2 {
-  margin-top: 0;
+  margin: 0;
   font-weight: 700;
   color: var(--titleColor);
   font-family: var(--titleFont);
@@ -49,12 +50,18 @@ h3 {
   margin: 0 0 .2em 0;
 }
 
+.spacer {
+  width:1em;
+  height:1em;
+}
+
 #header {
   padding: 2em 2em 0 2em;
   display:flex;
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 #location {
@@ -79,6 +86,12 @@ h3 {
   grid-template-rows: auto auto;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
+}
+
+.info-category {
+  display:grid;
+  grid-template-rows: auto 1fr;
+  align-items: stretch;
 }
 
 #wind-info {

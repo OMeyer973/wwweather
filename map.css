@@ -13,6 +13,35 @@
   /* background-color: var(--infoColor); */
 }
 
+.map-overlay {
+  position: absolute;
+  width: calc(100% - 2.4em);
+  height: calc(100% - 2.4em);
+  z-index: 2;
+  pointer-events: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  margin:auto;
+}
+
+#compass-ticks {
+  background-image: url('vector/compass-ticks.svg');
+  background-size: 95%;
+}
+
+#wind-arrow {
+  background-image: url('vector/wind-arrow3.svg');
+  background-size: 90%;
+  transform:rotate(69deg);
+}
+
+#waves-arrow {
+  background-image: url('vector/waves-arrow3.svg');
+  background-size: 90%;
+  transform: rotate(65deg);
+}
+
 #map {
   width: 100%;
   padding-bottom: 100%;
@@ -24,20 +53,6 @@
   background-image: url('tmp/map-img.png');
   background-size: 100%;
 }
- #compass-ticks {
-  position: absolute;
-  width: calc(100% - 2.4em);
-  height: calc(100% - 2.4em);
-  border-radius: 100%;
-
-  background-image: url('vector/compass-ticks.svg');
-  background-size: 95%;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 2;
-  pointer-events: none;
-}
-
 
 .mapboxgl-control-container {
   visibility: hidden;
