@@ -1,0 +1,45 @@
+// fonts
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap");
+
+// variables
+:root {
+  --titleColor: #262626;
+  --titleFont: "Poppins", sans-serif;
+  --dataColor: #000;
+
+  --labelColor: rgba(0, 0, 0, 0.55);
+  --labelBgColor: #e3e7e8;
+
+  --buttonColor: #fff;
+  --buttonBgColor: #e7501e;
+  --buttonBgColorsecondary: #177d92;
+
+  --tabColor: #fff;
+  --tabColorSecondary: rgba(255, 255, 255, 0.8);
+}
+
+@mixin focused {
+  box-shadow: 0 0 0 2pt rgba(255, 255, 255, 0.8), 0 0 0 4pt rgba(0, 0, 0, 0.4);
+}
+// reset
+*,
+*::before,
+*::after,
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: transparent;
+  background: transparent;
+  box-shadow: none;
+  font-family: poppins;
+  font-size: 97%;
+  font-weight: normal;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--titleColor);
+}
