@@ -1,0 +1,148 @@
+#map-tab {
+  display: grid;
+  padding-bottom: 0; // cf media query
+  padding-top: 3.5em; //cf media query
+  #compass {
+    margin: auto 0;
+    padding: 2em;
+    border-radius: 100%;
+    height: max-content;
+    /* clip-path: circle(50%); */
+    /* background-color: var(--infoColor); */
+  }
+
+  .map__overlay {
+    position: absolute;
+    width: calc(100% - 4em);
+    height: calc(100% - 4em);
+    z-index: 2;
+    pointer-events: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 100%;
+    margin: auto;
+    display: grid;
+    .map-label,
+    img {
+      margin: auto;
+      grid-area: 1 / 1 / 2 / 2;
+    }
+    img {
+      max-height: 20%;
+    }
+  }
+
+  #compass-ticks {
+    background-image: url("vector/compass-ticks.svg");
+    background-size: 95%;
+  }
+
+  #wind-arrow {
+    // background-image: url("vector/wind-kite-arrow.svg");
+    //z-index: 3;
+    // done via script
+    // transform: rotate(69deg) translateY(-5em);
+    // #map__label-offset {
+    //   transform: rotate(-69deg) translateY(-3em);
+    // }
+  }
+
+  #waves-arrow {
+    //    background-image: url("vector/waves-kite-arrow.svg");
+    // done via script
+    // transform: rotate(65deg) translateY(-5em);
+    // .map__label-offset {
+    //   transform: rotate(-65deg) translateY(3em);
+    // }
+  }
+
+  #map {
+    width: 100%;
+    padding-bottom: 100%;
+    border-radius: 100%;
+    clip-path: circle(50%);
+
+    /*tmp*/
+    background-color: red;
+    background-image: url("img/map-img.png");
+    background-size: 100%;
+  }
+
+  .mapboxgl-control-container {
+    visibility: hidden;
+  }
+
+  .cardinal-grid {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+    grid-template-rows: 30% 40% 30%;
+  }
+
+  #cardinals-secondary {
+    font-size: 0.8em;
+    font-weight: 100;
+    transform: rotate(-45deg);
+  }
+
+  .cardinal-point {
+    font-size: 1.5em;
+    font-weight: 900;
+    margin: 0.1em;
+    width: 1em;
+    height: 1em;
+    border-radius: 100%;
+    text-align: center;
+
+    line-height: 0.95em;
+
+    /* background-color: pink; */
+  }
+  #cardinals-secondary > .cardinal-point {
+    margin: 0.2em;
+  }
+
+  .cardinal-point > span {
+    display: inline-block;
+    margin-left: -100%; /* align center overflowing text trick */
+    margin-right: -100%;
+    text-align: center;
+  }
+
+  #cardinals-primary > .cardinal-point {
+    /* todo */
+  }
+
+  #cardinals-secondary > .cardinal-point {
+    transform: rotate(45deg);
+  }
+
+  .cardinal-top {
+    grid-row: 1;
+    grid-column: 2;
+    align-self: start;
+    justify-self: center;
+  }
+  .cardinal-left {
+    grid-row: 2;
+    grid-column: 1;
+    align-self: center;
+    justify-self: left;
+  }
+  .cardinal-right {
+    grid-row: 2;
+    grid-column: 3;
+    align-self: center;
+    justify-self: right;
+  }
+  .cardinal-down {
+    grid-row: 3;
+    grid-column: 2;
+    align-self: end;
+    justify-self: center;
+  }
+}

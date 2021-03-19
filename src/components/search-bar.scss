@@ -1,0 +1,39 @@
+.search-bar {
+  position: relative;
+
+  input {
+    color: var(--labelColor);
+    background: var(--labelBgColor);
+    border-radius: 3em;
+    background: var(--labelBgColor);
+    padding: 0.4em 1.9em 0.4em 0.5em;
+    width: 0em;
+    &:not(:placeholder-shown),
+    &:focus {
+      padding: 0.4em 2.2em 0.4em 0.5em;
+      width: 100%;
+      color: var(--titleColor);
+    }
+    &:focus {
+      @include focused;
+    }
+    z-index: 100;
+  }
+
+  .search-icon {
+    display: inline-block;
+    cursor: pointer;
+    background-image: url("vector/icons/search.svg");
+
+    position: absolute;
+    top: 0.4em;
+    right: 0.5em;
+    background-size: contain;
+    width: 1.5em;
+    height: 1.5em;
+    z-index: 0;
+  }
+  &:not(:focus-within) > .search-icon {
+    pointer-events: none;
+  }
+}

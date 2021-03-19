@@ -1,0 +1,28 @@
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: poppins;
+  font-size:100%;
+  font-weight:normal;
+}
+
+:root {
+  --titleColor: #262626;
+  --titleFont: 'Poppins', sans-serif;
+  --textColor: #ffffffbd;
+  --rowTextColor: white;
+  --textFont: 'Didact Gothic', sans-serif;
+  --buttonColor: #E5354C;
+  --buttonTextColor: #ffffff;
+  --itemRowColor: #ffffff1c;
+  --itemDescriptionColor: #6845a333;
+}
+
+.header{
+  background-color: var(--titleColor);
+  height: 64px;
+}
