@@ -29,7 +29,7 @@ header {
 }
 
 #dashboard {
-  max-width: 1050px;
+  max-width: 900px;
   margin: 2em auto;
   border: 0.125em solid rgba(0, 0, 0, 0);
   border-radius: 2em;
@@ -126,7 +126,7 @@ header {
   *,
   *::before,
   *::after {
-    font-size: 100%;
+    font-size: 95%;
   }
 
   .tab {
