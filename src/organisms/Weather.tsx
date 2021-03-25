@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WeatherData } from "./WeatherData";
+import { WeatherData } from "~/molecules/WeatherData";
 
 // todo : make dynamic
 import dayCloud3 from "~/vector/weather/day-cloud-3.svg"

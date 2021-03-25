@@ -2,12 +2,12 @@ import React from "react";
 import ReactDom from "react-dom";
 import "./index.scss";
 
-import App from "./App";
+import { Dashboard } from "./pages/Dashboard";
 // import reportWebVitals from "./reportWebVitals";
 
 ReactDom.render(
   //<React.StrictMode>
-    <App />,
+    <Dashboard />,
   //</React.StrictMode>,
   document.getElementById("root")
 );

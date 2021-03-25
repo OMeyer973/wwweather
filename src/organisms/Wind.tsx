@@ -1,6 +1,6 @@
 import React from "react";
 
-import WindWavesData from "./WindWavesData";
+import WindWavesData from "../molecules/WindWavesData";
 import windArrow from "~/vector/wind-kite-arrow.svg";
 
 export interface Props {

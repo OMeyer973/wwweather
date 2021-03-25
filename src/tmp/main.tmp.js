@@ -1,4 +1,4 @@
-import refreshCompass from "./components/compass.tmp";
+import refreshCompass from "./compass.tmp";
 
 const eps = 0.0001; //epsilon for lat and long coordinates comparison
 
