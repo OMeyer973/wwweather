@@ -1,11 +1,10 @@
 import React from "react";
+import "./ForecastTab.scss";
 
 export const ForecastTab = () => {
   return (
-    <div id="forecast-tab" className="tab">
-      <div className="flex flex--horizontal">
+    <div className="forecast-tab">
         <h2>Forecast</h2>
-      </div>
     </div>
   )
 }

@@ -43,19 +43,6 @@ header {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.125em;
-  .tab {
-    background: $tabColorSecondary;
-  }
-  .title-line {
-    margin-bottom: 2.5em;
-    h2 {
-      font-size: 1.5em;
-    }
-    img {
-      max-width: 2em;
-      max-height: 2em;
-    }
-  }
 }
 
 #forecast-tab {
@@ -111,7 +98,7 @@ header {
   #wind-waves-tab {
     grid-area: wind-weather;
   }
-  #forecast-tab {
+  .forecast-tab {
     grid-area: forecast;
     margin-top: 0.125em;
   }

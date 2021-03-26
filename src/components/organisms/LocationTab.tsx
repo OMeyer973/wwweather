@@ -1,20 +1,17 @@
 import React from "react";
 import"./LocationTab.scss";
 
+import { Value } from "~components/atoms/Value";
+import { SearchBar } from "~components/molecules/SearchBar";
+
 export const LocationTab = () => {
   return (
-    <div id="location-tab" className="tab flex flex--horizontal">
+    <div className="location-tab">
       <div>
-        <h2 className="data">Pointe du Talut/Belle-Île</h2>
-        <p className="data--slim">French Guiana</p>
+        <Value flavor="title">Pointe du Talut/Belle-Île</Value><br/>
+        <Value flavor="slim">French Guiana</Value>
       </div>
-      <div className="flex">
-        <form className="search-bar">
-          <input type="text" name="location" placeholder="Search location" required size={20}/>
-          <button className="search-icon" type="submit" value="submit">
-          </button>
-        </form>
-      </div>
+      <SearchBar label="Search Location"/>
     </div>
   )
 }

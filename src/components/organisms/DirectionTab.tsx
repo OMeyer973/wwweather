@@ -13,7 +13,7 @@ export interface Props {
 export const DirectionTab : React.FC<Props> = ({title, icon, iconRotation, children}) => {
   return (
     <div className="direction-tab">
-      <div className="title-line flex flex--horizontal">
+      <div className="title-line">
         <h2>{title}</h2>
         <Icon src={icon} size="medium" />
       </div>

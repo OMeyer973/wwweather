@@ -35,8 +35,8 @@ export const TimeTab: React.FC<Props> = ({date, time, timetable}) => {
     <div className="time-tab">
       <div className="main">
         <div className="time-info">
-          <Value flavor="slim">{date}</Value>
-          <Value>{time}</Value>
+          <Value flavor="slim">{date}</Value><br/>
+          <Value>{time}</Value><br/>
           <Value flavor="slim">(in 2 hours) {/*Todo : compute*/}</Value>
         </div>
         <Button className="btn-minus-3h" onClick={() =>"TODO"}>-3h</Button>

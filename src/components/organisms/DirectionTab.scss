@@ -2,6 +2,13 @@
 @import "/components/abstracts/variables.scss";
 
 .direction-tab {
+  .title-line {
+    h2 {
+      font-size: 1.5em;
+    }
+    @include flex;
+    margin-bottom: 2.5em;
+  }
   :last-child {
     margin-bottom: 0;
   }
