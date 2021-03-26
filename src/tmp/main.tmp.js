@@ -5,8 +5,8 @@ const eps = 0.0001; //epsilon for lat and long coordinates comparison
 const currLongitude = -52.6446239;
 const currLatitude = 5.168286;
 
-var weatherData;
-weatherData = {
+var DataColumn;
+DataColumn = {
   hours: [
     {
       airTemperature: { noaa: 23.56, sg: 23.56 },
@@ -60,7 +60,12 @@ weatherData = {
       windSpeed50m: { noaa: 3.04, sg: 3.04 },
       windSpeed800hpa: { noaa: 5.02, sg: 5.02 },
       windSpeed80m: { noaa: 3.88, sg: 3.88 },
-      windWaveDirection: { icon: 40.62, meteo: 57.91, noaa: 50.14, sg: 57.91 },
+      windWaveDirection: {
+        icon: 40.62,
+        meteo: 57.91,
+        noaa: 50.14,
+        sg: 57.91,
+      },
       windWaveHeight: { icon: 0.09, meteo: 0.84, noaa: 1.65, sg: 0.84 },
       windWavePeriod: { icon: 1.61, meteo: 3.55, noaa: 7.66, sg: 3.55 },
     },
@@ -74,7 +79,7 @@ weatherData = {
 //     'Authorization': '746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002'
 //   }
 // }).then((response) => response.json()).then((jsonData) => {
-//   weatherData = jsonData
+//   DataColumn = jsonData
 // });
 
 mapboxgl.accessToken =

@@ -1,10 +1,13 @@
 @import "/components/abstracts/mixins.scss";
 
-.time {
+.time-tab {
   .main {
-    #time-info {
-      text-align: center;
+    text-align: center;
+    .time-info {
       order: 1;
+      .value {
+        display: block;
+      }
     }
 
     .btn-minus-3h {

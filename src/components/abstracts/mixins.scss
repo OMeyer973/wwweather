@@ -9,6 +9,8 @@
 @mixin tab {
   padding: 2em 1.5em;
   background: $tabColor;
+
+  // todo RwD
 }
 
 @mixin flex {
@@ -21,3 +23,5 @@
 // flex-direction: row;
 // flex-direction: column;
 // align-self: stretch;
+
+// todo : hybrid flex col / row for RWD

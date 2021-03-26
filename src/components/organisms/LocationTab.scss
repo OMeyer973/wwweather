@@ -1,0 +1,6 @@
+@import "/components/abstracts/mixins.scss";
+//@import "/components/abstracts/variables.scss";
+
+.location-tab {
+  @include tab;
+}

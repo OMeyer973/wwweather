@@ -1,6 +1,7 @@
 import React from "react";
+import"./LocationTab.scss";
 
-const Location = () => {
+export const LocationTab = () => {
   return (
     <div id="location-tab" className="tab flex flex--horizontal">
       <div>
@@ -17,5 +18,3 @@ const Location = () => {
     </div>
   )
 }
-
-export default Location;

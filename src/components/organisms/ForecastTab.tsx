@@ -1,6 +1,6 @@
 import React from "react";
 
-const Forecast = () => {
+export const ForecastTab = () => {
   return (
     <div id="forecast-tab" className="tab">
       <div className="flex flex--horizontal">
@@ -9,5 +9,3 @@ const Forecast = () => {
     </div>
   )
 }
-
-export default Forecast;

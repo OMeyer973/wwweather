@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "./time.scss"
+import "./timeTab.scss"
 
 import { Button } from "~components/atoms/Button"
 import { Label } from "~components/atoms/Label";
@@ -28,23 +28,21 @@ export interface Props {
   timetable: Timetable;
 }
 
-export const Time: React.FC<Props> = ({date, time, timetable}) => {
+export const TimeTab: React.FC<Props> = ({date, time, timetable}) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
 
   return (
-    <div className="time">
+    <div className="time-tab">
       <div className="main">
-        <div id="time-info">
-          <p className="data--slim">{date}</p>
-          <p className="data">{time}</p>
-          <p className="data--slim">(in 2 hours)</p>
+        <div className="time-info">
+          <Value flavor="slim">{date}</Value>
+          <Value>{time}</Value>
+          <Value flavor="slim">(in 2 hours) {/*Todo : compute*/}</Value>
         </div>
-        <span className="btn-minus-3h">
-          <Button className="btn-minus-3h" onClick={() =>"TODO"}>-3h</Button>
-        </span>
-          <Button className="btn-plus-3h" onClick={() =>"TODO"}>+3h</Button>
+        <Button className="btn-minus-3h" onClick={() =>"TODO"}>-3h</Button>
+        <Button className="btn-plus-3h" onClick={() =>"TODO"}>+3h</Button>
       </div>
-      <Button 
+      <Button
         color="secondary"
         onClick={() => setShowTimetable(!showTimetable)}
         className="show-timetable"

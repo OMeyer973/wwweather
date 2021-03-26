@@ -1,6 +1,6 @@
 @import "/components/abstracts/mixins.scss";
 
-.weather {
+.weather-tab {
   @include tab;
   @include flex;
   flex-direction: row;

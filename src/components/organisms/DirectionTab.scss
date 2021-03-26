@@ -1,0 +1,11 @@
+@import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/variables.scss";
+
+.direction-tab {
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  @include tab;
+  background-color: $tabColorSecondary;
+}

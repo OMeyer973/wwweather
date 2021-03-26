@@ -1,0 +1,10 @@
+@import "/components/abstracts/mixins.scss";
+
+.wind-waves-data {
+  margin-bottom: 1.25em;
+  .value {
+    text-align: right;
+  }
+  width: 100%;
+  @include flex;
+}

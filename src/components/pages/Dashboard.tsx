@@ -3,13 +3,17 @@ import ReactDom from "react-dom";
 
 import Header from "~/components/organisms/Header";
 
-import Location from "~/components/organisms/Location";
-import { Time, Timetable } from "~/components/organisms/Time";
-import Map from "~/components/organisms/Map";
-import { Weather } from "~/components/organisms/Weather";
-import { Wind } from "~/components/organisms/Wind";
-import { Waves } from "~/components/organisms/Waves";
-import Forecast from "~/components/organisms/Forecast";
+import { LocationTab } from "~components/organisms/LocationTab";
+import { TimeTab, Timetable } from "~components/organisms/TimeTab";
+import Map from "~components/organisms/MapTab";
+import { WeatherTab } from "~components/organisms/WeatherTab";
+
+import { DirectionTab } from "~components/organisms/DirectionTab";
+  import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
+  import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
+  import { DataRow } from "~components/molecules/DataRow";
+
+import { ForecastTab } from "~components/organisms/ForecastTab";
 
 const timetable: Timetable = {
   sunrise: "06:47",
@@ -31,15 +35,23 @@ export const Dashboard: React.FC = () => (
   <>
     <Header/>
     <section id="dashboard">
-      <Location/>
-      <Time date="Monday, february 8th" time="21:00" timetable={timetable}/>
+      <LocationTab/>
+      <TimeTab date="Monday, february 8th" time="21:00" timetable={timetable}/>
       <Map/>
-      <Weather/>      
+      <WeatherTab/>      
       <div id="wind-waves-tab">
-        <Wind speed="18 kts" gusts="24 kts" direction="ENE 69°"/>
-        <Waves height="2.5 m" tide="Rising" direction="ENE 69°"/>
+      <DirectionTab title="Wind" icon={windArrow} iconRotation={69}>
+          <DataRow label="Speed" value="zz"/>
+          <DataRow label="Gusts" value="zz"/>
+          <DataRow label="DirectionTab" value="zz"/> 
+        </DirectionTab>
+        <DirectionTab title="Waves" icon={wavesArrow} iconRotation={69}>
+          <DataRow label="Height" value="zz"/>
+          <DataRow label="Tide" value="zz"/>
+          <DataRow label="DirectionTab" value="zz"/> 
+        </DirectionTab>
       </div>
-      <Forecast/>
+      <ForecastTab/>
     </section>
   </>
 );
