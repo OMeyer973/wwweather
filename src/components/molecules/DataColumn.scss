@@ -1,6 +1,6 @@
 .weather-data {
   text-align: center;
-  .value {
+  > * {
     display: block;
   }
 }

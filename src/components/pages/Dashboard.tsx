@@ -43,12 +43,12 @@ export const Dashboard: React.FC = () => (
       <DirectionTab title="Wind" icon={windArrow} iconRotation={69}>
           <DataRow label="Speed" value="zz"/>
           <DataRow label="Gusts" value="zz"/>
-          <DataRow label="DirectionTab" value="zz"/> 
+          <DataRow label="Direction" value="ENE 69 °"/> 
         </DirectionTab>
         <DirectionTab title="Waves" icon={wavesArrow} iconRotation={69}>
           <DataRow label="Height" value="zz"/>
           <DataRow label="Tide" value="zz"/>
-          <DataRow label="DirectionTab" value="zz"/> 
+          <DataRow label="Direction" value="ENE 69 °"/> 
         </DirectionTab>
       </div>
       <ForecastTab/>
