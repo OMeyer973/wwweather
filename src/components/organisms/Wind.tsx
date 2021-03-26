@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "~components/atoms/Icon";
 
 import WindWavesData from "../molecules/WindWavesData";
 import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
@@ -14,7 +15,7 @@ export const Wind : React.FC<Props> = ({speed, gusts, direction}) => {
     <div id="wind-tab" className="tab">
       <div className="title-line flex flex--horizontal">
         <h2>Wind</h2>
-        <img src={windArrow} alt="wind-kite-arrow"></img>
+        <Icon src={windArrow} size="medium"/>
       </div>
       <WindWavesData label="Speed" value={speed}/>
       <WindWavesData label="Gusts" value={gusts}/>

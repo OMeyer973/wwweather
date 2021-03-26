@@ -1,7 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import "./time.scss"
+
 import { Button } from "~components/atoms/Button"
 import { Label } from "~components/atoms/Label";
+import { Value } from "~components/atoms/Value";
 
 export interface Timetable {
   sunrise: string;
@@ -29,47 +32,45 @@ export const Time: React.FC<Props> = ({date, time, timetable}) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
 
   return (
-    <div id="time-tab" className="tab flex flex--vertical">
-      <div id="time-section" className="flex flex--horizontal flex-item--stretch">
+    <div className="time">
+      <div className="main">
         <div id="time-info">
           <p className="data--slim">{date}</p>
           <p className="data">{time}</p>
           <p className="data--slim">(in 2 hours)</p>
         </div>
-        <span id="btn-minus-3h">
-          <Button onClick={() =>"TODO"}>-3h</Button>
+        <span className="btn-minus-3h">
+          <Button className="btn-minus-3h" onClick={() =>"TODO"}>-3h</Button>
         </span>
-        <span id="btn-plus-3h">
-          <Button onClick={() =>"TODO"}>+3h</Button>
-        </span>
+          <Button className="btn-plus-3h" onClick={() =>"TODO"}>+3h</Button>
       </div>
       <Button 
         color="secondary"
         onClick={() => setShowTimetable(!showTimetable)}
+        className="show-timetable"
       >
         {`${showTimetable ? "hide" : "show"} timetable`}
       </Button>
-      <Label flavor="magnet primary">I'm a label</Label>
 
-      <div id="timetable" className={showTimetable ? "" : "hidden"}>
-        <div className="flex flex--horizontal flex-item--stretch">
+      <div id="timetable" className={`timetable ${showTimetable ? "" : "hidden"}`}>
+        <div>
           <div>
-            <p>Sunrise <span className="data--small">{timetable.sunrise}</span></p>
-            <p>Sunset <span className="data--small">{timetable.sunrise}</span></p>
+            <p><Label>Sunrise</Label> <Value flavor="small">{timetable.sunrise}</Value></p>
+            <p><Label>Sunset</Label> <Value flavor="small">{timetable.sunset}</Value></p>
           </div>
           <div>
-            <p>Low tides <span className="data--small">{timetable.firstLowTide}</span> <span className="data--small">{timetable.secondLowTide}</span></p>
-            <p>High tides <span className="data--small">{timetable.firstHighTide}</span> <span className="data--small">{timetable.secondHighTide}</span></p>
+            <p><Label>Low Tide</Label> <span><Value flavor="small">{timetable.firstLowTide}</Value> <Value flavor="small">{timetable.secondLowTide}</Value></span></p>
+            <p><Label>High Tide</Label> <Value flavor="small">{timetable.firstHighTide}</Value> <Value flavor="small">{timetable.secondLowTide}</Value></p>
           </div>
         </div>
-        <div className="flex flex--horizontal flex-item--stretch">
+        <div>
           <div>
-            <p>Fastest wind <span className="data--small">{timetable.fastestWind}</span></p>
-            <p>Slowest wind <span className="data--small">{timetable.slowestWind}</span></p>
+            <p><Label>Fastest Wind</Label> <Value flavor="small">{timetable.fastestWind}</Value></p>
+            <p><Label>Slowest Wind</Label> <Value flavor="small">{timetable.fastestWind}</Value></p>
           </div>
           <div>
-            <p>Highest waves <span className="data--small">{timetable.highestWaves}</span></p>
-            <p>Lowest Waves <span className="data--small">{timetable.lowestWaves}</span></p>
+            <p><Label>Highest Waves</Label> <Value flavor="small">{timetable.highestWaves}</Value></p>
+            <p><Label>Lowest Waves</Label> <Value flavor="small">{timetable.lowestWaves}</Value></p>
           </div>
         </div>
       </div>

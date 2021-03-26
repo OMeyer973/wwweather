@@ -1,0 +1,11 @@
+@import "/components/abstracts/mixins.scss";
+
+.weather {
+  @include tab;
+  @include flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  // todo move to dashboard
+  padding-top: 3em;
+}

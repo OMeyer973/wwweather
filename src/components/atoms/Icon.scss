@@ -1,0 +1,24 @@
+@import "/components/abstracts/variables.scss";
+
+.icon {
+  & img {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+  }
+
+  &.small {
+    width: 1em;
+    height: 1em;
+  }
+  &.medium {
+    width: 2em;
+    height: 2em;
+  }
+  &.large {
+    width: 4em;
+    height: 4em;
+  }
+
+  display: inline-block;
+}

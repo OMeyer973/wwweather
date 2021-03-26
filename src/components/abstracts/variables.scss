@@ -1,8 +1,10 @@
+// usage @import "/components/abstracts/variables.scss";
+
 $titleColor: #262626;
 $titleFont: "Poppins", sans-serif;
 $dataColor: #000;
 
-$labelColor: rgba(0, 0, 0, 0.55);
+$labelColor: rgba(0, 0, 0, 0.7);
 $labelBgColor: #e3e7e8;
 
 $buttonColor: #fff;
@@ -18,7 +20,7 @@ $tabColorSecondary: rgba(255, 255, 255, 0.8);
   --titleFont: "Poppins", sans-serif;
   --dataColor: #000;
 
-  --labelColor: rgba(0, 0, 0, 0.55);
+  --labelColor: rgba(0, 0, 0, 0.7);
   --labelBgColor: #e3e7e8;
 
   --buttonColor: #fff;

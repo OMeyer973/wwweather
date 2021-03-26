@@ -1,0 +1,43 @@
+@import "/components/abstracts/mixins.scss";
+
+.time {
+  .main {
+    #time-info {
+      text-align: center;
+      order: 1;
+    }
+
+    .btn-minus-3h {
+      order: 0;
+    }
+
+    .btn-plus-3h {
+      order: 2;
+    }
+
+    width: 100%;
+    @include flex;
+    order: 0;
+    margin-bottom: 1.5em;
+  }
+
+  .show-timetable {
+    order: 2;
+    margin-bottom: -3.4em;
+  }
+
+  .timetable {
+    order: 1;
+    width: 100%;
+    > div {
+      @include flex;
+      margin-bottom: 1.5em;
+      text-align: center;
+    }
+  }
+
+  @include tab;
+  background: $tabColorSecondary;
+  @include flex;
+  flex-direction: column;
+}

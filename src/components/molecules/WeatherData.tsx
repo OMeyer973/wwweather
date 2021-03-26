@@ -1,4 +1,8 @@
 import React from "react";
+import "./weatherData.scss"
+
+import { Icon } from "~components/atoms/Icon";
+import { Label } from "~components/atoms/Label";
 
 export interface Props {
   label: string;
@@ -8,11 +12,9 @@ export interface Props {
 
 export const WeatherData: React.FC<Props> = ({label, icon, value}) => {
   return (
-    <div>
-      <label className="label">{label}</label>
-      <div className="icon-holder">
-        <img src={icon} alt="day-cloud-3"/>
-      </div>
+    <div className="weather-data">
+      <Label>{label}</Label>
+      <Icon src={icon} size="large"/>
       <p className="data">{value}</p>        
     </div>
   )

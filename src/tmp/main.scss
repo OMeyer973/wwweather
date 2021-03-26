@@ -37,55 +37,7 @@ header {
   filter: drop-shadow(0px 0.2em 2em rgba(0, 0, 0, 0.1));
 }
 
-#time-tab {
-  background: $tabColorSecondary;
-  #time-section {
-    order: 0;
-    margin-bottom: 1.5em;
-    #time-info {
-      order: 1;
-      flex-grow: 2;
-      p {
-        text-align: center;
-      }
-    }
-    #btn-minus-3h {
-      order: 0;
-    }
-    #btn-plus-3h {
-      order: 2;
-    }
-  }
-  #btn-show-timetable {
-    order: 2;
-    margin-bottom: -3.4em;
-  }
-  #timetable {
-    order: 1;
-    width: 100%;
-    > div {
-      margin-bottom: 1.5em;
-    }
-  }
-}
-
 //#map-tab from map.scss
-
-#weather-tab {
-  p {
-    text-align: center;
-  }
-  .icon-holder {
-    width: 4em;
-    height: 4em;
-    margin: auto;
-    img {
-      object-fit: contain;
-      height: 100%;
-      width: 100%;
-    }
-  }
-}
 
 #wind-waves-tab {
   display: grid;
@@ -153,7 +105,7 @@ header {
   #location-tab {
     grid-area: location;
   }
-  #time-tab {
+  .time {
     grid-area: time;
     z-index: 0;
   }
@@ -162,9 +114,8 @@ header {
     padding-bottom: 2em;
     padding-top: 0em;
   }
-  #weather-tab {
+  .weather {
     grid-area: weather;
-    padding-top: 3em;
   }
   #wind-waves-tab {
     grid-area: wind-weather;

@@ -1,3 +1,23 @@
+@import "/components/abstracts/variables.scss";
+
+// usage @import "/components/abstracts/mixins.scss";
+
 @mixin focused {
   box-shadow: 0 0 0 2pt rgba(255, 255, 255, 0.8), 0 0 0 4pt rgba(0, 0, 0, 0.4);
 }
+
+@mixin tab {
+  padding: 2em 1.5em;
+  background: $tabColor;
+}
+
+@mixin flex {
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
+  align-items: center;
+}
+// to be used in addition with ...
+// flex-direction: row;
+// flex-direction: column;
+// align-self: stretch;

@@ -33,7 +33,7 @@ const Map = () => {
   
         <div id="wind-arrow" className="map__overlay" >
           <img src={windArrow} alt="wind-kite-arrow"></img>
-          <Magnet color="primary" additionalStyle={windMagnetPlacement}>Wind 18 kts</Magnet>
+          <Magnet color="primary" style={windMagnetPlacement}>Wind 18 kts</Magnet>
           {/* <label id="wind-arrow__label" className="map-label map-label--orange">
             Wind 18 kts
           </label> */}
