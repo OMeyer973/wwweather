@@ -1,12 +1,12 @@
 import React from "react";
 
-import { WeatherData } from "~/molecules/WeatherData";
+import { WeatherData } from "~/components/molecules/WeatherData";
 
 // todo : make dynamic
-import dayCloud3 from "~/vector/weather/day-cloud-3.svg"
-import rain3 from "~/vector/weather/rain-3.svg"
+import dayCloud3 from "~/components/atoms/icons/weather/day-cloud-3.svg"
+import rain3 from "~/components/atoms/icons/weather/rain-3.svg"
 
-import thermometer from "~/vector/weather/thermometer.svg"
+import thermometer from "~/components/atoms/icons/weather/thermometer.svg"
 
 export const Weather = () => {
   return (

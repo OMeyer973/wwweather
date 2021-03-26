@@ -8,7 +8,7 @@
     border-radius: 100%;
     height: max-content;
     /* clip-path: circle(50%); */
-    /* background-color: var(--infoColor); */
+    /* background-color: $infoColor); */
   }
 
   .map__overlay {
@@ -33,7 +33,7 @@
   }
 
   #compass-ticks {
-    background-image: url("vector/compass-ticks.svg");
+    background-image: url("/components/atoms/compass-ticks.svg");
     background-size: 95%;
   }
 

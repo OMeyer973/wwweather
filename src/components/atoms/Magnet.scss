@@ -1,0 +1,16 @@
+@import "/components/abstracts/variables.scss";
+
+.magnet {
+  &.primary {
+    color: $buttonColor;
+    background: $buttonBgColor;
+  }
+  &.secondary {
+    color: $buttonColor;
+    background: $buttonBgColorSecondary;
+  }
+  margin: auto;
+  padding: 0.25em 0.5em;
+  border-radius: 1em;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,19 @@
+@import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/variables.scss";
+
+.button {
+  font-weight: 700;
+  border-radius: 3em;
+  padding: 0.625em 0.75em;
+  &:focus-within {
+    @include focused;
+  }
+  &.primary {
+    color: $buttonColor;
+    background: $buttonBgColor;
+  }
+  &.secondary {
+    color: $buttonColor;
+    background-color: $buttonBgColorSecondary;
+  }
+}

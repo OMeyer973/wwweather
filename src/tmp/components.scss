@@ -1,9 +1,10 @@
+@import "/components/abstracts/variables.scss";
 @import "./search-bar.scss";
 
 // block components
 .tab {
   padding: 2em 1.5em;
-  background: var(--tabColor);
+  background: $tabColor;
 }
 
 .flex {
@@ -36,39 +37,12 @@
   font-weight: 600;
 }
 
-.btn {
-  color: var(--buttonColor);
-  font-weight: 700;
-  background: var(--buttonBgColor);
-  border-radius: 3em;
-  padding: 0.625em 0.75em;
-  &:focus-within {
-    @include focused;
-  }
-}
-
-.btn--teal {
-  background-color: var(--buttonBgColorsecondary);
-}
-
-label {
-  color: var(--labelColor);
-}
-
-.map-label {
-  padding: 0.25em 0.5em;
-  border-radius: 1em;
-  color: var(--buttonColor);
-  background: var(--buttonBgColor);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-}
-
 .map-label--orange {
-  color: var(--buttonColor);
-  background: var(--buttonBgColor);
+  color: $buttonColor;
+  background: $buttonBgColor;
 }
 
 .map-label--teal {
-  color: var(--buttonColor);
-  background: var(--buttonBgColorsecondary);
+  color: $buttonColor;
+  background: $buttonBgColorSecondary;
 }

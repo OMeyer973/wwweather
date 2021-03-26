@@ -1,9 +1,16 @@
 import React from "react";
+import CSS from 'csstype';
 
-import windArrow from "~/vector/wind-kite-arrow.svg"
-import wavesArrow from "~/vector/waves-kite-arrow.svg"
+import { Magnet } from "~/components/atoms/Magnet"
+
+import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg"
+import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg"
 
 const Map = () => {
+  const windMagnetPlacement: CSS.Properties = {
+    gridArea: "1 / 1 / 2 / 2"
+  }
+  
   return (
     <div id="map-tab" className="tab tab--map">
 
@@ -24,11 +31,12 @@ const Map = () => {
   
         <div id="compass-ticks" className="map__overlay"></div>
   
-        <div id="wind-arrow" className="map__overlay">
+        <div id="wind-arrow" className="map__overlay" >
           <img src={windArrow} alt="wind-kite-arrow"></img>
-          <label id="wind-arrow__label" className="map-label map-label--orange">
+          <Magnet color="primary" additionalStyle={windMagnetPlacement}>Wind 18 kts</Magnet>
+          {/* <label id="wind-arrow__label" className="map-label map-label--orange">
             Wind 18 kts
-          </label>
+          </label> */}
         </div>
         
         <div id="waves-arrow" className="map__overlay">

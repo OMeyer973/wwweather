@@ -13,7 +13,7 @@ body {
 }
 
 header {
-  background-color: var(--titleColor);
+  background-color: $titleColor;
   padding: 0 2em;
   div {
     max-width: 1200px;
@@ -38,7 +38,7 @@ header {
 }
 
 #time-tab {
-  background: var(--tabColorSecondary);
+  background: $tabColorSecondary;
   #time-section {
     order: 0;
     margin-bottom: 1.5em;
@@ -92,7 +92,7 @@ header {
   grid-template-columns: 1fr 1fr;
   gap: 0.125em;
   .tab {
-    background: var(--tabColorSecondary);
+    background: $tabColorSecondary;
   }
   .title-line {
     margin-bottom: 2.5em;
@@ -126,7 +126,10 @@ header {
   *,
   *::before,
   *::after {
-    font-size: 95%;
+    font-size: inherit;
+  }
+  body {
+    font-size: 90%;
   }
 
   .tab {

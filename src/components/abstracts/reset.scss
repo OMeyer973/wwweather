@@ -1,0 +1,33 @@
+@import "/components/abstracts/variables.scss";
+
+*,
+*::before,
+*::after,
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: transparent;
+  background: transparent;
+  box-shadow: none;
+  font-family: poppins;
+  font-size: inherit;
+  font-weight: normal;
+}
+
+body {
+  font-size: 80%;
+}
+
+h1,
+h2,
+h3 {
+  color: $titleColor;
+}
+
+.hidden {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}

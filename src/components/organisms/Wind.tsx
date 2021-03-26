@@ -1,7 +1,7 @@
 import React from "react";
 
 import WindWavesData from "../molecules/WindWavesData";
-import windArrow from "~/vector/wind-kite-arrow.svg";
+import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 
 export interface Props {
   speed: string;

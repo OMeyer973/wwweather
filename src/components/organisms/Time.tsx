@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { Button } from "~atoms/Button"
+import { Button } from "~components/atoms/Button"
+import { Label } from "~components/atoms/Label";
 
 export interface Timetable {
   sunrise: string;
@@ -25,7 +26,7 @@ export interface Props {
 }
 
 export const Time: React.FC<Props> = ({date, time, timetable}) => {
-  const [showTimetable, setShowTimetable] = useState<boolean>(true);
+  const [showTimetable, setShowTimetable] = useState<boolean>(false);
 
   return (
     <div id="time-tab" className="tab flex flex--vertical">
@@ -36,14 +37,19 @@ export const Time: React.FC<Props> = ({date, time, timetable}) => {
           <p className="data--slim">(in 2 hours)</p>
         </div>
         <span id="btn-minus-3h">
-          <button className="btn">-3h</button>
+          <Button onClick={() =>"TODO"}>-3h</Button>
         </span>
         <span id="btn-plus-3h">
-          <button className="btn">+3h</button>
+          <Button onClick={() =>"TODO"}>+3h</Button>
         </span>
       </div>
-      {/* <Button text={`${showTimetable ? "hide" : "show"} timetable`} onClick={() => setShowTimetable(!showTimetable)}/> */}
-      <button id="btn-show-timetable" className="btn btn--teal">show timetable</button>
+      <Button 
+        color="secondary"
+        onClick={() => setShowTimetable(!showTimetable)}
+      >
+        {`${showTimetable ? "hide" : "show"} timetable`}
+      </Button>
+      <Label flavor="magnet primary">I'm a label</Label>
 
       <div id="timetable" className={showTimetable ? "" : "hidden"}>
         <div className="flex flex--horizontal flex-item--stretch">

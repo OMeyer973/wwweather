@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import "./index.scss";
 
-import { Dashboard } from "./pages/Dashboard";
+import { Dashboard } from "~components/pages/Dashboard";
 // import reportWebVitals from "./reportWebVitals";
 
 ReactDom.render(

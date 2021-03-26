@@ -1,7 +1,7 @@
 import React from "react";
 
-import WindWavesData from "~/molecules/WindWavesData";
-import wavesArrow from "~/vector/waves-kite-arrow.svg"
+import WindWavesData from "~components/molecules/WindWavesData";
+import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg"
 
 export interface Props {
   height: string;

@@ -9,7 +9,7 @@ const Location = () => {
       </div>
       <div className="flex">
         <form className="search-bar">
-          <input type="text" name="location" placeholder="Search location" required size="20"/>
+          <input type="text" name="location" placeholder="Search location" required size={20}/>
           <button className="search-icon" type="submit" value="submit">
           </button>
         </form>

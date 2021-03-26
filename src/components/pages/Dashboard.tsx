@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDom from "react-dom";
 
-import Header from "~/organisms/Header";
+import Header from "~/components/organisms/Header";
 
-import Location from "~/organisms/Location";
-import { Time, Timetable } from "~/organisms/Time";
-import Map from "~/organisms/Map";
-import { Weather } from "~/organisms/Weather";
-import { Wind } from "~/organisms/Wind";
-import { Waves } from "~/organisms/Waves";
-import Forecast from "~/organisms/Forecast";
+import Location from "~/components/organisms/Location";
+import { Time, Timetable } from "~/components/organisms/Time";
+import Map from "~/components/organisms/Map";
+import { Weather } from "~/components/organisms/Weather";
+import { Wind } from "~/components/organisms/Wind";
+import { Waves } from "~/components/organisms/Waves";
+import Forecast from "~/components/organisms/Forecast";
 
 const timetable: Timetable = {
   sunrise: "06:47",
