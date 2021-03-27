@@ -1,4 +1,7 @@
-#map-tab {
+@import "/components/abstracts/mixins.scss";
+//@import "/components/abstracts/variables.scss";
+
+.map-tab {
   display: grid;
   padding-bottom: 0; // cf media query
   padding-top: 3.5em; //cf media query
@@ -6,7 +9,7 @@
     margin: auto 0;
     padding: 2em;
     border-radius: 100%;
-    height: max-content;
+    width: 100%;
     /* clip-path: circle(50%); */
     /* background-color: $infoColor); */
   }
@@ -64,7 +67,7 @@
 
     /*tmp*/
     background-color: red;
-    background-image: url("img/map-img.png");
+    background-image: url("/img/map-img.png");
     background-size: 100%;
   }
 
@@ -145,4 +148,7 @@
     align-self: end;
     justify-self: center;
   }
+
+  @include tab;
+  @include flex;
 }

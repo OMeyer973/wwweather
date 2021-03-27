@@ -1,32 +1,6 @@
 @import "/components/abstracts/variables.scss";
 @import "/components/molecules/SearchBar.scss";
 
-// block components
-.tab {
-  padding: 2em 1.5em;
-  background: $tabColor;
-}
-
-.flex {
-  display: flex;
-  gap: 1em;
-
-  justify-content: space-between;
-  align-items: center;
-}
-
-.flex--horizontal {
-  flex-direction: row;
-}
-
-.flex--vertical {
-  flex-direction: column;
-}
-
-.flex-item--stretch {
-  align-self: stretch;
-}
-
 // elements
 .data {
   font-size: 1.5em;

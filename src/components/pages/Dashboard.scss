@@ -1,0 +1,54 @@
+@import "/components/abstracts/mixins.scss";
+
+.dashboard {
+  max-width: 900px;
+  margin: 2em auto;
+  border: 0.125em solid rgba(0, 0, 0, 0);
+  border-radius: 2em;
+  overflow: hidden;
+  filter: drop-shadow(0px 0.2em 2em rgba(0, 0, 0, 0.1));
+
+  @include breakpoint(small) {
+    & .location-tab {
+      grid-area: location;
+    }
+    & .time-tab {
+      grid-area: time;
+      z-index: 0;
+    }
+    & .map-tab {
+      grid-area: map;
+      padding-bottom: 2em;
+      padding-top: 0em;
+    }
+    & .weather-tab {
+      grid-area: weather;
+    }
+    & .wind-waves-tab {
+      grid-area: wind-weather;
+    }
+    & .forecast-tab {
+      grid-area: forecast;
+      margin-top: 0.125em;
+    }
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 0 0.125em;
+    grid-template-areas:
+      "location time"
+      "map time"
+      "map weather"
+      "map wind-weather"
+      "forecast forecast";
+  }
+
+  @include breakpoint(tiny) {
+    .wind-waves-tab {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.125em;
+    }
+  }
+}

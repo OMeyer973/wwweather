@@ -1,1 +1,14 @@
-@import "~/tmp/main.scss";
+@import "/components/abstracts/fonts.scss";
+@import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/reset.scss";
+@import "/components/abstracts/variables.scss";
+
+body {
+  background: linear-gradient(
+      198.04deg,
+      rgba(0, 211, 255, 0.3) 22.99%,
+      rgba(255, 63, 0, 0.3) 85.77%
+    ),
+    #e3e8e7;
+  background-attachment: fixed;
+}

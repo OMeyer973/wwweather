@@ -2,15 +2,14 @@
 
 // usage @import "/components/abstracts/mixins.scss";
 
-@mixin focused {
-  box-shadow: 0 0 0 2pt rgba(255, 255, 255, 0.8), 0 0 0 4pt rgba(0, 0, 0, 0.4);
-}
-
+// containers
 @mixin tab {
-  padding: 2em 1.5em;
+  padding: 1.5em;
   background: $tabColor;
 
-  // todo RwD
+  @include breakpoint(medium) {
+    padding: 2em;
+  }
 }
 
 @mixin flex {
@@ -23,8 +22,14 @@
 // flex-direction: row;
 // flex-direction: column;
 // align-self: stretch;
-
 // todo : hybrid flex col / row for RWD
+
+// states
+@mixin focused {
+  box-shadow: 0 0 0 2pt rgba(255, 255, 255, 0.8), 0 0 0 4pt rgba(0, 0, 0, 0.4);
+}
+
+// responsive
 
 // cf https://responsivedesign.is/develop/getting-started-with-sass-and-breakpoint-mixin/
 @mixin breakpoint($point) {

@@ -1,7 +1,7 @@
 import React from "react";
 import CSS from "csstype";
 
-// fridge magnet-style label
+// "fridge magnet" style label
 import "./Magnet.scss";
 
 type Color = "primary" | "secondary";

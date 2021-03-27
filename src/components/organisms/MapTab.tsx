@@ -1,5 +1,6 @@
 import React from "react";
 import CSS from "csstype";
+import "./MapTab.scss";
 
 import { Magnet } from "~/components/atoms/Magnet";
 
@@ -12,7 +13,7 @@ const Map = () => {
   };
 
   return (
-    <div id="map-tab" className="tab tab--map">
+    <div className="map-tab">
       <div id="compass">
         <div id="cardinals-primary" className="cardinal-grid">
           <div className="cardinal-point cardinal-top">

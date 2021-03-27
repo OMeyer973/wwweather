@@ -1,0 +1,17 @@
+@import "/components/abstracts/variables.scss";
+
+.header {
+  background-color: $titleColor;
+  padding: 0 2em;
+  div {
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  .header__title {
+    color: white;
+    font-weight: 900;
+    font-size: 1.5em;
+  }
+}

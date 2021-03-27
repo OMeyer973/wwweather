@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
+import "./Dashboard.scss";
 
 import Header from "~/components/organisms/Header";
 
@@ -34,12 +35,12 @@ const timetable: Timetable = {
 export const Dashboard: React.FC = () => (
   <>
     <Header />
-    <section id="dashboard">
+    <section className="dashboard">
       <LocationTab />
       <TimeTab date="Monday, february 8th" time="21:00" timetable={timetable} />
       <Map />
       <WeatherTab />
-      <div id="wind-waves-tab">
+      <div className="wind-waves-tab">
         <DirectionTab title="Wind" icon={windArrow} iconRotation={69}>
           <DataRow label="Speed" value="zz" />
           <DataRow label="Gusts" value="zz" />
