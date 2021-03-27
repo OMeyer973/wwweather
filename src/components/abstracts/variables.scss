@@ -15,25 +15,6 @@ $buttonBgColorSecondary: #177d92;
 $tabColor: #fff;
 $tabColorSecondary: rgba(255, 255, 255, 0.8);
 
-// cf https://sass-guidelin.es/#responsive-web-design-and-breakpoints
-$breakpoints: (
-  "tiny": (
-    min-width: 350px,
-  ),
-  "small": (
-    min-width: 600px,
-  ),
-  "medium": (
-    min-width: 800px,
-  ),
-  "large": (
-    min-width: 1000px,
-  ),
-  "huge": (
-    min-width: 1200px,
-  ),
-);
-
 // todo: rm (non sass duplicate)
 :root {
   --titleColor: #262626;

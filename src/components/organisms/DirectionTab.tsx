@@ -1,5 +1,5 @@
 import React from "react";
-import "./DirectionTab.scss"
+import "./DirectionTab.scss";
 
 import { Icon } from "~components/atoms/Icon";
 
@@ -10,7 +10,12 @@ export interface Props {
   children: React.ReactNode;
 }
 
-export const DirectionTab : React.FC<Props> = ({title, icon, iconRotation, children}) => {
+export const DirectionTab: React.FC<Props> = ({
+  title,
+  icon,
+  iconRotation,
+  children,
+}) => {
   return (
     <div className="direction-tab">
       <div className="title-line">
@@ -19,5 +24,5 @@ export const DirectionTab : React.FC<Props> = ({title, icon, iconRotation, child
       </div>
       {children}
     </div>
-  )
-}
+  );
+};

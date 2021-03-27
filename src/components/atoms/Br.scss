@@ -1,0 +1,24 @@
+@import "/components/abstracts/mixins.scss";
+
+.br {
+  &.tiny {
+    @include breakpoint(tiny) {
+      display: none;
+    }
+  }
+  &.small {
+    @include breakpoint(small) {
+      display: none;
+    }
+  }
+  &.medium {
+    @include breakpoint(medium) {
+      display: none;
+    }
+  }
+  &.large {
+    @include breakpoint(large) {
+      display: none;
+    }
+  }
+}

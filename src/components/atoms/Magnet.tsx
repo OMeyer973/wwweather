@@ -1,10 +1,10 @@
 import React from "react";
-import CSS from 'csstype';
+import CSS from "csstype";
 
 // fridge magnet-style label
-import "./Magnet.scss"
+import "./Magnet.scss";
 
-type Color =  "primary" | "secondary"
+type Color = "primary" | "secondary";
 
 export interface Props {
   children: React.ReactNode;
@@ -12,10 +12,12 @@ export interface Props {
   style?: CSS.Properties;
 }
 
-export const Magnet: React.FC<Props> = ({children, color, style }) => {
+export const Magnet: React.FC<Props> = ({ children, color, style }) => {
   return (
-      <label className={`magnet ${color}`} style={style}>{children}</label>
-    );
+    <label className={`magnet ${color}`} style={style}>
+      {children}
+    </label>
+  );
 };
 
 Magnet.defaultProps = {

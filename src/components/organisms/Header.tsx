@@ -7,7 +7,7 @@ const Header: React.FC = () => {
         <h1 className="header__title">WWWeather</h1>
       </div>
     </header>
-  )
-}
+  );
+};
 
 export default Header;

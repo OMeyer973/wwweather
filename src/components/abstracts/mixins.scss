@@ -25,3 +25,24 @@
 // align-self: stretch;
 
 // todo : hybrid flex col / row for RWD
+
+// cf https://responsivedesign.is/develop/getting-started-with-sass-and-breakpoint-mixin/
+@mixin breakpoint($point) {
+  @if $point == tiny {
+    @media (min-width: 380px) {
+      @content;
+    }
+  } @else if $point == small {
+    @media (min-width: 600px) {
+      @content;
+    }
+  } @else if $point == medium {
+    @media (min-width: 800px) {
+      @content;
+    }
+  } @else if $point == large {
+    @media (min-width: 1000px) {
+      @content;
+    }
+  }
+}

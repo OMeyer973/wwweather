@@ -1,9 +1,9 @@
 import React from "react";
-import CSS from 'csstype';
+import CSS from "csstype";
 
-import "./Icon.scss"
+import "./Icon.scss";
 
-type Size =  "small" | "medium" | "large"
+type Size = "small" | "medium" | "large";
 
 export interface Props {
   src: string;
@@ -11,15 +11,20 @@ export interface Props {
   style?: CSS.Properties;
 }
 
-export const Icon: React.FC<Props> = ({src, size, style }) => {
+export const Icon: React.FC<Props> = ({ src, size, style }) => {
   return (
-      <span className={`icon ${size}`} style={style}>
-        <img 
-          src={src} 
-          alt={src.substr(src.lastIndexOf('/') + 1, src.lastIndexOf('.', src.lastIndexOf('.') - 1) - 1).replace(/_|-/g, ' ')}
-        />
-      </span>
-    );
+    <span className={`icon ${size}`} style={style}>
+      <img
+        src={src}
+        alt={src
+          .substr(
+            src.lastIndexOf("/") + 1,
+            src.lastIndexOf(".", src.lastIndexOf(".") - 1) - 1
+          )
+          .replace(/_|-/g, " ")}
+      />
+    </span>
+  );
 };
 
 Icon.defaultProps = {
