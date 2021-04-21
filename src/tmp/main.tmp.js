@@ -1,10 +1,3 @@
-import refreshCompass from "./compass.tmp";
-
-const eps = 0.0001; //epsilon for lat and long coordinates comparison
-
-const currLongitude = -52.6446239;
-const currLatitude = 5.168286;
-
 var DataColumn;
 DataColumn = {
   hours: [
@@ -81,37 +74,3 @@ DataColumn = {
 // }).then((response) => response.json()).then((jsonData) => {
 //   DataColumn = jsonData
 // });
-
-var map = new mapboxgl.Map({
-  container: "map",
-  style: "mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe",
-  center: [currLongitude, currLatitude], // starting position [lng, lat]
-  zoom: 12, // starting zoom
-  maxZoom: 14.5,
-  // minZoom: 9,
-  maxBounds: [
-    [currLongitude - 0.5, currLatitude - 0.5], // Southwest coordinates
-    [currLongitude + 0.5, currLatitude + 0.5], // Northeast coordinates
-  ],
-  //interactive: false
-});
-
-map.dragPan.disable();
-
-// stay centered on point of interest
-map.on("moveend", function () {
-  console.log();
-  const currCenter = map.getCenter();
-  if (
-    Math.abs(currCenter.lng - currLongitude) > eps &&
-    Math.abs(currCenter.lat - currLatitude) > eps
-  )
-    map.setCenter([currLongitude, currLatitude]);
-});
-
-// rotate compas
-map.on("move", function () {
-  refreshCompass(map.getBearing(), 52, 68);
-});
-
-refreshCompass(map.getBearing(), 52, 68);

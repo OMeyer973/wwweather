@@ -7,12 +7,11 @@ mapboxgl.accessToken =
   "pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA";
 
 export interface Props {
-  windAngle: number;
-  wavesAngle: number;
   onRotate: (bearing: number) => void;
+  style?: CSS.Properties;
 }
 
-export const Map: React.FC<Props> = ({ windAngle, wavesAngle, onRotate }) => {
+export const Map: React.FC<Props> = ({ onRotate, style }) => {
   const mapContainer = useRef();
   const [longitude, setLongitude] = useState(-52.6446239);
   const [latitude, setLatitude] = useState(5.168286);
@@ -32,7 +31,7 @@ export const Map: React.FC<Props> = ({ windAngle, wavesAngle, onRotate }) => {
     map.on("move", () => {
       setZoom(map.getZoom());
       setBearing(map.getBearing());
-      onRotate(zoom);
+      onRotate(map.getBearing());
     });
 
     // stay centered on point of interest
@@ -51,5 +50,5 @@ export const Map: React.FC<Props> = ({ windAngle, wavesAngle, onRotate }) => {
 
     return () => map.remove();
   }, []);
-  return <div id="map" ref={mapContainer} />;
+  return <div id="map" ref={mapContainer} style={style} />;
 };

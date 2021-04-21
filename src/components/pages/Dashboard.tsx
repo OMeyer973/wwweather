@@ -52,7 +52,7 @@ export const Dashboard: React.FC = () => (
     <section className="dashboard">
       <LocationTab />
       <TimeTab date="Monday, february 8th" time="21:00" timetable={timetable} />
-      <MapTab windAngle={windData.direction} wavesAngle={wavesData.direction} />
+      <MapTab windData={windData} wavesData={wavesData} />
       <WeatherTab />
       <div className="wind-waves-tab">
         <DirectionTab
