@@ -20,7 +20,13 @@ export const DirectionTab: React.FC<Props> = ({
     <div className="direction-tab">
       <div className="title-line">
         <h2>{title}</h2>
-        <Icon src={icon} size="medium" />
+        <Icon
+          src={icon}
+          size="medium"
+          style={{
+            transform: "rotate(" + iconRotation + "deg)",
+          }}
+        />
       </div>
       {children}
     </div>

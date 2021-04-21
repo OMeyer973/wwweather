@@ -82,9 +82,6 @@ DataColumn = {
 //   DataColumn = jsonData
 // });
 
-mapboxgl.accessToken =
-  "pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA";
-
 var map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe",

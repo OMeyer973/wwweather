@@ -2,14 +2,36 @@ import React from "react";
 import CSS from "csstype";
 import "./MapTab.scss";
 
+import { Map } from "~/components/atoms/Map";
 import { Magnet } from "~/components/atoms/Magnet";
 
 import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
 
-const Map = () => {
+export interface WindData {
+  direction: number;
+  speed: number;
+  gusts: number;
+}
+
+type Tide = "low" | "rising" | "high" | "lowering";
+
+export interface WavesData {
+  direction: number;
+  height: number;
+  tide: Tide;
+}
+
+export interface Props {
+  windAngle: number;
+  wavesAngle: number;
+}
+
+export const MapTab: React.FC<Props> = ({ windAngle, wavesAngle }) => {
   const windMagnetPlacement: CSS.Properties = {
     gridArea: "1 / 1 / 2 / 2",
+    // transform: "rotate(" + windAngle + "deg) translateY(-25%)",
+    transform: "rotate(" + -windAngle + "deg) translateY(-25%)",
   };
 
   return (
@@ -52,9 +74,9 @@ const Map = () => {
           <Magnet color="primary" style={windMagnetPlacement}>
             Wind 18 kts
           </Magnet>
-          {/* <label id="wind-arrow__label" className="map-label map-label--orange">
+          <label id="wind-arrow__label" className="map-label map-label--orange">
             Wind 18 kts
-          </label> */}
+          </label>
         </div>
 
         <div id="waves-arrow" className="map__overlay">
@@ -65,11 +87,13 @@ const Map = () => {
         </div>
 
         <div id="map-container">
-          <div id="map"></div>
+          <Map
+            windAngle={windAngle}
+            wavesAngle={wavesAngle}
+            onRotate={(r) => console.log(r)}
+          />
         </div>
       </div>
     </div>
   );
 };
-
-export default Map;

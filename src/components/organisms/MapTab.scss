@@ -2,10 +2,14 @@
 //@import "/components/abstracts/variables.scss";
 
 .map-tab {
-  display: grid;
+  @include tab;
+  @include flex;
+
   padding-bottom: 0; // cf media query
   padding-top: 3.5em; //cf media query
+
   #compass {
+    position: relative;
     margin: auto 0;
     padding: 2em;
     border-radius: 100%;
@@ -70,7 +74,6 @@
     background-image: url("/img/map-img.png");
     background-size: 100%;
   }
-
   .mapboxgl-control-container {
     visibility: hidden;
   }
@@ -148,7 +151,4 @@
     align-self: end;
     justify-self: center;
   }
-
-  @include tab;
-  @include flex;
 }
