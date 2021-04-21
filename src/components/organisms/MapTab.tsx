@@ -2,25 +2,13 @@ import React, { useState } from "react";
 import CSS from "csstype";
 import "./MapTab.scss";
 
+import { WindData, WavesData } from "~components/abstracts/Types";
+
 import { Map } from "~/components/atoms/Map";
 import { Magnet } from "~/components/atoms/Magnet";
 
 import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
-
-export interface WindData {
-  direction: number;
-  speed: number;
-  gusts: number;
-}
-
-type Tide = "low" | "rising" | "high" | "lowering";
-
-export interface WavesData {
-  direction: number;
-  height: number;
-  tide: Tide;
-}
 
 export interface Props {
   windData: WindData;
@@ -117,7 +105,7 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
                 "4em)",
             }}
           >
-            Wind 18 kts
+            Wind {windData.speed.toFixed(0)} kts
           </Magnet>
         </div>
 
@@ -142,7 +130,7 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
                 "4em)",
             }}
           >
-            Waves 2.5 m
+            Waves {wavesData.height.toFixed(1)} m
           </Magnet>
         </div>
 

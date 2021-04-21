@@ -2,26 +2,12 @@ import React from "react";
 import { useState } from "react";
 import "./timeTab.scss";
 
+import { Timetable } from "~components/abstracts/Types";
+
 import { Button } from "~components/atoms/Button";
 import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
-
-export interface Timetable {
-  sunrise: string;
-  sunset: string;
-
-  firstLowTide: string;
-  secondLowTide: string;
-  firstHighTide: string;
-  secondHighTide: string;
-
-  fastestWind: string;
-  slowestWind: string;
-
-  highestWaves: string;
-  lowestWaves: string;
-}
 
 export interface Props {
   date: string;
