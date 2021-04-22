@@ -44,19 +44,19 @@ const timetable: Timetable = {
 const placeholderDataThisHour: DataByHour = {
   time: new Date(),
   weatherData: {
-    cloudCover: 5,
-    riskOfRain: 20,
-    temperature: 28,
+    cloudCover: 0,
+    riskOfRain: 0,
+    temperature: 0,
   },
   windData: {
-    direction: 69,
-    speed: 8,
-    gusts: 15,
+    direction: 0,
+    speed: 0,
+    gusts: 0,
   },
   wavesData: {
-    direction: 90,
-    height: 2,
-    tide: "rising",
+    direction: 180,
+    height: 0,
+    tide: "low",
   },
 };
 
