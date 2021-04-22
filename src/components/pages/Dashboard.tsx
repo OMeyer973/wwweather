@@ -98,11 +98,7 @@ export const Dashboard: React.FC = () => {
       <Header />
       <section className="dashboard">
         <LocationTab location="Kourou" country="French Guiana" />
-        <TimeTab
-          date="Monday, february 8th"
-          time="21:00"
-          timetable={timetable}
-        />
+        <TimeTab time={dataThisHour.time} timetable={timetable} />
         <MapTab
           windData={dataThisHour.windData}
           wavesData={dataThisHour.wavesData}

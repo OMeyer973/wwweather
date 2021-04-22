@@ -9,24 +9,57 @@ import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
 
+const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const nth = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
+
 export interface Props {
-  date: string;
-  time: string;
+  time: Date;
   timetable: Timetable;
 }
 
-export const TimeTab: React.FC<Props> = ({ date, time, timetable }) => {
+export const TimeTab: React.FC<Props> = ({ time, timetable }) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
 
   return (
     <div className="time-tab">
       <div className="main">
         <div className="time-info">
-          <Value flavor="slim">{date}</Value>
+          <Value flavor="slim">
+            {weekDays[time.getDay()] +
+              ", " +
+              months[time.getMonth()].toLowerCase() +
+              " " +
+              time.getDate() +
+              nth[time.getDate() % 10]}
+          </Value>
           <br />
-          <Value>{time}</Value>
+          <Value>{time.getHours() + ":" + time.getMinutes()}</Value>
           <br />
-          <Value flavor="slim">(in 2 hours) {/*Todo : compute*/}</Value>
+          <Value flavor="slim">(now) {/*Todo : compute*/}</Value>
         </div>
         <Button className="btn-minus-3h" onClick={() => "TODO"}>
           -3h
