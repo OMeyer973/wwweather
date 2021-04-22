@@ -4,13 +4,18 @@ import "./LocationTab.scss";
 import { Value } from "~components/atoms/Value";
 import { SearchBar } from "~components/molecules/SearchBar";
 
-export const LocationTab = () => {
+export interface Props {
+  location: string;
+  country: string;
+}
+
+export const LocationTab: React.FC<Props> = ({ location, country }) => {
   return (
     <div className="location-tab">
       <div>
-        <Value flavor="title">Pointe du Talut/Belle-Île</Value>
+        <Value flavor="title">{location}</Value>
         <br />
-        <Value flavor="slim">French Guiana</Value>
+        <Value flavor="slim">{country}</Value>
       </div>
       <SearchBar label="Search Location" />
     </div>

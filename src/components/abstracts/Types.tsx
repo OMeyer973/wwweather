@@ -33,3 +33,16 @@ export interface WavesData {
   height: number;
   tide: Tide;
 }
+
+export interface DataByHour {
+  time: Date;
+  weatherData: WeatherData;
+  windData: WindData;
+  wavesData: WavesData;
+}
+
+export interface DataByDay {
+  time: Date;
+  timeTable: Timetable;
+  hours: DataByHour[];
+}
