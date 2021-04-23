@@ -61,8 +61,14 @@ const placeholderDataThisHour: DataByHour = {
 };
 
 const fetchWeatherData = async () => {
+  // start yesterday at midnight (local time)
+  const start = new Date(
+    new Date().setHours(0, 0, 0, 0) - 86400000
+  ).toISOString();
+  const lat = 5.168286;
+  const lng = -52.6446239;
   const res = await fetch(
-    `https://api.stormglass.io/v2/weather/point?lat=${5.168286}&lng=${-52.6446239}&params=${"airTemperature,airTemperature80m,airTemperature100m,airTemperature1000hpa,airTemperature800hpa,airTemperature500hpa,airTemperature200hpa,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,iceCover,precipitation,snowDepth,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,visibility,waterTemperature,waveDirection,waveHeight,wavePeriod,windWaveDirection,windWaveHeight,windWavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windDirection1000hpa,windDirection800hpa,windDirection500hpa,windDirection200hpa,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m,windSpeed1000hpa,windSpeed800hpa,windSpeed500hpa,windSpeed200hpa"}`,
+    `https://api.stormglass.io/v2/weather/point?start=${start}&lat=${lat}&lng=${lng}&params=${"airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,precipitation,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,waterTemperature,waveDirection,waveHeight,wavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m"}`,
     {
       headers: {
         Authorization:
@@ -86,9 +92,10 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     const getTasks = async () => {
       const weatherFromServer = await fetchWeatherData();
+      console.log(weatherFromServer);
       const newDataThisHour = makeDataThisHour(weatherFromServer.hours[0]);
       console.log(newDataThisHour);
-      // setDataThisHour(newDataThisHour);
+      setDataThisHour(newDataThisHour);
     };
     getTasks();
   }, []);

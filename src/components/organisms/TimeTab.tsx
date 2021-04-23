@@ -57,7 +57,11 @@ export const TimeTab: React.FC<Props> = ({ time, timetable }) => {
               nth[time.getDate() % 10]}
           </Value>
           <br />
-          <Value>{time.getHours() + ":" + time.getMinutes()}</Value>
+          <Value>
+            {("00" + time.getHours()).slice(-2) +
+              ":" +
+              ("00" + time.getMinutes()).slice(-2)}
+          </Value>
           <br />
           <Value flavor="slim">(now) {/*Todo : compute*/}</Value>
         </div>

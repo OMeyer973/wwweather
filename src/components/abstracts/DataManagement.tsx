@@ -1,12 +1,12 @@
 // averages all the values of a given object
 const avg = (data: any) =>
-  Object.values(data).reduce(
-    (average: any, value: any, index, array: Array<any>) => {
-      if (typeof value != "number")
-        console.error("avg called on object with non number values");
-      return average + value / array.length;
-    }
-  );
+  Object.values(
+    data
+  ).reduce((average: any, value: any, index, array: Array<any>) =>
+    typeof value === "number"
+      ? average + value
+      : console.error("avg called on object with non number values")
+  ) / Object.values(data).length;
 
 // meter per second to knots
 const mps2kts = (a: number) => a * 1.943844;
@@ -35,7 +35,7 @@ export const makeDataThisHour = (rawHourlyData: any) => {
     time: new Date(rawHourlyData.time),
     weatherData: {
       cloudCover: avg(rawHourlyData.cloudCover),
-      riskOfRain: mmph2riskOfRainPercent(rawHourlyData.precipitation),
+      riskOfRain: mmph2riskOfRainPercent(avg(rawHourlyData.precipitation)),
       temperature: avg(rawHourlyData.airTemperature),
     },
     windData: {

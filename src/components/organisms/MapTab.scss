@@ -87,6 +87,7 @@
     display: grid;
     grid-template-columns: 30% 40% 30%;
     grid-template-rows: 30% 40% 30%;
+    pointer-events: none;
   }
 
   #cardinals-secondary {
