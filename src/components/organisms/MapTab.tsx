@@ -19,8 +19,8 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
   const [bearing, setBearing] = useState(0);
 
   const invertTags = () => {
-    const wi = (windData.direction + bearing + 180) % 360;
-    const wa = (wavesData.direction + bearing + 180) % 360;
+    const wi = (windData.direction + bearing + 270) % 360;
+    const wa = (wavesData.direction + bearing + 270) % 360;
     return (wa < wi && wi < 180) || (180 < wi && wi < wa);
   };
 
