@@ -35,6 +35,11 @@
     width: 100%;
     > div {
       @include flex;
+      justify-content: space-around;
+      @include breakpoint(tiny) {
+        justify-content: space-between;
+      }
+
       margin-bottom: 1.5em;
       text-align: center;
     }
