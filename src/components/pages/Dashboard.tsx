@@ -7,6 +7,7 @@ import {
   WindData,
   WavesData,
   DataByHour,
+  DataByDay,
 } from "~/components/abstracts/Types";
 
 import { makeDataThisHour } from "~/components/abstracts/DataManagement";
@@ -25,6 +26,12 @@ import { DataRow } from "~components/molecules/DataRow";
 
 import { ForecastTab } from "~components/organisms/ForecastTab";
 
+const oneDay = 86400000;
+const oneHour = 3600000;
+
+// start yesterday at midnight (local time)
+const getStartDate = () => new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
+
 const timetable: Timetable = {
   sunrise: "06:47",
   sunset: "06:47",
@@ -41,30 +48,29 @@ const timetable: Timetable = {
   lowestWaves: "06:47",
 };
 
-const placeholderDataThisHour: DataByHour = {
-  time: new Date(),
-  weatherData: {
-    cloudCover: 0,
-    riskOfRain: 0,
-    temperature: 0,
+const placeholderPredictions: DataByHour[] = [
+  {
+    time: getStartDate(),
+    weatherData: {
+      cloudCover: 0,
+      riskOfRain: 0,
+      temperature: 0,
+    },
+    windData: {
+      direction: 0,
+      speed: 0,
+      gusts: 0,
+    },
+    wavesData: {
+      direction: 180,
+      height: 0,
+      tide: "low",
+    },
   },
-  windData: {
-    direction: 0,
-    speed: 0,
-    gusts: 0,
-  },
-  wavesData: {
-    direction: 180,
-    height: 0,
-    tide: "low",
-  },
-};
+];
 
 const fetchWeatherData = async () => {
-  // start yesterday at midnight (local time)
-  const start = new Date(
-    new Date().setHours(0, 0, 0, 0) - 86400000
-  ).toISOString();
+  const start = getStartDate().toISOString();
   const lat = 5.168286;
   const lng = -52.6446239;
   const res = await fetch(
@@ -87,15 +93,24 @@ export const Dashboard: React.FC = () => {
   };
 
   //const [rawData, setRawData] = useState(null);
-  const [dataThisHour, setDataThisHour] = useState(placeholderDataThisHour);
+  const [predictions, setPredictions] = useState(placeholderPredictions);
+  const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
     const getTasks = async () => {
       const weatherFromServer = await fetchWeatherData();
       console.log(weatherFromServer);
-      const newDataThisHour = makeDataThisHour(weatherFromServer.hours[0]);
-      console.log(newDataThisHour);
-      setDataThisHour(newDataThisHour);
+      const newPredictions = weatherFromServer.hours.map((hour: any) =>
+        makeDataThisHour(hour)
+      );
+      setPredictions(newPredictions);
+
+      setCurrentPredictionId(
+        newPredictions.findIndex(
+          (item: DataByHour) =>
+            Math.abs(item.time.valueOf() - Date.now()) < oneHour
+        )
+      );
     };
     getTasks();
   }, []);
@@ -105,32 +120,53 @@ export const Dashboard: React.FC = () => {
       <Header />
       <section className="dashboard">
         <LocationTab location="Kourou" country="French Guiana" />
-        <TimeTab time={dataThisHour.time} timetable={timetable} />
-        <MapTab
-          windData={dataThisHour.windData}
-          wavesData={dataThisHour.wavesData}
+        <TimeTab
+          time={predictions[currentPredictionId].time}
+          timetable={timetable}
+          onMinus3hours={() => {
+            setCurrentPredictionId(Math.max(0, currentPredictionId - 3));
+          }}
+          onPlus3hours={() =>
+            setCurrentPredictionId(
+              Math.min(predictions.length - 1, currentPredictionId + 3)
+            )
+          }
         />
-        <WeatherTab weatherData={dataThisHour.weatherData} />
+        <MapTab
+          windData={predictions[currentPredictionId].windData}
+          wavesData={predictions[currentPredictionId].wavesData}
+        />
+        <WeatherTab
+          weatherData={predictions[currentPredictionId].weatherData}
+        />
         <div className="wind-waves-tab">
           <DirectionTab
             title="Wind"
             icon={windArrow}
-            iconRotation={dataThisHour.windData.direction}
+            iconRotation={predictions[currentPredictionId].windData.direction}
           >
             <DataRow
               label="Speed"
-              value={dataThisHour.windData.speed.toFixed(0) + " kts"}
+              value={
+                predictions[currentPredictionId].windData.speed.toFixed(0) +
+                " kts"
+              }
             />
             <DataRow
               label="Gusts"
-              value={dataThisHour.windData.gusts.toFixed(0) + " kts"}
+              value={
+                predictions[currentPredictionId].windData.gusts.toFixed(0) +
+                " kts"
+              }
             />
             <DataRow
               label="Direction"
               value={
-                angleToCardinal(dataThisHour.windData.direction) +
+                angleToCardinal(
+                  predictions[currentPredictionId].windData.direction
+                ) +
                 " / " +
-                dataThisHour.windData.direction.toFixed(0) +
+                predictions[currentPredictionId].windData.direction.toFixed(0) +
                 "°"
               }
             />
@@ -138,19 +174,29 @@ export const Dashboard: React.FC = () => {
           <DirectionTab
             title="Waves"
             icon={wavesArrow}
-            iconRotation={dataThisHour.wavesData.direction}
+            iconRotation={predictions[currentPredictionId].wavesData.direction}
           >
             <DataRow
               label="Height"
-              value={dataThisHour.wavesData.height.toFixed(1) + " m"}
+              value={
+                predictions[currentPredictionId].wavesData.height.toFixed(1) +
+                " m"
+              }
             />
-            <DataRow label="Tide" value={dataThisHour.wavesData.tide} />
+            <DataRow
+              label="Tide"
+              value={predictions[currentPredictionId].wavesData.tide}
+            />
             <DataRow
               label="Direction"
               value={
-                angleToCardinal(dataThisHour.wavesData.direction) +
+                angleToCardinal(
+                  predictions[currentPredictionId].wavesData.direction
+                ) +
                 " / " +
-                dataThisHour.wavesData.direction.toFixed(0) +
+                predictions[currentPredictionId].wavesData.direction.toFixed(
+                  0
+                ) +
                 "°"
               }
             />

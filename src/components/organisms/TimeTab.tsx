@@ -39,9 +39,16 @@ const nth = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
 export interface Props {
   time: Date;
   timetable: Timetable;
+  onMinus3hours: () => void;
+  onPlus3hours: () => void;
 }
 
-export const TimeTab: React.FC<Props> = ({ time, timetable }) => {
+export const TimeTab: React.FC<Props> = ({
+  time,
+  timetable,
+  onMinus3hours,
+  onPlus3hours,
+}) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
 
   return (
@@ -65,10 +72,10 @@ export const TimeTab: React.FC<Props> = ({ time, timetable }) => {
           <br />
           <Value flavor="slim">(now) {/*Todo : compute*/}</Value>
         </div>
-        <Button className="btn-minus-3h" onClick={() => "TODO"}>
+        <Button className="btn-minus-3h" onClick={onMinus3hours}>
           -3h
         </Button>
-        <Button className="btn-plus-3h" onClick={() => "TODO"}>
+        <Button className="btn-plus-3h" onClick={onPlus3hours}>
           +3h
         </Button>
       </div>

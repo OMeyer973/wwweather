@@ -1,8 +1,15 @@
+import {
+  Timetable,
+  WeatherData,
+  WindData,
+  WavesData,
+  DataByHour,
+  DataByDay,
+} from "~/components/abstracts/Types";
+
 // averages all the values of a given object
 const avg = (data: any) =>
-  Object.values(
-    data
-  ).reduce((average: any, value: any, index, array: Array<any>) =>
+  Object.values(data).reduce((average: any, value: any) =>
     typeof value === "number"
       ? average + value
       : console.error("avg called on object with non number values")
@@ -29,8 +36,10 @@ const meanAngleDeg = (arr: Array<number>) =>
 const avgAngle = (data: any) => meanAngleDeg(Object.values(data));
 
 // rawHourlyDataresult of a stormglass api fetch
-export const makeDataThisHour = (rawHourlyData: any) => {
-  console.log(rawHourlyData);
+export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
+  rawHourlyData
+) => {
+  //console.log(rawHourlyData);
   return {
     time: new Date(rawHourlyData.time),
     weatherData: {
