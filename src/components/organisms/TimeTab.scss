@@ -23,7 +23,11 @@
 
   .show-timetable {
     order: 2;
-    margin-bottom: -3.4em;
+
+    margin-bottom: -3em;
+    @include breakpoint(medium) {
+      margin-bottom: -3.4em;
+    }
   }
 
   .timetable {

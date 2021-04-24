@@ -55,8 +55,9 @@ export const TimeTab: React.FC<Props> = ({
     <div className="time-tab">
       <div className="main">
         <div className="time-info">
+          {console.log(time.getDay())}
           <Value flavor="slim">
-            {weekDays[time.getDay()] +
+            {weekDays[(time.getDay() - 1) % 7] +
               ", " +
               months[time.getMonth()].toLowerCase() +
               " " +

@@ -1,3 +1,4 @@
+import { maxParallelImageRequests } from "mapbox-gl";
 import {
   Timetable,
   WeatherData,
@@ -6,6 +7,9 @@ import {
   DataByHour,
   DataByDay,
 } from "~/components/abstracts/Types";
+
+export const clamp = (x: number, a: number, b: number) =>
+  Math.max(a, Math.min(x, b));
 
 // averages all the values of a given object
 const avg = (data: any) =>
@@ -18,8 +22,8 @@ const avg = (data: any) =>
 // meter per second to knots
 const mps2kts = (a: number) => a * 1.943844;
 
-// precipitations in mm per hour (equivalent to  kg/m²) to risk of rain percentage, considering 10 mm per hour 100% rain
-const mmph2riskOfRainPercent = (a: number) => a * 10;
+// precipitations in mm per hour (equivalent to  kg/m²) to risk of rain percentage, considering 3.33 mm per hour 100% rain
+const mmph2riskOfRainPercent = (a: number) => clamp(a * 30, 0, 100);
 
 const sum = (arr: Array<number>) => arr.reduce((a: number, b: number) => a + b);
 
@@ -39,7 +43,6 @@ const avgAngle = (data: any) => meanAngleDeg(Object.values(data));
 export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   rawHourlyData
 ) => {
-  //console.log(rawHourlyData);
   return {
     time: new Date(rawHourlyData.time),
     weatherData: {

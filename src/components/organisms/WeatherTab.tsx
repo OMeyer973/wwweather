@@ -2,6 +2,7 @@ import React from "react";
 import "./WeatherTab.scss";
 
 import { WeatherData } from "~/components/abstracts/Types";
+import { clamp } from "~/components/abstracts/DataManagement";
 
 import { DataColumn } from "~components/molecules/DataColumn";
 
@@ -30,11 +31,11 @@ export const WeatherTab: React.FC<Props> = ({ weatherData }) => {
   return (
     <div className="weather-tab">
       <DataColumn
-        label="Cloud coverage"
+        label="Cloud cover"
         icon={
           cloudIcons[
             Math.floor(
-              (Math.min(weatherData.cloudCover, 99) / 100) * cloudIcons.length
+              (clamp(weatherData.cloudCover, 0, 99) / 100) * cloudIcons.length
             )
           ]
         }
@@ -45,12 +46,11 @@ export const WeatherTab: React.FC<Props> = ({ weatherData }) => {
         icon={
           rainIcons[
             Math.floor(
-              Math.sqrt(Math.min(weatherData.riskOfRain, 99) / 100) *
-                rainIcons.length
+              (clamp(weatherData.riskOfRain, 0, 99) / 100) * rainIcons.length
             )
           ]
         }
-        value={weatherData.riskOfRain.toFixed(0) + " %"}
+        value={weatherData.riskOfRain.toFixed(0) + " "}
       />
       <DataColumn
         label="Temperature"

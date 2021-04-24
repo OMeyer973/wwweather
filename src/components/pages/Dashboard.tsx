@@ -99,7 +99,11 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     const getTasks = async () => {
       const weatherFromServer = await fetchWeatherData();
-      console.log(weatherFromServer);
+      if (weatherFromServer.hours === undefined) {
+        console.error("couldn't fetch data from weather api");
+        console.error(weatherFromServer);
+        return;
+      }
       const newPredictions = weatherFromServer.hours.map((hour: any) =>
         makeDataThisHour(hour)
       );
