@@ -15,7 +15,7 @@ import { makeDataThisHour } from "~/components/abstracts/DataManagement";
 import Header from "~/components/organisms/Header";
 
 import { LocationTab } from "~components/organisms/LocationTab";
-import { TimeTab } from "~components/organisms/TimeTab";
+import { TimeTab, oneDay, oneHour } from "~components/organisms/TimeTab";
 import { MapTab } from "~components/organisms/MapTab";
 import { WeatherTab } from "~components/organisms/WeatherTab";
 
@@ -26,8 +26,7 @@ import { DataRow } from "~components/molecules/DataRow";
 
 import { ForecastTab } from "~components/organisms/ForecastTab";
 
-const oneDay = 86400000;
-const oneHour = 3600000;
+import dummyRawWeatherData from "~components/abstracts/dummyRawWeatherData.json";
 
 // start yesterday at midnight (local time)
 const getStartDate = () => new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
@@ -98,13 +97,24 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const getTasks = async () => {
-      const weatherFromServer = await fetchWeatherData();
+      //todo: re-activate
+      const weatherFromServer = {};
+      // const weatherFromServer = await fetchWeatherData();
       if (weatherFromServer.hours === undefined) {
-        console.error("couldn't fetch data from weather api");
+        console.error(
+          "couldn't fetch data from weather api, fallback to dummy data"
+        );
         console.error(weatherFromServer);
-        return;
+
+        // return;
       }
-      const newPredictions = weatherFromServer.hours.map((hour: any) =>
+      console.log(dummyRawWeatherData);
+      const rawWeatherData =
+        weatherFromServer.hours === undefined
+          ? dummyRawWeatherData
+          : weatherFromServer;
+
+      const newPredictions = rawWeatherData.hours.map((hour: any) =>
         makeDataThisHour(hour)
       );
       setPredictions(newPredictions);

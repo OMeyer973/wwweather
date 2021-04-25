@@ -34,10 +34,12 @@
     order: 1;
     width: 100%;
     > div {
-      @include flex;
-      justify-content: space-around;
+      display: grid;
+      // gap: 3em;
+      grid-template-columns: 1fr 1fr;
+      // justify-content: space-around;
+      // justify-content: space-between;
       @include breakpoint(tiny) {
-        justify-content: space-between;
       }
 
       margin-bottom: 1.5em;

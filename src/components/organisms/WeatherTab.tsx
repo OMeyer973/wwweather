@@ -50,7 +50,7 @@ export const WeatherTab: React.FC<Props> = ({ weatherData }) => {
             )
           ]
         }
-        value={weatherData.riskOfRain.toFixed(0) + " "}
+        value={weatherData.riskOfRain.toFixed(0) + " %"}
       />
       <DataColumn
         label="Temperature"

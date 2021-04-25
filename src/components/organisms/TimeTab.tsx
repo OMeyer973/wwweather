@@ -9,6 +9,9 @@ import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
 
+export const oneDay = 86400000;
+export const oneHour = 3600000;
+
 const weekDays = [
   "Monday",
   "Tuesday",
@@ -36,6 +39,29 @@ const months = [
 
 const nth = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
 
+const makeRelativeTimeLabel = (time: Date) => {
+  const hoursDifference = Math.round(
+    (new Date(time).valueOf() - new Date().valueOf()) / oneHour
+  );
+  if (Math.abs(hoursDifference) <= 12) {
+    if (Math.abs(hoursDifference) < 1) return "now";
+    if (hoursDifference > 0)
+      return "in " + hoursDifference.toFixed(0) + " hours";
+    return (-hoursDifference).toFixed(0) + " hours ago";
+  }
+
+  const daysDifference = Math.round(
+    (new Date(time).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) /
+      oneDay
+  );
+  if (daysDifference === 0) return "today";
+  if (daysDifference === +1) return "tomorrow";
+  if (daysDifference > 1) return "in " + daysDifference.toFixed(0) + " days";
+  if (daysDifference === -1) return "yesterday";
+  // can't happen - minimum time : yesterday
+  if (daysDifference < -1) return (-daysDifference).toFixed(0) + " days ago";
+};
+
 export interface Props {
   time: Date;
   timetable: Timetable;
@@ -55,9 +81,8 @@ export const TimeTab: React.FC<Props> = ({
     <div className="time-tab">
       <div className="main">
         <div className="time-info">
-          {console.log(time.getDay())}
           <Value flavor="slim">
-            {weekDays[(time.getDay() - 1) % 7] +
+            {weekDays[(time.getDay() + 6) % 7] +
               ", " +
               months[time.getMonth()].toLowerCase() +
               " " +
@@ -71,7 +96,7 @@ export const TimeTab: React.FC<Props> = ({
               ("00" + time.getMinutes()).slice(-2)}
           </Value>
           <br />
-          <Value flavor="slim">(now) {/*Todo : compute*/}</Value>
+          <Value flavor="slim">({makeRelativeTimeLabel(time)})</Value>
         </div>
         <Button className="btn-minus-3h" onClick={onMinus3hours}>
           -3h

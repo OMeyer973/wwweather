@@ -62,3 +62,14 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
     },
   };
 };
+
+//downloads json data on the clients computer
+const handleSaveToPC = (jsonData: any, filename: string) => {
+  const fileData = JSON.stringify(jsonData);
+  const blob = new Blob([fileData], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.download = `${filename}.json`;
+  link.href = url;
+  link.click();
+};

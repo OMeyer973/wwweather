@@ -51,6 +51,7 @@
     gap: 0.125em;
     & .wind-waves-data {
       flex-direction: column;
+      align-items: baseline;
     }
     @include breakpoint(tiny) {
       & .wind-waves-data {
