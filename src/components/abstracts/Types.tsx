@@ -40,9 +40,3 @@ export interface DataByHour {
   windData: WindData;
   wavesData: WavesData;
 }
-
-export interface DataByDay {
-  time: Date;
-  timeTable: Timetable;
-  hours: DataByHour[];
-}

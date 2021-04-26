@@ -5,7 +5,6 @@ import {
   WindData,
   WavesData,
   DataByHour,
-  DataByDay,
 } from "~/components/abstracts/Types";
 
 export const clamp = (x: number, a: number, b: number) =>

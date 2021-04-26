@@ -7,7 +7,6 @@ import {
   WindData,
   WavesData,
   DataByHour,
-  DataByDay,
 } from "~/components/abstracts/Types";
 
 import { makeDataThisHour } from "~/components/abstracts/DataManagement";
@@ -216,7 +215,10 @@ export const Dashboard: React.FC = () => {
             />
           </DirectionTab>
         </div>
-        <ForecastTab />
+        <ForecastTab
+          predictions={predictions}
+          currentPredictionId={currentPredictionId}
+        />
       </section>
     </>
   );
