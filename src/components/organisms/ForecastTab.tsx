@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
 
-import { ForecastGraph } from "~components/atoms/ForecastGraphRecharts";
+import { ForecastGraph } from "~components/atoms/ForecastGraph";
 
 import { DataByHour } from "~/components/abstracts/Types";
 
