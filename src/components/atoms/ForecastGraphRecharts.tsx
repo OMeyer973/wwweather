@@ -10,11 +10,8 @@ import {
   Area,
 } from "recharts";
 
-const tooltipStyle = {
-  // display: "none",
-  backgroundColor: "red",
-  color: "blue",
-};
+import Color from "color";
+import { Gradient } from "~/components/abstracts/Gradient";
 
 const useResize = (myRef) => {
   const [width, setWidth] = useState(0);
@@ -33,6 +30,20 @@ const useResize = (myRef) => {
   return { width, height };
 };
 
+const dangerGradient = new Gradient(
+  Color("#b94cff"),
+  Color("#413cff"),
+  Color("#00f7ff"),
+  Color("#ffff00"),
+  Color("#ff0000"),
+  Color("#510049")
+);
+
+// for drawing days separation in graph
+const daysPredicted = 10;
+// for drawing danger color in graph (in kts)
+const mostDangerouWind = 40;
+
 export interface ForecastGraphPoint {
   windSpeed: number;
   maxWindSpeed: number;
@@ -49,10 +60,12 @@ export interface Props {
 export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
   const chartContainer = useRef(null);
   // useEffect(() => {}, [chartContainer.current]);
+  useResize(chartContainer);
+
   const graphWidth = chartContainer.current
     ? chartContainer.current.offsetWidth
     : 0;
-  const chartContainerSize = useResize(chartContainer);
+
   return (
     <div id="chart-container" ref={chartContainer}>
       <AreaChart
@@ -60,67 +73,67 @@ export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
         // width={800}
         height={100}
         data={data}
+        margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
       >
         {/* <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
           <Area type="monotone" dataKey="pv" stroke="#8884d8" fill="#8884d8" /> */}
         <defs>
           <linearGradient id="maxWindSpeed" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={1} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            {data.map((item, id) => (
+              <stop
+                key={id}
+                offset={"" + (id / data.length) * 100 + "%"}
+                stopColor={dangerGradient
+                  .eval(data[id].maxWindSpeed / mostDangerouWind)
+                  .hex()}
+              />
+            ))}
           </linearGradient>
           <linearGradient id="windSpeed" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="5%" stopColor="#82ca9d" stopOpacity={1} />
-            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+            {data.map((item, id) => (
+              <stop
+                key={id}
+                offset={"" + (id / data.length) * 100 + "%"}
+                stopColor={dangerGradient
+                  .eval(data[id].windSpeed / mostDangerouWind)
+                  .hex()}
+              />
+            ))}
           </linearGradient>
         </defs>
         <XAxis
-          // dataKey="time"
-          dataKey="timeStamp"
-          //angle={45}
+          dataKey="time"
+          // dataKey="timeStamp"
           ticks={[0]}
-          // ticks={data
-          //   .filter(
-          //     (item) =>
-          //       item.timeStamp != undefined && item.time.getHours() === 0
-          //   )
-          //   .map((item) => item.timeStamp)}
         />
         {/* <YAxis /> */}
+        {console.log()}
         <CartesianGrid
           strokeDasharray="3 3"
           horizontal={false}
-          // verticalPoints={[100, 1619431200000, 0, 1, 2, 3, 4, 5, 6]}
-          verticalPoints={new Array(10).map(
-            (item, id) => (id * graphWidth) / 10
+          verticalPoints={[...new Array(daysPredicted + 1)].map(
+            (item, id) => (id * graphWidth) / daysPredicted
           )}
-          // horizontalPoints={data
-          //   .map((item, id) => (item.time.getHours() === 0 ? id : -1))
-          //   .filter((item) => item != -1)}
-          // horizontalPoints={data
-          //   .filter(
-          //     (item) =>
-          //       item.timeStamp != undefined && item.time.getHours() === 3
-          //   )
-          //   .map((item) => item.timeStamp)}
         />
         <Tooltip
           // labelStyle={tooltipStyle}
           // contentStyle={tooltipStyle}
-          wrapperStyle={tooltipStyle}
+          wrapperStyle={{ display: "none" }}
         />
         <Area
           type="monotone"
           dataKey="maxWindSpeed"
           stroke="url(#maxWindSpeed)"
-          fillOpacity={1}
+          fillOpacity={0.7}
           fill="url(#maxWindSpeed)"
         />
         <Area
           type="monotone"
           dataKey="windSpeed"
-          stroke="black"
+          stroke="#ffffff"
           fillOpacity={1}
           fill="url(#windSpeed)"
+          strokeWidth="1.5"
         />
       </AreaChart>
     </div>

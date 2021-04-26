@@ -103,11 +103,11 @@ export const Dashboard: React.FC = () => {
         console.error(
           "couldn't fetch data from weather api, fallback to dummy data"
         );
-        console.error(weatherFromServer);
+        // console.error(weatherFromServer);
 
         // return;
       }
-      console.log(dummyRawWeatherData);
+      // console.log(dummyRawWeatherData);
       const rawWeatherData =
         weatherFromServer.hours === undefined
           ? dummyRawWeatherData
