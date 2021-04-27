@@ -38,7 +38,7 @@ const months = [
 
 const nth = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
 
-const makeRelativeTimeLabel = (time: Date) => {
+export const makeRelativeTimeLabel = (time: Date) => {
   const hoursDifference = Math.round(
     (new Date(time).valueOf() - new Date().valueOf()) / oneHour
   );

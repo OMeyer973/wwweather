@@ -3,7 +3,7 @@
 
 .forecast-graph {
   overflow-x: scroll;
-  margin-bottom: -2.25em;
+  margin-bottom: -2em;
   position: relative;
   &::-webkit-scrollbar {
     display: none;
@@ -12,8 +12,8 @@
   scrollbar-width: none; /* Firefox */
 
   .cursor {
-    position: fixed;
-    z-index: 100;
+    position: absolute;
+    z-index: 1;
     height: 5.5em;
     width: 0.125em;
     &.primary {

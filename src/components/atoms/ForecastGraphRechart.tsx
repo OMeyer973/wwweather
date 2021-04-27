@@ -104,19 +104,20 @@ export const ForecastGraph: React.FC<Props> = ({
                 }
           );
 
+  const setPredictionFromMouseEvent = (e: any) =>
+    e == null || e.chartX == undefined
+      ? {}
+      : setCurrentPredictionId(
+          clamp(
+            Math.floor((e.chartX / graphWidth) * predictions.length),
+            0,
+            predictions.length - 1
+          )
+        );
   return (
     <>
       <script src="node_modules/dragscroll/dragscroll.js"></script>
       <div className="forecast-graph" ref={graphContainer}>
-        <div
-          className="cursor primary"
-          style={{
-            marginLeft:
-              ((currentPredictionId / predictions.length) * graphWidth).toFixed(
-                4
-              ) + "px",
-          }}
-        ></div>
         <div
           className="cursor secondary"
           style={{
@@ -130,18 +131,18 @@ export const ForecastGraph: React.FC<Props> = ({
               ).toFixed(4) + "px",
           }}
         ></div>
+        <div
+          className="cursor primary"
+          style={{
+            marginLeft:
+              ((currentPredictionId / predictions.length) * graphWidth).toFixed(
+                4
+              ) + "px",
+          }}
+        ></div>
+
         <AreaChart
-          onMouseMove={(e: any) =>
-            e == null || e.chartX == undefined
-              ? {}
-              : setCurrentPredictionId(
-                  clamp(
-                    Math.floor((e.chartX / graphWidth) * predictions.length),
-                    0,
-                    predictions.length - 1
-                  )
-                )
-          }
+          onMouseMove={setPredictionFromMouseEvent}
           width={graphWidth}
           height={100}
           data={data}
