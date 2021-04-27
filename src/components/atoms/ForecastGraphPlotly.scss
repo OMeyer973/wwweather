@@ -3,8 +3,20 @@
 
 .forecast-graph {
   overflow-x: scroll;
-  margin-bottom: -2em;
-
+  // margin-bottom: -2em;
+  .hoverlayer {
+    .axistext,
+    .hovertext {
+      rect,
+      path {
+        display: none;
+      }
+      text {
+        background-color: red;
+        border-radius: 3em;
+      }
+    }
+  }
   &::-webkit-scrollbar {
     display: none;
   }

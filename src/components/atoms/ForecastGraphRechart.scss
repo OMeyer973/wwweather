@@ -1,0 +1,16 @@
+@import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/variables.scss";
+
+.forecast-graph {
+  overflow-x: scroll;
+  margin-bottom: -2em;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  svg.recharts-surface > g {
+    height: 100%;
+  }
+}

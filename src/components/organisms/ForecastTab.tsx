@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
 
-import { ForecastGraph } from "~components/atoms/ForecastGraph";
+import { ForecastGraph } from "~components/atoms/ForecastGraphRechart";
 
 import { DataByHour } from "~/components/abstracts/Types";
 
@@ -55,35 +55,7 @@ export const ForecastTab: React.FC<Props> = ({
   return (
     <div className="forecast-tab">
       <h2>Forecast</h2>
-      <ForecastGraph
-        data={
-          predictions === undefined
-            ? []
-            : predictions
-                //.filter((prediction) => prediction.time.getHours() % 6 === 0)
-                .map((prediction) =>
-                  prediction.time.getHours() === 0
-                    ? {
-                        windSpeed: prediction.windData.speed,
-                        maxWindSpeed: prediction.windData.gusts,
-                        time: prediction.time,
-                        timeStamp: prediction.time.valueOf(),
-                        label: prediction.time.toDateString().slice(0, -5),
-                      }
-                    : {
-                        windSpeed: prediction.windData.speed,
-                        maxWindSpeed: prediction.windData.gusts,
-                        time: prediction.time,
-                        timeStamp: prediction.time.valueOf(),
-                      }
-                )
-        }
-        targetTime={
-          predictions === undefined
-            ? new Date()
-            : predictions[currentPredictionId].time
-        }
-      />
+      <ForecastGraph predictions={predictions} />
     </div>
   );
 };

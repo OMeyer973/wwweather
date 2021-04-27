@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import "./ForecastGraph.scss";
+import "./ForecastGraphRechart.scss";
+import { DataByHour } from "~/components/abstracts/Types";
 
 import {
   AreaChart,
@@ -58,11 +59,14 @@ export interface ForecastGraphPoint {
 }
 
 export interface Props {
-  data: ForecastGraphPoint[];
-  targetTime: Date;
+  predictions: DataByHour[];
+  currentPredictionId: number;
 }
 
-export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
+export const ForecastGraph: React.FC<Props> = ({
+  predictions,
+  currentPredictionId,
+}) => {
   const graphContainer = useRef(null);
   useResize(graphContainer);
 
@@ -73,6 +77,29 @@ export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
   const graphWidth = isTouchEnabled()
     ? Math.max(800, graphContainerWidth)
     : graphContainerWidth;
+
+  const data =
+    predictions === undefined
+      ? []
+      : predictions
+          .filter((prediction) => prediction.time.getHours() % 3 === 0)
+          .map((prediction) =>
+            prediction.time.getHours() === 0
+              ? {
+                  windSpeed: prediction.windData.speed,
+                  maxWindSpeed: prediction.windData.gusts,
+                  time: prediction.time,
+                  timeStamp: prediction.time.valueOf(),
+                  label: prediction.time.toDateString().slice(0, -5),
+                }
+              : {
+                  windSpeed: prediction.windData.speed,
+                  maxWindSpeed: prediction.windData.gusts,
+                  time: prediction.time,
+                  timeStamp: prediction.time.valueOf(),
+                }
+          );
+
   return (
     <>
       <script src="node_modules/dragscroll/dragscroll.js"></script>
@@ -115,7 +142,7 @@ export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
             // dataKey="timeStamp"
             ticks={[0]}
           />
-          {/* <YAxis /> */}
+          <YAxis domain={[0, 40]} hide={true} />
           {console.log()}
           <CartesianGrid
             strokeDasharray="3 3"
@@ -123,26 +150,31 @@ export const ForecastGraph: React.FC<Props> = ({ data, targetTime }) => {
             verticalPoints={[...new Array(daysPredicted + 1)].map(
               (item, id) => (id * graphWidth) / daysPredicted
             )}
+            // width={1.6}
+            style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
           <Tooltip
             // labelStyle={tooltipStyle}
             // contentStyle={tooltipStyle}
             wrapperStyle={{ display: "none" }}
+            cursor={{ strokeWidth: "0.125em", stroke: "#000" }}
+            //viewbox={{ x: 0, y: 0, width: 400, height: 400 }}
+            isAnimationActive={false}
           />
           <Area
             type="monotone"
             dataKey="maxWindSpeed"
-            stroke="url(#maxWindSpeed)"
-            fillOpacity={0.7}
+            stroke="0"
+            fillOpacity={0.6}
             fill="url(#maxWindSpeed)"
           />
           <Area
             type="monotone"
             dataKey="windSpeed"
-            stroke="#ffffff"
-            fillOpacity={1}
+            stroke="0"
+            fillOpacity={0.7}
             fill="url(#windSpeed)"
-            strokeWidth="1.5"
+            strokeWidth="1"
           />
         </AreaChart>
       </div>
