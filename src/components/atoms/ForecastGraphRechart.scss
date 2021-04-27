@@ -3,14 +3,24 @@
 
 .forecast-graph {
   overflow-x: scroll;
-  margin-bottom: -2em;
+  margin-bottom: -2.25em;
+  position: relative;
   &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 
-  svg.recharts-surface > g {
-    height: 100%;
+  .cursor {
+    position: fixed;
+    z-index: 100;
+    height: 5.5em;
+    width: 0.125em;
+    &.primary {
+      background-color: $buttonBgColor;
+    }
+    &.secondary {
+      background-color: $buttonBgColorSecondary;
+    }
   }
 }

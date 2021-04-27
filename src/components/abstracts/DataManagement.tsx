@@ -7,8 +7,15 @@ import {
   DataByHour,
 } from "~/components/abstracts/Types";
 
+////// Constants
+export const oneDay = 86400000;
+export const oneHour = 3600000;
+
+////// utils
 export const clamp = (x: number, a: number, b: number) =>
   Math.max(a, Math.min(x, b));
+
+////// parse weather server data
 
 // averages all the values of a given object
 const avg = (data: any) =>
@@ -61,6 +68,8 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
     },
   };
 };
+
+//misc
 
 //downloads json data on the clients computer
 const handleSaveToPC = (jsonData: any, filename: string) => {

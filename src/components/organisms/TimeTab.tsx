@@ -9,8 +9,7 @@ import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
 
-export const oneDay = 86400000;
-export const oneHour = 3600000;
+import { oneDay, oneHour } from "~components/abstracts/DataManagement";
 
 const weekDays = [
   "Monday",

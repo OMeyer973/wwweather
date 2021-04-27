@@ -9,12 +9,13 @@ import {
   DataByHour,
 } from "~/components/abstracts/Types";
 
+import { oneDay, oneHour } from "~components/abstracts/DataManagement";
 import { makeDataThisHour } from "~/components/abstracts/DataManagement";
 
 import Header from "~/components/organisms/Header";
 
 import { LocationTab } from "~components/organisms/LocationTab";
-import { TimeTab, oneDay, oneHour } from "~components/organisms/TimeTab";
+import { TimeTab } from "~components/organisms/TimeTab";
 import { MapTab } from "~components/organisms/MapTab";
 import { WeatherTab } from "~components/organisms/WeatherTab";
 
@@ -218,6 +219,7 @@ export const Dashboard: React.FC = () => {
         <ForecastTab
           predictions={predictions}
           currentPredictionId={currentPredictionId}
+          setCurrentPredictionId={setCurrentPredictionId}
         />
       </section>
     </>
