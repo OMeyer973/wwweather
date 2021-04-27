@@ -21,7 +21,7 @@ const isTouchEnabled = () =>
   navigator.maxTouchPoints > 0 ||
   navigator.msMaxTouchPoints > 0;
 
-const useResize = (myRef) => {
+const useResize = (myRef: any) => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
@@ -86,7 +86,7 @@ export const ForecastGraph: React.FC<Props> = ({
     predictions === undefined
       ? []
       : predictions
-          // .filter((prediction) => prediction.time.getHours() % 3 === 0)
+          .filter((prediction) => prediction.time.getHours() % 3 === 0)
           .map((prediction) =>
             prediction.time.getHours() === 0
               ? {
@@ -131,8 +131,7 @@ export const ForecastGraph: React.FC<Props> = ({
           }}
         ></div>
         <AreaChart
-          // chartX, chartY
-          onMouseMove={(e) =>
+          onMouseMove={(e: any) =>
             e == null || e.chartX == undefined
               ? {}
               : setCurrentPredictionId(
@@ -148,8 +147,6 @@ export const ForecastGraph: React.FC<Props> = ({
           data={data}
           margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
         >
-          {/* <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
-          <Area type="monotone" dataKey="pv" stroke="#8884d8" fill="#8884d8" /> */}
           <defs>
             <linearGradient id="maxWindSpeed" x1="0" y1="0" x2="1" y2="0">
               {data.map((item, id) => (
@@ -174,11 +171,7 @@ export const ForecastGraph: React.FC<Props> = ({
               ))}
             </linearGradient>
           </defs>
-          <XAxis
-            dataKey="time"
-            // dataKey="timeStamp"
-            ticks={[0]}
-          />
+          <XAxis dataKey="time" ticks={[0]} />
           <YAxis domain={[0, yAxisMax]} hide={true} />
           {console.log()}
           <CartesianGrid
@@ -195,26 +188,18 @@ export const ForecastGraph: React.FC<Props> = ({
               .filter((item) => item != -1)}
             style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
-          {/* <Tooltip
-            // labelStyle={tooltipStyle}
-            // contentStyle={tooltipStyle}
-            wrapperStyle={{ display: "none" }}
-            cursor={{ strokeWidth: "0.125em", stroke: "#000" }}
-            //viewbox={{ x: 0, y: 0, width: 400, height: 400 }}
-            isAnimationActive={false}
-          /> */}
           <Area
             type="monotone"
             dataKey="maxWindSpeed"
             stroke="0"
-            fillOpacity={0.6}
+            fillOpacity={0.7}
             fill="url(#maxWindSpeed)"
           />
           <Area
             type="monotone"
             dataKey="windSpeed"
-            stroke="0"
-            fillOpacity={0.7}
+            stroke="#ffffff70"
+            fillOpacity={0.8}
             fill="url(#windSpeed)"
             strokeWidth="1"
           />
