@@ -40,6 +40,7 @@ export const ForecastTab: React.FC<Props> = ({
     <div className="forecast-tab">
       <h2>Forecast</h2>
       <ForecastGraph
+        graphType="wind" // todo add other graph types
         predictions={predictions}
         currentPredictionId={currentPredictionId}
         setCurrentPredictionId={setCurrentPredictionId}

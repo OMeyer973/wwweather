@@ -16,6 +16,14 @@ import {
 import Color from "color";
 import { Gradient } from "~/components/abstracts/Gradient";
 
+type GraphType = "wind" | "waves" | "weather";
+
+export interface GraphColorScheme {
+  gradient: Gradient;
+  strokeColor: Color;
+  opacity: number;
+}
+
 const isTouchEnabled = () =>
   "ontouchstart" in window ||
   navigator.maxTouchPoints > 0 ||
@@ -38,39 +46,80 @@ const useResize = (myRef: any) => {
   return { width, height };
 };
 
-const graphColors = new Gradient(
-  Color("#b94cff"),
-  Color("#413cff"),
-  Color("#00f7ff"),
-  Color("#ffff00"),
-  Color("#ff0000"),
-  Color("#510049")
+// const graphColors = new Gradient(
+//   Color("#b94cff"),
+//   Color("#413cff"),
+//   Color("#00f7ff"),
+//   Color("#ffff00"),
+//   Color("#ff0000"),
+//   Color("#510049")
+// );
+
+const windColors = new Gradient(
+  Color("#ffffff"),
+  Color("#ffa200"),
+  Color("#ff6000"),
+  Color("#c30017"),
+  Color("#45002d"),
+  Color("#000000")
 );
+
+const graphColors = windColors; // todod : rm
+
+const windSpeedColorScheme: GraphColorScheme = {
+  gradient: windColors,
+  strokeColor: new Color("#c30017"),
+  opacity: 0.9,
+};
+
+const windGustsColorScheme: GraphColorScheme = {
+  gradient: windColors,
+  strokeColor: new Color("#45002d"),
+  opacity: 1,
+};
+
+const wavesGraphColors = new Gradient(
+  Color("#ffffff"),
+  Color("#88eaff"),
+  Color("#00ff7e"),
+  Color("#177d92"),
+  Color("#171792"),
+  Color("#000000")
+);
+
+const wavesHeightColorScheme: GraphColorScheme = {
+  gradient: wavesGraphColors,
+  strokeColor: new Color("#177d92"),
+  opacity: 1,
+};
 
 // for drawing days separation in graph
 const daysPredicted = 10;
 // for drawing danger color in graph (in kts)
 const yAxisMax = 40;
 
-export interface ForecastGraphPoint {
-  windSpeed: number;
-  maxWindSpeed: number;
-  time: Date;
-  timeStamp: number;
-  label?: string;
-}
-
 export interface Props {
+  graphType: GraphType;
   predictions: DataByHour[];
   currentPredictionId: number;
   setCurrentPredictionId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const ForecastGraph: React.FC<Props> = ({
+  graphType,
   predictions,
   currentPredictionId,
   setCurrentPredictionId,
 }) => {
+  const graphsColorScheme: GraphColorScheme[] =
+    graphType === "wind"
+      ? [windSpeedColorScheme, windGustsColorScheme]
+      : graphType === "waves"
+      ? [wavesHeightColorScheme]
+      : graphType === "weather"
+      ? [] // TODO weather corlor schemes
+      : [];
+
   const graphContainer = useRef(null);
   useResize(graphContainer);
 
@@ -87,22 +136,38 @@ export const ForecastGraph: React.FC<Props> = ({
       ? []
       : predictions
           .filter((prediction) => prediction.time.getHours() % 3 === 0)
-          .map((prediction) =>
-            prediction.time.getHours() === 0
-              ? {
-                  windSpeed: prediction.windData.speed,
-                  maxWindSpeed: prediction.windData.gusts,
-                  time: prediction.time,
-                  timeStamp: prediction.time.valueOf(),
-                  label: prediction.time.toDateString().slice(0, -5),
-                }
-              : {
-                  windSpeed: prediction.windData.speed,
-                  maxWindSpeed: prediction.windData.gusts,
-                  time: prediction.time,
-                  timeStamp: prediction.time.valueOf(),
-                }
-          );
+          .map((prediction) => ({
+            value0:
+              graphType === "wind"
+                ? prediction.windData.speed
+                : graphType === "waves"
+                ? prediction.wavesData.height
+                : graphType === "weather"
+                ? prediction.weatherData.cloudCover
+                : 0,
+
+            value1:
+              graphType === "wind"
+                ? prediction.windData.gusts
+                : graphType === "waves"
+                ? 0 // todo : sea level (!= prediction.wavesData.tide)
+                : graphType === "weather"
+                ? prediction.weatherData.riskOfRain
+                : 0,
+
+            value2:
+              graphType === "wind"
+                ? 0
+                : graphType === "waves"
+                ? 0
+                : graphType === "weather"
+                ? prediction.weatherData.temperature
+                : 0,
+
+            time: prediction.time,
+            timeStamp: prediction.time.valueOf(),
+            label: prediction.time.toDateString().slice(0, -5),
+          }));
 
   const setPredictionFromMouseEvent = (e: any) =>
     e == null || e.chartX == undefined
@@ -149,25 +214,30 @@ export const ForecastGraph: React.FC<Props> = ({
           margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="maxWindSpeed" x1="0" y1="0" x2="1" y2="0">
+            <linearGradient id="value2" x1="0" y1="0" x2="1" y2="0">
               {data.map((item, id) => (
                 <stop
                   key={id}
                   offset={"" + (id / data.length) * 100 + "%"}
-                  stopColor={graphColors
-                    .eval(data[id].maxWindSpeed / yAxisMax)
-                    .hex()}
+                  stopColor={graphColors.eval(data[id].value2 / yAxisMax).hex()}
                 />
               ))}
             </linearGradient>
-            <linearGradient id="windSpeed" x1="0" y1="0" x2="1" y2="0">
+            <linearGradient id="value1" x1="0" y1="0" x2="1" y2="0">
               {data.map((item, id) => (
                 <stop
                   key={id}
                   offset={"" + (id / data.length) * 100 + "%"}
-                  stopColor={graphColors
-                    .eval(data[id].windSpeed / yAxisMax)
-                    .hex()}
+                  stopColor={graphColors.eval(data[id].value1 / yAxisMax).hex()}
+                />
+              ))}
+            </linearGradient>
+            <linearGradient id="value0" x1="0" y1="0" x2="1" y2="0">
+              {data.map((item, id) => (
+                <stop
+                  key={id}
+                  offset={"" + (id / data.length) * 100 + "%"}
+                  stopColor={graphColors.eval(data[id].value0 / yAxisMax).hex()}
                 />
               ))}
             </linearGradient>
@@ -183,25 +253,33 @@ export const ForecastGraph: React.FC<Props> = ({
                 id === 0
                   ? 1
                   : item.time.getHours() === 0
-                  ? (id * graphWidth) / array.length
+                  ? (id / (array.length - 0.7)) * graphWidth
                   : -1
               )
               .filter((item) => item != -1)}
             style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
+
           <Area
             type="monotone"
-            dataKey="maxWindSpeed"
-            stroke="0"
-            fillOpacity={0.7}
-            fill="url(#maxWindSpeed)"
+            dataKey="value2"
+            stroke="#731000"
+            fillOpacity={1}
+            fill="url(#value2)"
           />
           <Area
             type="monotone"
-            dataKey="windSpeed"
-            stroke="#ffffff70"
-            fillOpacity={0.8}
-            fill="url(#windSpeed)"
+            dataKey="value1"
+            stroke="#731000"
+            fillOpacity={1}
+            fill="url(#value1)"
+          />
+          <Area
+            type="monotone"
+            dataKey="value0"
+            stroke="#e7501e"
+            fillOpacity={1}
+            fill="url(#value0)"
             strokeWidth="1"
           />
         </AreaChart>
