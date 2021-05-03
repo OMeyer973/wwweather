@@ -91,15 +91,14 @@ export const Dashboard: React.FC = () => {
     return directions[Math.round((angle % 360) / 45)];
   };
 
-  //const [rawData, setRawData] = useState(null);
   const [predictions, setPredictions] = useState(placeholderPredictions);
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
     const getTasks = async () => {
       //todo: re-activate
-      const weatherFromServer = {};
-      // const weatherFromServer = await fetchWeatherData();
+      // const weatherFromServer = {};
+      const weatherFromServer = await fetchWeatherData();
       if (weatherFromServer.hours === undefined) {
         console.error(
           "couldn't fetch data from weather api, fallback to dummy data"

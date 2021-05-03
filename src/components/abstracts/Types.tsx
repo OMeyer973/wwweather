@@ -31,6 +31,7 @@ type Tide = "low" | "rising" | "high" | "lowering";
 export interface WavesData {
   direction: number;
   height: number;
+  seaLevel: number;
   tide: Tide;
 }
 

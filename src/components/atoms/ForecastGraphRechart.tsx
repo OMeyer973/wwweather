@@ -16,12 +16,18 @@ import {
 import Color from "color";
 import { Gradient } from "~/components/abstracts/Gradient";
 
-type GraphType = "wind" | "waves" | "weather";
+export type GraphType = "wind" | "waves" | "weather";
 
 export interface GraphColorScheme {
   gradient: Gradient;
   strokeColor: Color;
   opacity: number;
+  fatStroke?: boolean;
+}
+
+export interface GraphProperties {
+  colors: GraphColorScheme[];
+  maxY: number;
 }
 
 const isTouchEnabled = () =>
@@ -93,6 +99,53 @@ const wavesHeightColorScheme: GraphColorScheme = {
   opacity: 1,
 };
 
+const seaLevelColorScheme: GraphColorScheme = {
+  gradient: wavesGraphColors,
+  strokeColor: new Color("#177d92"),
+  opacity: 1,
+};
+
+const cloudsGraphColors = new Gradient(
+  Color("#fdff5f"),
+  Color("#8f9e8f"),
+  Color("#737385"),
+  Color("#4a444e")
+);
+
+const cloudsColorScheme: GraphColorScheme = {
+  gradient: cloudsGraphColors,
+  strokeColor: new Color("#737385"),
+  opacity: 0.5,
+};
+
+const rainGraphColors = new Gradient(
+  Color("#fdff5f"),
+  Color("#6aacb0"),
+  Color("#1c4b85"),
+  Color("#152f4e")
+);
+
+const rainColorScheme: GraphColorScheme = {
+  gradient: rainGraphColors,
+  strokeColor: new Color("#1c4b85"),
+  opacity: 0.5,
+};
+
+const temperatureGraphColors = new Gradient(
+  Color("#00162e"),
+  Color("#2e47ff"),
+  Color("#a31fa3"),
+  Color("#b82828"),
+  Color("#3c0d1d")
+);
+
+const temperatureColorScheme: GraphColorScheme = {
+  gradient: temperatureGraphColors,
+  strokeColor: new Color("#a31fa3"),
+  opacity: 0,
+  fatStroke: true,
+};
+
 // for drawing days separation in graph
 const daysPredicted = 10;
 // for drawing danger color in graph (in kts)
@@ -111,14 +164,17 @@ export const ForecastGraph: React.FC<Props> = ({
   currentPredictionId,
   setCurrentPredictionId,
 }) => {
-  const graphsColorScheme: GraphColorScheme[] =
+  const graphProperties: GraphProperties =
     graphType === "wind"
-      ? [windSpeedColorScheme, windGustsColorScheme]
+      ? { colors: [windSpeedColorScheme, windGustsColorScheme], maxY: 40 }
       : graphType === "waves"
-      ? [wavesHeightColorScheme]
+      ? { colors: [wavesHeightColorScheme, seaLevelColorScheme], maxY: 8 }
       : graphType === "weather"
-      ? [] // TODO weather corlor schemes
-      : [];
+      ? {
+          colors: [temperatureColorScheme, rainColorScheme, cloudsColorScheme],
+          maxY: 100,
+        }
+      : { colors: [], maxY: 0 };
 
   const graphContainer = useRef(null);
   useResize(graphContainer);
@@ -143,7 +199,7 @@ export const ForecastGraph: React.FC<Props> = ({
                 : graphType === "waves"
                 ? prediction.wavesData.height
                 : graphType === "weather"
-                ? prediction.weatherData.cloudCover
+                ? prediction.weatherData.temperature
                 : 0,
 
             value1:
@@ -161,7 +217,7 @@ export const ForecastGraph: React.FC<Props> = ({
                 : graphType === "waves"
                 ? 0
                 : graphType === "weather"
-                ? prediction.weatherData.temperature
+                ? prediction.weatherData.cloudCover
                 : 0,
 
             time: prediction.time,
@@ -214,7 +270,7 @@ export const ForecastGraph: React.FC<Props> = ({
           margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
         >
           <defs>
-            {graphsColorScheme.map((item, graphId) => (
+            {graphProperties.colors.map((item, graphId) => (
               <linearGradient
                 key={graphId}
                 id={"value" + graphId}
@@ -227,8 +283,12 @@ export const ForecastGraph: React.FC<Props> = ({
                   <stop
                     key={id}
                     offset={"" + (id / data.length) * 100 + "%"}
-                    stopColor={graphsColorScheme[graphId].gradient
-                      .eval(data[id]["value" + graphId] / yAxisMax)
+                    stopColor={graphProperties.colors[graphId].gradient
+                      .eval(
+                        graphProperties.maxY == 0
+                          ? 0
+                          : data[id]["value" + graphId] / graphProperties.maxY
+                      )
                       .hex()}
                   />
                 ))}
@@ -236,7 +296,13 @@ export const ForecastGraph: React.FC<Props> = ({
             ))}
           </defs>
           <XAxis dataKey="time" ticks={[0]} />
-          <YAxis domain={[0, yAxisMax]} hide={true} />
+          <YAxis
+            domain={[
+              0,
+              (dataMax: number) => Math.max(graphProperties.maxY, dataMax),
+            ]}
+            hide={true}
+          />
           {console.log()}
           <CartesianGrid
             strokeDasharray="3 3"
@@ -252,7 +318,7 @@ export const ForecastGraph: React.FC<Props> = ({
               .filter((item) => item != -1)}
             style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
-          {graphsColorScheme.map((_, id, array) => {
+          {graphProperties.colors.map((_, id, array) => {
             const graphId = array.length - id - 1;
             const item = array[graphId];
             return (
@@ -260,7 +326,12 @@ export const ForecastGraph: React.FC<Props> = ({
                 key={graphId}
                 type="monotone"
                 dataKey={"value" + graphId}
-                stroke={item.strokeColor.hex()}
+                stroke={
+                  item.fatStroke
+                    ? "url(#value" + graphId + ")"
+                    : item.strokeColor.hex()
+                }
+                strokeWidth={item.fatStroke ? 2 : 1}
                 fillOpacity={item.opacity}
                 fill={"url(#value" + graphId + ")"}
               />

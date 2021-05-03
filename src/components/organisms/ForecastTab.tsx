@@ -1,10 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
 
-import { ForecastGraph } from "~components/atoms/ForecastGraphRechart";
+import {
+  ForecastGraph,
+  GraphType,
+} from "~components/atoms/ForecastGraphRechart";
 import { Value } from "~components/atoms/Value";
 import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 import { DataByHour } from "~/components/abstracts/Types";
+
+import Dropdown from "react-dropdown";
+// import "react-dropdown/style.css";
 
 export interface Props {
   predictions: DataByHour[];
@@ -34,13 +40,27 @@ export const ForecastTab: React.FC<Props> = ({
   currentPredictionId,
   setCurrentPredictionId,
 }) => {
+  const [graphType, setGraphType] = useState<GraphType>("wind");
+
   const time = predictions[currentPredictionId].time;
 
+  const options: { value: GraphType; label: string }[] = [
+    { value: "wind", label: "Wind forecast" },
+    { value: "waves", label: "Waves forecast" },
+    { value: "weather", label: "Weather forecast" },
+  ];
   return (
     <div className="forecast-tab">
-      <h2>Forecast</h2>
+      <h2>
+        <Dropdown
+          options={options}
+          onChange={(e) => setGraphType(e.value)}
+          // value={options[0]}
+          placeholder="Wind forecast"
+        />
+      </h2>
       <ForecastGraph
-        graphType="wind" // todo add other graph types
+        graphType={graphType} // todo add other graph types
         predictions={predictions}
         currentPredictionId={currentPredictionId}
         setCurrentPredictionId={setCurrentPredictionId}

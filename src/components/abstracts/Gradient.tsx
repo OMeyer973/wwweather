@@ -8,9 +8,13 @@ export class Gradient {
   }
 
   eval(t: number) {
+    if (t == undefined || Object.is(t, NaN)) {
+      console.error("tried to evaluate gradient at " + t);
+      return Color.rgb(0, 0, 0);
+    }
     const l = this.colors.length;
     if (l === 0) {
-      console.error("tried to evaluate an empty gradient");
+      console.error("tried to evaluate empty gradient");
       return Color.rgb(0, 0, 0);
     }
     const id1 = Math.floor(t * l);

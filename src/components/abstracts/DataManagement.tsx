@@ -64,6 +64,10 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
     wavesData: {
       direction: avgAngle(rawHourlyData.waveDirection),
       height: avg(rawHourlyData.waveHeight),
+      seaLevel:
+        rawHourlyData.seaLevel === undefined
+          ? 0 // todo fixx !
+          : avg(rawHourlyData.seaLevel) * 20,
       tide: "rising", // todo
     },
   };
