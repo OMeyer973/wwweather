@@ -214,33 +214,26 @@ export const ForecastGraph: React.FC<Props> = ({
           margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="value2" x1="0" y1="0" x2="1" y2="0">
-              {data.map((item, id) => (
-                <stop
-                  key={id}
-                  offset={"" + (id / data.length) * 100 + "%"}
-                  stopColor={graphColors.eval(data[id].value2 / yAxisMax).hex()}
-                />
-              ))}
-            </linearGradient>
-            <linearGradient id="value1" x1="0" y1="0" x2="1" y2="0">
-              {data.map((item, id) => (
-                <stop
-                  key={id}
-                  offset={"" + (id / data.length) * 100 + "%"}
-                  stopColor={graphColors.eval(data[id].value1 / yAxisMax).hex()}
-                />
-              ))}
-            </linearGradient>
-            <linearGradient id="value0" x1="0" y1="0" x2="1" y2="0">
-              {data.map((item, id) => (
-                <stop
-                  key={id}
-                  offset={"" + (id / data.length) * 100 + "%"}
-                  stopColor={graphColors.eval(data[id].value0 / yAxisMax).hex()}
-                />
-              ))}
-            </linearGradient>
+            {graphsColorScheme.map((item, graphId) => (
+              <linearGradient
+                key={graphId}
+                id={"value" + graphId}
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
+                {data.map((item, id) => (
+                  <stop
+                    key={id}
+                    offset={"" + (id / data.length) * 100 + "%"}
+                    stopColor={graphsColorScheme[graphId].gradient
+                      .eval(data[id]["value" + graphId] / yAxisMax)
+                      .hex()}
+                  />
+                ))}
+              </linearGradient>
+            ))}
           </defs>
           <XAxis dataKey="time" ticks={[0]} />
           <YAxis domain={[0, yAxisMax]} hide={true} />
@@ -259,29 +252,20 @@ export const ForecastGraph: React.FC<Props> = ({
               .filter((item) => item != -1)}
             style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
-
-          <Area
-            type="monotone"
-            dataKey="value2"
-            stroke="#731000"
-            fillOpacity={1}
-            fill="url(#value2)"
-          />
-          <Area
-            type="monotone"
-            dataKey="value1"
-            stroke="#731000"
-            fillOpacity={1}
-            fill="url(#value1)"
-          />
-          <Area
-            type="monotone"
-            dataKey="value0"
-            stroke="#e7501e"
-            fillOpacity={1}
-            fill="url(#value0)"
-            strokeWidth="1"
-          />
+          {graphsColorScheme.map((_, id, array) => {
+            const graphId = array.length - id - 1;
+            const item = array[graphId];
+            return (
+              <Area
+                key={graphId}
+                type="monotone"
+                dataKey={"value" + graphId}
+                stroke={item.strokeColor.hex()}
+                fillOpacity={item.opacity}
+                fill={"url(#value" + graphId + ")"}
+              />
+            );
+          })}
         </AreaChart>
       </div>
     </>
