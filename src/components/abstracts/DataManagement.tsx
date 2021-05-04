@@ -37,8 +37,8 @@ export const throttle: any = (
 
 ////// parse weather server data
 
-// averages all the values of a given object
-const avg = (data: any) =>
+// averages all the values of a given object (typescript abomination but very useful in our case)
+const avg: (data: any) => number = (data) =>
   Object.values(data).reduce((average: any, value: any) =>
     typeof value === "number"
       ? average + value
@@ -72,7 +72,8 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   rawHourlyData
 ) => {
   return {
-    time: new Date(rawHourlyData.time),
+    // time: new Date(rawHourlyData.time), // todo : restore
+    time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
     weatherData: {
       cloudCover: avg(rawHourlyData.cloudCover),
       riskOfRain: mmph2riskOfRainPercent(avg(rawHourlyData.precipitation)),

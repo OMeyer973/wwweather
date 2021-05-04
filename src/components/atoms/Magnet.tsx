@@ -10,11 +10,17 @@ export interface Props {
   children: React.ReactNode;
   color?: Color;
   style?: CSS.Properties;
+  className?: string;
 }
 
-export const Magnet: React.FC<Props> = ({ children, color, style }) => {
+export const Magnet: React.FC<Props> = ({
+  children,
+  color,
+  style,
+  className,
+}) => {
   return (
-    <label className={`magnet ${color}`} style={style}>
+    <label className={`magnet ${color} ${className}`} style={style}>
       {children}
     </label>
   );

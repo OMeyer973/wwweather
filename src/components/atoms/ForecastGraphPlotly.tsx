@@ -94,8 +94,7 @@ export const ForecastGraph: React.FC<Props> = ({
     : graphContainerWidth;
   return (
     <>
-      <script src="node_modules/dragscroll/dragscroll.js"></script>
-      <div className="forecast-graph dragscroll" ref={graphContainer}>
+      <div className="forecast-graph" ref={graphContainer}>
         <Plot
           data={[
             makeDataFromPredictions(

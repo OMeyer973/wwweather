@@ -4,6 +4,7 @@
 .forecast-graph {
   overflow-x: scroll;
   position: relative;
+  height: 140px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -14,11 +15,8 @@
   .recharts-wrapper {
     margin-bottom: -2em;
   }
-  .label {
+  .grid-label {
     position: absolute;
-    margin-bottom: 2em;
-  }
-  .value {
   }
   .cursor {
     position: absolute;
@@ -31,5 +29,10 @@
     &.secondary {
       background-color: $buttonBgColorSecondary;
     }
+  }
+
+  .graph-label {
+    text-align: center;
+    margin-top: 2em;
   }
 }

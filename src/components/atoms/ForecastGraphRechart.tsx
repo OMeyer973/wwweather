@@ -19,7 +19,9 @@ import {
 } from "~components/abstracts/DataManagement";
 
 import { Gradient } from "~/components/abstracts/Gradient";
+import BoundedLabel from "~components/atoms/BoundedLabel";
 import { Value } from "~components/atoms/Value";
+import { Magnet } from "~components/atoms/Magnet";
 import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 
 export type GraphType = "wind" | "waves" | "weather";
@@ -74,15 +76,6 @@ const useResize = (myRef: any) => {
   }, [myRef]);
   return { width, height };
 };
-
-// const graphColors = new Gradient(
-//   Color("#b94cff"),
-//   Color("#413cff"),
-//   Color("#00f7ff"),
-//   Color("#ffff00"),
-//   Color("#ff0000"),
-//   Color("#510049")
-// );
 
 const windColors = new Gradient(
   Color("#ffffff"),
@@ -193,7 +186,7 @@ export const ForecastGraph: React.FC<Props> = ({
   const graphContainerWidth = graphContainer.current
     ? graphContainer.current.offsetWidth
     : 0;
-  const graphWidth = isTouchEnabled()
+  const graphWidth: number = isTouchEnabled()
     ? Math.max(800, graphContainerWidth)
     : graphContainerWidth;
 
@@ -254,7 +247,7 @@ export const ForecastGraph: React.FC<Props> = ({
     .map((item, id, array) => ({
       label:
         weekDays[item.time.getDay()] +
-        " " +
+        "\xa0" + // non breaking space
         item.time.getMonth() +
         "/" +
         item.time.getDate(),
@@ -277,30 +270,27 @@ export const ForecastGraph: React.FC<Props> = ({
           )
         );
 
+  const primaryCursorPosition =
+    (currentPredictionId / predictions.length) * graphWidth;
+  const secondaryCursorPosition =
+    (predictions.findIndex(
+      (item) => Math.abs(item.time.valueOf() - Date.now()) < oneHour
+    ) /
+      predictions.length) *
+    graphWidth;
   return (
     <>
-      <script src="node_modules/dragscroll/dragscroll.js"></script>
       <div className="forecast-graph" ref={graphContainer}>
         <div
           className="cursor secondary"
           style={{
-            marginLeft:
-              (
-                (predictions.findIndex(
-                  (item) => Math.abs(item.time.valueOf() - Date.now()) < oneHour
-                ) /
-                  predictions.length) *
-                graphWidth
-              ).toFixed(4) + "px",
+            left: secondaryCursorPosition.toFixed(0) + "px",
           }}
         ></div>
         <div
           className="cursor primary"
           style={{
-            marginLeft:
-              ((currentPredictionId / predictions.length) * graphWidth).toFixed(
-                4
-              ) + "px",
+            left: primaryCursorPosition.toFixed(0) + "px",
           }}
         ></div>
 
@@ -373,31 +363,48 @@ export const ForecastGraph: React.FC<Props> = ({
           })}
         </AreaChart>
         <div className="">
-          {gridData.map((item) => (
-            <label
-              className="label"
-              style={{ left: item.position }}
-              key={item.label}
-            >
-              {item.label}
-            </label>
-          ))}
+          {gridData
+            .map((item) => (
+              <label
+                className="label grid-label"
+                style={{ left: item.position }}
+                key={item.label}
+              >
+                {item.label}
+              </label>
+            ))
+            .slice(0, -1)}
+          <BoundedLabel
+            minX={0}
+            maxX={graphWidth}
+            centerX={secondaryCursorPosition}
+            className="graph-label"
+          >
+            <Magnet color="secondary">Now </Magnet>
+          </BoundedLabel>
 
-          <Value flavor="slim">
+          <BoundedLabel
+            minX={0}
+            maxX={graphWidth}
+            centerX={primaryCursorPosition}
+            className="graph-label"
+          >
+            <Magnet>
+              {weekDays[(time.getDay() + 6) % 7] +
+                " " +
+                months[time.getMonth()].toLowerCase() +
+                " " +
+                time.getDate() +
+                ", " +
+                ("00" + time.getHours()).slice(-2) +
+                ":" +
+                ("00" + time.getMinutes()).slice(-2)}
+            </Magnet>
             <br />
-            {weekDays[(time.getDay() + 6) % 7] +
-              " " +
-              months[time.getMonth()].toLowerCase() +
-              " " +
-              time.getDate() +
-              ", " +
-              ("00" + time.getHours()).slice(-2) +
-              ":" +
-              ("00" + time.getMinutes()).slice(-2) +
-              " (" +
-              makeRelativeTimeLabel(time) +
-              ")"}
-          </Value>
+            <label className="label">
+              {" (" + makeRelativeTimeLabel(time) + ")"}
+            </label>
+          </BoundedLabel>
         </div>
       </div>
     </>
