@@ -3,7 +3,6 @@
 
 .forecast-graph {
   overflow-x: scroll;
-  margin-bottom: -2em;
   position: relative;
   &::-webkit-scrollbar {
     display: none;
@@ -11,6 +10,16 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 
+  .recharts-surface,
+  .recharts-wrapper {
+    margin-bottom: -2em;
+  }
+  .label {
+    position: absolute;
+    margin-bottom: 2em;
+  }
+  .value {
+  }
   .cursor {
     position: absolute;
     z-index: 1;

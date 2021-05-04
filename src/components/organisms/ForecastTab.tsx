@@ -18,23 +18,6 @@ export interface Props {
   setCurrentPredictionId: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 export const ForecastTab: React.FC<Props> = ({
   predictions,
   currentPredictionId,
@@ -42,7 +25,7 @@ export const ForecastTab: React.FC<Props> = ({
 }) => {
   const [graphType, setGraphType] = useState<GraphType>("wind");
 
-  const time = predictions[currentPredictionId].time;
+  // const time = predictions[currentPredictionId].time;
 
   const options: { value: GraphType; label: string }[] = [
     { value: "wind", label: "Wind forecast" },
@@ -65,22 +48,7 @@ export const ForecastTab: React.FC<Props> = ({
         currentPredictionId={currentPredictionId}
         setCurrentPredictionId={setCurrentPredictionId}
       />
-      <div className="time-info">
-        <Value flavor="slim">
-          {weekDays[(time.getDay() + 6) % 7] +
-            " " +
-            months[time.getMonth()].toLowerCase() +
-            " " +
-            time.getDate() +
-            ", " +
-            ("00" + time.getHours()).slice(-2) +
-            ":" +
-            ("00" + time.getMinutes()).slice(-2) +
-            " (" +
-            makeRelativeTimeLabel(time) +
-            ")"}
-        </Value>
-      </div>
+      <div className="time-info"></div>
     </div>
   );
 };

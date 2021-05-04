@@ -15,6 +15,26 @@ export const oneHour = 3600000;
 export const clamp = (x: number, a: number, b: number) =>
   Math.max(a, Math.min(x, b));
 
+// throttle the rate at which a callback can be called
+// usage :
+// window.addEventListener("resize", throttle(handleResize, 200));
+export const throttle: any = (
+  callback: (args: any) => any,
+  interval: number
+) => {
+  let enableCall = true;
+
+  return (...args: any) => {
+    if (!enableCall) return;
+
+    enableCall = false;
+    setTimeout(() => {
+      callback.apply(this, args);
+      enableCall = true;
+    }, interval);
+  };
+};
+
 ////// parse weather server data
 
 // averages all the values of a given object
@@ -36,11 +56,13 @@ const sum = (arr: Array<number>) => arr.reduce((a: number, b: number) => a + b);
 const degToRad = (a: number) => (Math.PI / 180) * a;
 
 const meanAngleDeg = (arr: Array<number>) =>
-  (180 / Math.PI) *
-  Math.atan2(
-    sum(arr.map(degToRad).map(Math.sin)) / arr.length,
-    sum(arr.map(degToRad).map(Math.cos)) / arr.length
-  );
+  ((180 / Math.PI) *
+    Math.atan2(
+      sum(arr.map(degToRad).map(Math.sin)) / arr.length,
+      sum(arr.map(degToRad).map(Math.cos)) / arr.length
+    ) +
+    360) %
+  360;
 
 // averages all the angle values (in degree) of a given object
 const avgAngle = (data: any) => meanAngleDeg(Object.values(data));

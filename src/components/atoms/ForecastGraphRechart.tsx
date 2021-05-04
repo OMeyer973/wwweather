@@ -1,9 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastGraphRechart.scss";
-import { DataByHour } from "~/components/abstracts/Types";
-import { clamp } from "~/components/abstracts/DataManagement";
-import { oneDay, oneHour } from "~components/abstracts/DataManagement";
-
 import {
   AreaChart,
   XAxis,
@@ -12,9 +8,19 @@ import {
   CartesianGrid,
   Area,
 } from "recharts";
-
 import Color from "color";
+
+import { DataByHour } from "~/components/abstracts/Types";
+import {
+  oneDay,
+  oneHour,
+  clamp,
+  throttle,
+} from "~components/abstracts/DataManagement";
+
 import { Gradient } from "~/components/abstracts/Gradient";
+import { Value } from "~components/atoms/Value";
+import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 
 export type GraphType = "wind" | "waves" | "weather";
 
@@ -29,6 +35,22 @@ export interface GraphProperties {
   colors: GraphColorScheme[];
   maxY: number;
 }
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const isTouchEnabled = () =>
   "ontouchstart" in window ||
@@ -41,12 +63,13 @@ const useResize = (myRef: any) => {
 
   useEffect(() => {
     const handleResize = () => {
+      console.log("cc");
       setWidth(myRef.current.offsetWidth);
       setHeight(myRef.current.offsetHeight);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", throttle(handleResize, 200));
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", throttle(handleResize, 200));
     };
   }, [myRef]);
   return { width, height };
@@ -164,6 +187,17 @@ export const ForecastGraph: React.FC<Props> = ({
   currentPredictionId,
   setCurrentPredictionId,
 }) => {
+  // LAYOUT
+  const graphContainer = useRef(null);
+  useResize(graphContainer);
+  const graphContainerWidth = graphContainer.current
+    ? graphContainer.current.offsetWidth
+    : 0;
+  const graphWidth = isTouchEnabled()
+    ? Math.max(800, graphContainerWidth)
+    : graphContainerWidth;
+
+  // DATA
   const graphProperties: GraphProperties =
     graphType === "wind"
       ? { colors: [windSpeedColorScheme, windGustsColorScheme], maxY: 40 }
@@ -176,16 +210,7 @@ export const ForecastGraph: React.FC<Props> = ({
         }
       : { colors: [], maxY: 0 };
 
-  const graphContainer = useRef(null);
-  useResize(graphContainer);
-
-  const graphContainerWidth = graphContainer.current
-    ? graphContainer.current.offsetWidth
-    : 0;
-
-  const graphWidth = isTouchEnabled()
-    ? Math.max(800, graphContainerWidth)
-    : graphContainerWidth;
+  const time = predictions[currentPredictionId].time;
 
   const data =
     predictions === undefined
@@ -225,6 +250,22 @@ export const ForecastGraph: React.FC<Props> = ({
             label: prediction.time.toDateString().slice(0, -5),
           }));
 
+  const gridData = data
+    .map((item, id, array) => ({
+      label:
+        weekDays[item.time.getDay()] +
+        " " +
+        item.time.getMonth() +
+        "/" +
+        item.time.getDate(),
+      position:
+        id === 0
+          ? 1
+          : item.time.getHours() === 0
+          ? (id / (array.length - 0.7)) * graphWidth
+          : -1,
+    }))
+    .filter((item) => item.position != -1);
   const setPredictionFromMouseEvent = (e: any) =>
     e == null || e.chartX == undefined
       ? {}
@@ -235,6 +276,7 @@ export const ForecastGraph: React.FC<Props> = ({
             predictions.length - 1
           )
         );
+
   return (
     <>
       <script src="node_modules/dragscroll/dragscroll.js"></script>
@@ -263,7 +305,7 @@ export const ForecastGraph: React.FC<Props> = ({
         ></div>
 
         <AreaChart
-          onMouseMove={setPredictionFromMouseEvent}
+          onMouseMove={throttle(setPredictionFromMouseEvent, 70)}
           width={graphWidth}
           height={100}
           data={data}
@@ -307,15 +349,7 @@ export const ForecastGraph: React.FC<Props> = ({
           <CartesianGrid
             strokeDasharray="3 3"
             horizontal={false}
-            verticalPoints={data
-              .map((item, id, array) =>
-                id === 0
-                  ? 1
-                  : item.time.getHours() === 0
-                  ? (id / (array.length - 0.7)) * graphWidth
-                  : -1
-              )
-              .filter((item) => item != -1)}
+            verticalPoints={gridData.map((item) => item.position)}
             style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
           />
           {graphProperties.colors.map((_, id, array) => {
@@ -338,6 +372,33 @@ export const ForecastGraph: React.FC<Props> = ({
             );
           })}
         </AreaChart>
+        <div className="">
+          {gridData.map((item) => (
+            <label
+              className="label"
+              style={{ left: item.position }}
+              key={item.label}
+            >
+              {item.label}
+            </label>
+          ))}
+
+          <Value flavor="slim">
+            <br />
+            {weekDays[(time.getDay() + 6) % 7] +
+              " " +
+              months[time.getMonth()].toLowerCase() +
+              " " +
+              time.getDate() +
+              ", " +
+              ("00" + time.getHours()).slice(-2) +
+              ":" +
+              ("00" + time.getMinutes()).slice(-2) +
+              " (" +
+              makeRelativeTimeLabel(time) +
+              ")"}
+          </Value>
+        </div>
       </div>
     </>
   );

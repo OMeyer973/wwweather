@@ -6,6 +6,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 mapboxgl.accessToken =
   "pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA";
 
+import { throttle } from "~components/abstracts/DataManagement";
+
 export interface Props {
   onRotate: (bearing: number) => void;
   style?: CSS.Properties;
@@ -28,6 +30,7 @@ export const Map: React.FC<Props> = ({ onRotate, style }) => {
       zoom: zoom,
     });
 
+    // todo throttle ? => should it be platform spcefic ?
     map.on("move", () => {
       setZoom(map.getZoom());
       setBearing(map.getBearing());

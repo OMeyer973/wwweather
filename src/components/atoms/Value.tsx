@@ -10,7 +10,7 @@ export interface Props {
 }
 
 export const Value: React.FC<Props> = ({ children, flavor }) => {
-  return <label className={`value ${flavor}`}>{children}</label>;
+  return <span className={`value ${flavor}`}>{children}</span>;
 };
 
 Value.defaultProps = {
