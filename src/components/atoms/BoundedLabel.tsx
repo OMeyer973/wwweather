@@ -32,23 +32,25 @@ const BoundedLabel: React.FC<Props> = ({
   return (
     <span
       className={`bounded-label ${className}`}
+      style={{
+        transform: `translateX(${Math.min(
+          Math.max(minX, centerX - width / 2),
+          maxX - width
+        )}px)`,
+      }}
       // style={{
       //   float: "left",
-      //   left: Math.min(Math.max(minX, centerX - width / 2), maxX - width),
+      //   left: Math.min(Math.max(minX, centerX - width / 2), maxX - width - 8),
       // }}
-      style={
-        centerX < (minX + maxX) / 2
-          ? { float: "left", left: Math.max(minX, centerX - width / 2) }
-          : { float: "right", right: Math.max(maxX - centerX - width / 2, 0) }
-      }
+      // style={
+      //   centerX < (minX + maxX) / 2
+      //     ? { float: "left", left: Math.max(minX, centerX - width / 2) }
+      //     : { float: "right", right: Math.max(maxX - centerX - width / 2, 0) }
+      // }
     >
       {children}
     </span>
   );
-};
-
-BoundedLabel.defaultProps = {
-  color: "primary",
 };
 
 export default sizeMe({ monitorHeight: true })(BoundedLabel);

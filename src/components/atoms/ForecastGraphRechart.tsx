@@ -384,6 +384,7 @@ export const ForecastGraph: React.FC<Props> = ({
           </BoundedLabel>
 
           <BoundedLabel
+            size={{ width: 120, height: 100 }} // non mandatory, prevents flickering
             minX={0}
             maxX={graphWidth}
             centerX={primaryCursorPosition}
