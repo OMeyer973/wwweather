@@ -1,6 +1,7 @@
 # Wind Waves Weather
 
 Weather info to find the best time to go kitesurfing
+Live at [https://omeyer973.github.io/wwweather/](https://omeyer973.github.io/wwweather/)
 
 ---
 
@@ -15,7 +16,6 @@ Weather info to find the best time to go kitesurfing
 
 - Build on local machine with `npm run build`
 - Build and publish to `"gh-pages"` live branch with `npm run deploy`
-  > see troubleshooting if you encounter an error at this step
 
 ### Utilities
 

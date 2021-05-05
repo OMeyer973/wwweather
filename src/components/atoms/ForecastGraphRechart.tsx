@@ -26,17 +26,14 @@ import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 
 export type GraphType = "wind" | "waves" | "weather";
 
-export interface GraphColorScheme {
-  gradient: Gradient;
-  strokeColor: Color;
-  opacity: number;
-  fatStroke?: boolean;
-}
+import {
+  StaticForecastGraph,
+  GraphColorScheme,
+  GraphProperties,
+  GraphDataPoint,
+  GridPoint,
+} from "~components/atoms/StaticForecastGraph";
 
-export interface GraphProperties {
-  colors: GraphColorScheme[];
-  maxY: number;
-}
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const months = [
@@ -65,7 +62,6 @@ const useResize = (myRef: any) => {
 
   useEffect(() => {
     const handleResize = () => {
-      console.log("cc");
       setWidth(myRef.current.offsetWidth);
       setHeight(myRef.current.offsetHeight);
     };
@@ -174,6 +170,8 @@ export interface Props {
   setCurrentPredictionId: React.Dispatch<React.SetStateAction<number>>;
 }
 
+////////////////////////////////////////////////
+//////// COMPONENT BEGIN
 export const ForecastGraph: React.FC<Props> = ({
   graphType,
   predictions,
@@ -203,9 +201,9 @@ export const ForecastGraph: React.FC<Props> = ({
         }
       : { colors: [], maxY: 0 };
 
-  const time = predictions[currentPredictionId].time;
+  const currTime = predictions[currentPredictionId].time;
 
-  const data =
+  const graphData: GraphDataPoint[] =
     predictions === undefined
       ? []
       : predictions
@@ -239,26 +237,8 @@ export const ForecastGraph: React.FC<Props> = ({
                 : 0,
 
             time: prediction.time,
-            timeStamp: prediction.time.valueOf(),
-            label: prediction.time.toDateString().slice(0, -5),
           }));
 
-  const gridData = data
-    .map((item, id, array) => ({
-      label:
-        weekDays[item.time.getDay()] +
-        "\xa0" + // non breaking space
-        item.time.getMonth() +
-        "/" +
-        item.time.getDate(),
-      position:
-        id === 0
-          ? 1
-          : item.time.getHours() === 0
-          ? (id / (array.length - 0.7)) * graphWidth
-          : -1,
-    }))
-    .filter((item) => item.position != -1);
   const setPredictionFromMouseEvent = (e: any) =>
     e == null || e.chartX == undefined
       ? {}
@@ -293,120 +273,46 @@ export const ForecastGraph: React.FC<Props> = ({
             left: primaryCursorPosition.toFixed(0) + "px",
           }}
         ></div>
+        <StaticForecastGraph
+          graphData={graphData}
+          graphProperties={graphProperties}
+          graphWidth={graphWidth}
+          onMouseMove={setPredictionFromMouseEvent}
+          // onMouseMove={throttle(setPredictionFromMouseEvent, 70)}
+        />
 
-        <AreaChart
-          onMouseMove={throttle(setPredictionFromMouseEvent, 70)}
-          width={graphWidth}
-          height={100}
-          data={data}
-          margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
+        <BoundedLabel
+          minX={0}
+          maxX={graphWidth}
+          centerX={secondaryCursorPosition}
+          className="graph-label"
         >
-          <defs>
-            {graphProperties.colors.map((item, graphId) => (
-              <linearGradient
-                key={graphId}
-                id={"value" + graphId}
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                {data.map((item, id) => (
-                  <stop
-                    key={id}
-                    offset={"" + (id / data.length) * 100 + "%"}
-                    stopColor={graphProperties.colors[graphId].gradient
-                      .eval(
-                        graphProperties.maxY == 0
-                          ? 0
-                          : data[id]["value" + graphId] / graphProperties.maxY
-                      )
-                      .hex()}
-                  />
-                ))}
-              </linearGradient>
-            ))}
-          </defs>
-          <XAxis dataKey="time" ticks={[0]} />
-          <YAxis
-            domain={[
-              0,
-              (dataMax: number) => Math.max(graphProperties.maxY, dataMax),
-            ]}
-            hide={true}
-          />
-          {console.log()}
-          <CartesianGrid
-            strokeDasharray="3 3"
-            horizontal={false}
-            verticalPoints={gridData.map((item) => item.position)}
-            style={{ strokeWidth: "0.1em", stroke: "rgba(0, 0, 0, 0.7)" }}
-          />
-          {graphProperties.colors.map((_, id, array) => {
-            const graphId = array.length - id - 1;
-            const item = array[graphId];
-            return (
-              <Area
-                key={graphId}
-                type="monotone"
-                dataKey={"value" + graphId}
-                stroke={
-                  item.fatStroke
-                    ? "url(#value" + graphId + ")"
-                    : item.strokeColor.hex()
-                }
-                strokeWidth={item.fatStroke ? 2 : 1}
-                fillOpacity={item.opacity}
-                fill={"url(#value" + graphId + ")"}
-              />
-            );
-          })}
-        </AreaChart>
-        <div className="">
-          {gridData
-            .map((item) => (
-              <label
-                className="label grid-label"
-                style={{ left: item.position }}
-                key={item.label}
-              >
-                {item.label}
-              </label>
-            ))
-            .slice(0, -1)}
-          <BoundedLabel
-            minX={0}
-            maxX={graphWidth}
-            centerX={secondaryCursorPosition}
-            className="graph-label"
-          >
-            <Magnet color="secondary">Now </Magnet>
-          </BoundedLabel>
+          <Magnet color="secondary">Now </Magnet>
+        </BoundedLabel>
 
-          <BoundedLabel
-            size={{ width: 120, height: 100 }} // non mandatory, prevents flickering
-            minX={0}
-            maxX={graphWidth}
-            centerX={primaryCursorPosition}
-            className="graph-label"
-          >
-            <Magnet>
-              {weekDays[(time.getDay() + 6) % 7] +
-                " " +
-                months[time.getMonth()].toLowerCase() +
-                " " +
-                time.getDate() +
-                ", " +
-                ("00" + time.getHours()).slice(-2) +
-                ":" +
-                ("00" + time.getMinutes()).slice(-2)}
-            </Magnet>
-            <br />
-            <label className="label">
-              {" (" + makeRelativeTimeLabel(time) + ")"}
-            </label>
-          </BoundedLabel>
-        </div>
+        <BoundedLabel
+          size={{ width: 120, height: 100 }} // non mandatory, prevents flickering
+          minX={0}
+          maxX={graphWidth}
+          centerX={primaryCursorPosition}
+          className="graph-label"
+        >
+          <Magnet>
+            {weekDays[(currTime.getDay() + 6) % 7] +
+              " " +
+              months[currTime.getMonth()].toLowerCase() +
+              " " +
+              currTime.getDate() +
+              ", " +
+              ("00" + currTime.getHours()).slice(-2) +
+              ":" +
+              ("00" + currTime.getMinutes()).slice(-2)}
+          </Magnet>
+          <br />
+          <label className="label">
+            {" (" + makeRelativeTimeLabel(currTime) + ")"}
+          </label>
+        </BoundedLabel>
       </div>
     </>
   );
