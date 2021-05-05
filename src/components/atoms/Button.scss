@@ -8,6 +8,14 @@
   &:focus-within {
     @include focused;
   }
+  transition: all 200ms ease;
+
+  &:hover {
+    @include focused;
+    // box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
   &.primary {
     color: $buttonColor;
     background: $buttonBgColor;

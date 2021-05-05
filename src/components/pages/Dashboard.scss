@@ -8,6 +8,11 @@
   overflow: hidden;
   filter: drop-shadow(0px 0.2em 2em rgba(0, 0, 0, 0.1));
 
+  & .map-tab {
+    padding-left: 0em;
+    padding-right: 0em;
+  }
+
   @include breakpoint(small) {
     & .location-tab {
       grid-area: location;
@@ -18,8 +23,9 @@
     }
     & .map-tab {
       grid-area: map;
-      padding-bottom: 2em;
-      padding-top: 0em;
+      padding: 0em 1.5em 2em 1.5em;
+      // padding-top: 0em;
+      // padding-bottom: 2em;
     }
     & .weather-tab {
       grid-area: weather;

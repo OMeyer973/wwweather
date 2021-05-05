@@ -1,21 +1,24 @@
 @import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/variables.scss";
 
 .search-bar {
   position: relative;
 
   input {
-    color: var(--labelColor);
-    background: var(--labelBgColor);
+    color: $labelColor;
+    background: $labelBgColor;
     border-radius: 3em;
-    background: var(--labelBgColor);
     padding: 0.4em 1.9em 0.4em 0.5em;
     width: 0em;
+    float: right;
     &:not(:placeholder-shown),
     &:focus {
       padding: 0.4em 2.2em 0.4em 0.5em;
       width: 100%;
-      color: var(--titleColor);
+      color: $titleColor;
     }
+    transition: all 200ms ease;
+
     &:focus {
       @include focused;
     }
