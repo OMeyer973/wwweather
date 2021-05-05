@@ -105,7 +105,7 @@ export const ForecastTab: React.FC<Props> = ({
         <Dropdown
           options={options}
           onChange={(e) => setGraphType(e.value)}
-          placeholder={options[0].value}
+          placeholder={options[0].label}
         />
       </h2>
 
@@ -151,7 +151,7 @@ export const ForecastTab: React.FC<Props> = ({
               months[currTime.getMonth()].toLowerCase() +
               " " +
               currTime.getDate() +
-              ", " +
+              " " +
               ("00" + currTime.getHours()).slice(-2) +
               ":" +
               ("00" + currTime.getMinutes()).slice(-2)}

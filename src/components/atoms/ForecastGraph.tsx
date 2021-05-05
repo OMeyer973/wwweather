@@ -88,7 +88,7 @@ const wavesHeightColorScheme: GraphColorScheme = {
 const seaLevelColorScheme: GraphColorScheme = {
   gradient: wavesGraphColors,
   strokeColor: new Color("#177d92"),
-  opacity: 1,
+  opacity: 0.8,
 };
 
 const cloudsColorScheme: GraphColorScheme = {
@@ -98,8 +98,8 @@ const cloudsColorScheme: GraphColorScheme = {
     Color("#737385"),
     Color("#4a444e")
   ),
-  strokeColor: new Color("#737385"),
-  opacity: 0.5,
+  strokeColor: new Color("#4a444e"),
+  opacity: 0.7,
 };
 
 const rainColorScheme: GraphColorScheme = {
@@ -109,18 +109,19 @@ const rainColorScheme: GraphColorScheme = {
     Color("#1c4b85"),
     Color("#152f4e")
   ),
-  strokeColor: new Color("#1c4b85"),
-  opacity: 0.5,
+  strokeColor: new Color("#006E9E"),
+  opacity: 1,
 };
 
 const temperatureColorScheme: GraphColorScheme = {
-  gradient: new Gradient(
-    Color("#00162e"),
-    Color("#2e47ff"),
-    Color("#a31fa3"),
-    Color("#b82828"),
-    Color("#3c0d1d")
-  ),
+  // gradient: new Gradient(
+  //   Color("#00162e"),
+  //   Color("#2e47ff"),
+  //   Color("#a31fa3"),
+  //   Color("#b82828"),
+  //   Color("#3c0d1d")
+  // ),
+  gradient: windColors,
   strokeColor: new Color("#a31fa3"),
   opacity: 0,
   fatStroke: true,
@@ -147,7 +148,7 @@ export const ForecastGraph: React.FC<Props> = ({
       : graphType === "weather"
       ? {
           colors: [temperatureColorScheme, rainColorScheme, cloudsColorScheme],
-          maxY: 100,
+          maxY: 110,
         }
       : { colors: [], maxY: 0 };
 
@@ -163,7 +164,7 @@ export const ForecastGraph: React.FC<Props> = ({
                 : graphType === "waves"
                 ? prediction.wavesData.height
                 : graphType === "weather"
-                ? prediction.weatherData.temperature
+                ? prediction.weatherData.temperature * 2
                 : 0,
 
             value1:
@@ -191,7 +192,7 @@ export const ForecastGraph: React.FC<Props> = ({
     .map((item, id, array) => ({
       label:
         weekDays[(item.time.getDay() + 6) % 7] +
-        " " +
+        "\xa0" +
         item.time.getMonth() +
         "/" +
         item.time.getDate(),
@@ -211,7 +212,7 @@ export const ForecastGraph: React.FC<Props> = ({
           width={graphWidth}
           height={100}
           data={graphData}
-          margin={{ top: 0, right: 0, left: 1, bottom: 0 }}
+          margin={{ top: 2, right: 0, left: 1, bottom: 0 }}
         >
           <defs>
             {graphProperties.colors.map((item, graphId: number) => (
@@ -267,7 +268,7 @@ export const ForecastGraph: React.FC<Props> = ({
                     ? "url(#value" + graphId + ")"
                     : item.strokeColor.hex()
                 }
-                strokeWidth={item.fatStroke ? 2 : 1}
+                strokeWidth={item.fatStroke ? 4 : 2}
                 fillOpacity={item.opacity}
                 fill={"url(#value" + graphId + ")"}
               />
