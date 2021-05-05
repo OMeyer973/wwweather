@@ -97,8 +97,8 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     const getTasks = async () => {
       //todo: re-activate
-      const weatherFromServer = {};
-      // const weatherFromServer = await fetchWeatherData();
+      // const weatherFromServer = {};
+      const weatherFromServer = await fetchWeatherData();
       if (weatherFromServer.hours === undefined) {
         console.error(
           "couldn't fetch data from weather api, fallback to dummy data"

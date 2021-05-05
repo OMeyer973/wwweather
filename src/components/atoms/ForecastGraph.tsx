@@ -4,7 +4,6 @@ import { AreaChart, XAxis, YAxis, CartesianGrid, Area } from "recharts";
 import Color from "color";
 
 import { DataByHour } from "~/components/abstracts/Types";
-
 import { Gradient } from "~/components/abstracts/Gradient";
 
 export type GraphType = "wind" | "waves" | "weather";
@@ -59,8 +58,6 @@ const windColors = new Gradient(
   Color("#000000")
 );
 
-const graphColors = windColors; // todod : rm
-
 const windSpeedColorScheme: GraphColorScheme = {
   gradient: windColors,
   strokeColor: new Color("#c30017"),
@@ -94,132 +91,119 @@ const seaLevelColorScheme: GraphColorScheme = {
   opacity: 1,
 };
 
-const cloudsGraphColors = new Gradient(
-  Color("#fdff5f"),
-  Color("#8f9e8f"),
-  Color("#737385"),
-  Color("#4a444e")
-);
-
 const cloudsColorScheme: GraphColorScheme = {
-  gradient: cloudsGraphColors,
+  gradient: new Gradient(
+    Color("#fdff5f"),
+    Color("#8f9e8f"),
+    Color("#737385"),
+    Color("#4a444e")
+  ),
   strokeColor: new Color("#737385"),
   opacity: 0.5,
 };
 
-const rainGraphColors = new Gradient(
-  Color("#fdff5f"),
-  Color("#6aacb0"),
-  Color("#1c4b85"),
-  Color("#152f4e")
-);
-
 const rainColorScheme: GraphColorScheme = {
-  gradient: rainGraphColors,
+  gradient: new Gradient(
+    Color("#fdff5f"),
+    Color("#6aacb0"),
+    Color("#1c4b85"),
+    Color("#152f4e")
+  ),
   strokeColor: new Color("#1c4b85"),
   opacity: 0.5,
 };
 
-const temperatureGraphColors = new Gradient(
-  Color("#00162e"),
-  Color("#2e47ff"),
-  Color("#a31fa3"),
-  Color("#b82828"),
-  Color("#3c0d1d")
-);
-
 const temperatureColorScheme: GraphColorScheme = {
-  gradient: temperatureGraphColors,
+  gradient: new Gradient(
+    Color("#00162e"),
+    Color("#2e47ff"),
+    Color("#a31fa3"),
+    Color("#b82828"),
+    Color("#3c0d1d")
+  ),
   strokeColor: new Color("#a31fa3"),
   opacity: 0,
   fatStroke: true,
 };
 
 export interface Props {
-  // graphData: GraphDataPoint[];
-  // graphProperties: GraphProperties;
   graphType: GraphType;
   predictions: DataByHour[];
   graphWidth: number;
   onMouseMove?: any;
 }
 
-////////////////////////////////////////////////
-//////// COMPONENT BEGIN
-export const ForecastGraph: React.FC<Props> = React.memo(
-  ({ graphType, predictions, graphWidth, onMouseMove }) => {
-    // ({ graphData, graphProperties, graphWidth, onMouseMove }) => {
-    console.log(JSON.stringify(predictions));
-    const graphProperties: GraphProperties =
-      graphType === "wind"
-        ? { colors: [windSpeedColorScheme, windGustsColorScheme], maxY: 40 }
-        : graphType === "waves"
-        ? { colors: [wavesHeightColorScheme, seaLevelColorScheme], maxY: 8 }
-        : graphType === "weather"
-        ? {
-            colors: [
-              temperatureColorScheme,
-              rainColorScheme,
-              cloudsColorScheme,
-            ],
-            maxY: 100,
-          }
-        : { colors: [], maxY: 0 };
+export const ForecastGraph: React.FC<Props> = ({
+  graphType,
+  predictions,
+  graphWidth,
+  onMouseMove,
+}) => {
+  const graphProperties: GraphProperties =
+    graphType === "wind"
+      ? { colors: [windSpeedColorScheme, windGustsColorScheme], maxY: 40 }
+      : graphType === "waves"
+      ? { colors: [wavesHeightColorScheme, seaLevelColorScheme], maxY: 8 }
+      : graphType === "weather"
+      ? {
+          colors: [temperatureColorScheme, rainColorScheme, cloudsColorScheme],
+          maxY: 100,
+        }
+      : { colors: [], maxY: 0 };
 
-    const graphData: GraphDataPoint[] =
-      predictions === undefined
-        ? []
-        : predictions
-            .filter((prediction) => prediction.time.getHours() % 3 === 0)
-            .map((prediction) => ({
-              value0:
-                graphType === "wind"
-                  ? prediction.windData.speed
-                  : graphType === "waves"
-                  ? prediction.wavesData.height
-                  : graphType === "weather"
-                  ? prediction.weatherData.temperature
-                  : 0,
+  const graphData: GraphDataPoint[] =
+    predictions === undefined
+      ? []
+      : predictions
+          .filter((prediction) => prediction.time.getHours() % 3 === 0)
+          .map((prediction) => ({
+            value0:
+              graphType === "wind"
+                ? prediction.windData.speed
+                : graphType === "waves"
+                ? prediction.wavesData.height
+                : graphType === "weather"
+                ? prediction.weatherData.temperature
+                : 0,
 
-              value1:
-                graphType === "wind"
-                  ? prediction.windData.gusts
-                  : graphType === "waves"
-                  ? 0 // todo : sea level (!= prediction.wavesData.tide)
-                  : graphType === "weather"
-                  ? prediction.weatherData.riskOfRain
-                  : 0,
+            value1:
+              graphType === "wind"
+                ? prediction.windData.gusts
+                : graphType === "waves"
+                ? 0 // todo : sea level (!= prediction.wavesData.tide)
+                : graphType === "weather"
+                ? prediction.weatherData.riskOfRain
+                : 0,
 
-              value2:
-                graphType === "wind"
-                  ? 0
-                  : graphType === "waves"
-                  ? 0
-                  : graphType === "weather"
-                  ? prediction.weatherData.cloudCover
-                  : 0,
+            value2:
+              graphType === "wind"
+                ? 0
+                : graphType === "waves"
+                ? 0
+                : graphType === "weather"
+                ? prediction.weatherData.cloudCover
+                : 0,
 
-              time: prediction.time,
-            }));
+            time: prediction.time,
+          }));
 
-    const gridData: GridPoint[] = graphData
-      .map((item, id, array) => ({
-        label:
-          weekDays[(item.time.getDay() + 6) % 7] +
-          "\xa0" + // non breaking space
-          item.time.getMonth() +
-          "/" +
-          item.time.getDate(),
-        position:
-          id < 1
-            ? 1
-            : item.time.getHours() === 0
-            ? (id / (array.length - 0.7)) * graphWidth
-            : -1,
-      }))
-      .filter((item) => item.position != -1)
-      .slice(0, -1);
-
+  const gridData: GridPoint[] = graphData
+    .map((item, id, array) => ({
+      label:
+        weekDays[(item.time.getDay() + 6) % 7] +
+        " " +
+        item.time.getMonth() +
+        "/" +
+        item.time.getDate(),
+      position:
+        id < 1
+          ? 1
+          : item.time.getHours() === 0
+          ? (id / (array.length - 0.7)) * graphWidth
+          : -1,
+    }))
+    .filter((item) => item.position != -1);
+  return React.useMemo(() => {
     return (
       <div className="forecast-graph">
         <AreaChart
@@ -305,5 +289,5 @@ export const ForecastGraph: React.FC<Props> = React.memo(
         </div>
       </div>
     );
-  }
-);
+  }, [graphType, predictions, graphWidth]);
+};

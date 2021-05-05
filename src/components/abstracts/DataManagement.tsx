@@ -15,26 +15,6 @@ export const oneHour = 3600000;
 export const clamp = (x: number, a: number, b: number) =>
   Math.max(a, Math.min(x, b));
 
-// throttle the rate at which a callback can be called
-// usage :
-// window.addEventListener("resize", throttle(handleResize, 200));
-export const throttle: any = (
-  callback: (args: any) => any,
-  interval: number
-) => {
-  let enableCall = true;
-
-  return (...args: any) => {
-    if (!enableCall) return;
-
-    enableCall = false;
-    setTimeout(() => {
-      callback.apply(this, args);
-      enableCall = true;
-    }, interval);
-  };
-};
-
 ////// parse weather server data
 
 // averages all the values of a given object (typescript abomination but very useful in our case)
@@ -72,8 +52,8 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   rawHourlyData
 ) => {
   return {
-    // time: new Date(rawHourlyData.time), // todo : restore
-    time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
+    time: new Date(rawHourlyData.time), // todo : restore
+    // time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
     weatherData: {
       cloudCover: avg(rawHourlyData.cloudCover),
       riskOfRain: mmph2riskOfRainPercent(avg(rawHourlyData.precipitation)),
@@ -96,7 +76,7 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   };
 };
 
-//misc
+//unused misc
 
 //downloads json data on the clients computer
 const handleSaveToPC = (jsonData: any, filename: string) => {
@@ -107,4 +87,24 @@ const handleSaveToPC = (jsonData: any, filename: string) => {
   link.download = `${filename}.json`;
   link.href = url;
   link.click();
+};
+
+// throttle the rate at which a callback can be called
+// usage :
+// window.addEventListener("resize", throttle(handleResize, 200));
+export const throttle: any = (
+  callback: (args: any) => any,
+  interval: number
+) => {
+  let enableCall = true;
+
+  return (...args: any) => {
+    if (!enableCall) return;
+
+    enableCall = false;
+    setTimeout(() => {
+      callback.apply(this, args);
+      enableCall = true;
+    }, interval);
+  };
 };

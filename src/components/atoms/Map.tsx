@@ -6,7 +6,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 mapboxgl.accessToken =
   "pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA";
 
-import { throttle } from "~components/abstracts/DataManagement";
+const longitude = -52.6446239;
+const latitude = 5.168286;
+const eps = 0.0001; //epsilon for lat and long coordinates comparison
 
 export interface Props {
   onRotate: (bearing: number) => void;
@@ -15,10 +17,6 @@ export interface Props {
 
 export const Map: React.FC<Props> = ({ onRotate, style }) => {
   const mapContainer = useRef();
-  const [longitude, setLongitude] = useState(-52.6446239);
-  const [latitude, setLatitude] = useState(5.168286);
-  const [bearing, setBearing] = useState(0);
-  const [zoom, setZoom] = useState(12);
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -27,20 +25,15 @@ export const Map: React.FC<Props> = ({ onRotate, style }) => {
       height: 400,
       style: "mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe",
       center: [longitude, latitude],
-      zoom: zoom,
+      zoom: 12,
     });
 
-    // todo throttle ? => should it be platform spcefic ?
     map.on("move", () => {
-      setZoom(map.getZoom());
-      setBearing(map.getBearing());
       onRotate(map.getBearing());
     });
 
     // stay centered on point of interest
     map.on("moveend", () => {
-      const eps = 0.0001; //epsilon for lat and long coordinates comparison
-
       const currCenter = map.getCenter();
       if (
         Math.abs(currCenter.lng - longitude) > eps &&

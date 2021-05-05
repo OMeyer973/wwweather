@@ -1,19 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
-import { Value } from "~components/atoms/Value";
-import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
-import { DataByHour } from "~/components/abstracts/Types";
-
 import Dropdown from "react-dropdown";
-
+import { DataByHour } from "~/components/abstracts/Types";
 import { oneHour, clamp, throttle } from "~components/abstracts/DataManagement";
-
 import BoundedLabel from "~components/atoms/BoundedLabel";
 import { Magnet } from "~components/atoms/Magnet";
+import { ForecastGraph } from "~components/atoms/ForecastGraph";
+import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 
 export type GraphType = "wind" | "waves" | "weather";
-
-import { ForecastGraph } from "~components/atoms/ForecastGraph";
 
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -67,8 +62,6 @@ export const ForecastTab: React.FC<Props> = ({
 }) => {
   const [graphType, setGraphType] = useState<GraphType>("wind");
 
-  // const time = predictions[currentPredictionId].time;
-
   const options: { value: GraphType; label: string }[] = [
     { value: "wind", label: "Wind forecast" },
     { value: "waves", label: "Waves forecast" },
@@ -86,7 +79,6 @@ export const ForecastTab: React.FC<Props> = ({
 
   const currTime = predictions[currentPredictionId].time;
 
-  // DATA
   const setPredictionFromMouseEvent = (e: any) =>
     e == null || e.chartX == undefined
       ? {}
@@ -113,8 +105,7 @@ export const ForecastTab: React.FC<Props> = ({
         <Dropdown
           options={options}
           onChange={(e) => setGraphType(e.value)}
-          // value={options[0]}
-          placeholder="Wind forecast"
+          placeholder={options[0].value}
         />
       </h2>
 
@@ -136,7 +127,6 @@ export const ForecastTab: React.FC<Props> = ({
           graphType={graphType}
           graphWidth={graphWidth}
           onMouseMove={setPredictionFromMouseEvent}
-          // onMouseMove={throttle(setPredictionFromMouseEvent, 70)}
         />
 
         <BoundedLabel

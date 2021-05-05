@@ -11,13 +11,15 @@ export interface Props {
   style?: CSS.Properties;
 }
 
-export const Value: React.FC<Props> = ({ children, flavor, style }) => {
-  return (
-    <span className={`value ${flavor}`} style={style}>
-      {children}
-    </span>
-  );
-};
+export const Value: React.FC<Props> = React.memo(
+  ({ children, flavor, style }) => {
+    return (
+      <span className={`value ${flavor}`} style={style}>
+        {children}
+      </span>
+    );
+  }
+);
 
 Value.defaultProps = {
   flavor: "default",

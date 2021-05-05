@@ -1,5 +1,5 @@
 import React from "react";
-import "./DataColumn.scss"
+import "./DataColumn.scss";
 
 import { Icon } from "~components/atoms/Icon";
 import { Label } from "~components/atoms/Label";
@@ -11,12 +11,14 @@ export interface Props {
   value: string;
 }
 
-export const DataColumn: React.FC<Props> = ({label, icon, value}) => {
-  return (
-    <div className="weather-data">
-      <Label>{label}</Label>
-      <Icon src={icon} size="large"/>
-      <Value>{value}</Value>        
-    </div>
-  )
-}
+export const DataColumn: React.FC<Props> = React.memo(
+  ({ label, icon, value }) => {
+    return (
+      <div className="weather-data">
+        <Label>{label}</Label>
+        <Icon src={icon} size="large" />
+        <Value>{value}</Value>
+      </div>
+    );
+  }
+);

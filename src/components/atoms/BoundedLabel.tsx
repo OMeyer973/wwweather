@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from "react";
-import CSS from "csstype";
 import "./BoundedLabel.scss";
 import sizeMe from "react-sizeme";
 
@@ -38,10 +37,6 @@ const BoundedLabel: React.FC<Props> = ({
           maxX - width
         )}px)`,
       }}
-      // style={{
-      //   float: "left",
-      //   left: Math.min(Math.max(minX, centerX - width / 2), maxX - width - 8),
-      // }}
       // style={
       //   centerX < (minX + maxX) / 2
       //     ? { float: "left", left: Math.max(minX, centerX - width / 2) }
@@ -53,4 +48,4 @@ const BoundedLabel: React.FC<Props> = ({
   );
 };
 
-export default sizeMe({ monitorHeight: true })(BoundedLabel);
+export default sizeMe({ monitorWidth: true })(BoundedLabel);

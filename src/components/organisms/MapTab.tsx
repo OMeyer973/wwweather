@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import CSS from "csstype";
 import "./MapTab.scss";
 
 import { WindData, WavesData } from "~components/abstracts/Types";
@@ -24,7 +23,8 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
     return (wa < wi && wi < 180) || (180 < wi && wi < wa);
   };
 
-  const updateCompass = () => {};
+  const rotateBearing = "rotate(" + bearing + "deg)";
+  const rotateBearing45 = "rotate(" + (bearing + 45) + "deg)";
 
   return (
     <div className="map-tab">
@@ -33,25 +33,25 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
           <div id="cardinals-primary" className="cardinal-grid">
             <div
               className="cardinal-point cardinal-top"
-              style={{ transform: "rotate(" + bearing + "deg)" }}
+              style={{ transform: rotateBearing }}
             >
               <span>N</span>
             </div>
             <div
               className="cardinal-point cardinal-right"
-              style={{ transform: "rotate(" + bearing + "deg)" }}
+              style={{ transform: rotateBearing }}
             >
               <span>E</span>
             </div>
             <div
               className="cardinal-point cardinal-down"
-              style={{ transform: "rotate(" + bearing + "deg)" }}
+              style={{ transform: rotateBearing }}
             >
               <span>S</span>
             </div>
             <div
               className="cardinal-point cardinal-left"
-              style={{ transform: "rotate(" + bearing + "deg)" }}
+              style={{ transform: rotateBearing }}
             >
               <span>O</span>
             </div>
@@ -60,25 +60,25 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
           <div id="cardinals-secondary" className="cardinal-grid">
             <div
               className="cardinal-point cardinal-top"
-              style={{ transform: "rotate(" + (bearing + 45) + "deg)" }}
+              style={{ transform: rotateBearing45 }}
             >
               <span>NO</span>
             </div>
             <div
               className="cardinal-point cardinal-right"
-              style={{ transform: "rotate(" + (bearing + 45) + "deg)" }}
+              style={{ transform: rotateBearing45 }}
             >
               <span>NE</span>
             </div>
             <div
               className="cardinal-point cardinal-down"
-              style={{ transform: "rotate(" + (bearing + 45) + "deg)" }}
+              style={{ transform: rotateBearing45 }}
             >
               <span>SE</span>
             </div>
             <div
               className="cardinal-point cardinal-left"
-              style={{ transform: "rotate(" + (bearing + 45) + "deg)" }}
+              style={{ transform: rotateBearing45 }}
             >
               <span>SO</span>
             </div>
@@ -137,10 +137,7 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
           </div>
 
           <div id="map-container">
-            <Map
-              style={{ transform: "rotate(" + bearing + "deg)" }}
-              onRotate={setBearing}
-            />
+            <Map style={{ transform: rotateBearing }} onRotate={setBearing} />
           </div>
         </div>
       </div>

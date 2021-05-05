@@ -6,6 +6,6 @@ export interface Props {
   children: React.ReactNode;
 }
 
-export const Label: React.FC<Props> = ({ children }) => {
+export const Label: React.FC<Props> = React.memo(({ children }) => {
   return <label className={`label`}>{children}</label>;
-};
+});
