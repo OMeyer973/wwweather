@@ -1,15 +1,58 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
-import {
-  ForecastGraph,
-  GraphType,
-} from "~components/atoms/ForecastGraphRechart";
 import { Value } from "~components/atoms/Value";
 import { makeRelativeTimeLabel } from "~components/organisms/TimeTab";
 import { DataByHour } from "~/components/abstracts/Types";
 
 import Dropdown from "react-dropdown";
-// import "react-dropdown/style.css";
+
+import { oneHour, clamp, throttle } from "~components/abstracts/DataManagement";
+
+import BoundedLabel from "~components/atoms/BoundedLabel";
+import { Magnet } from "~components/atoms/Magnet";
+
+export type GraphType = "wind" | "waves" | "weather";
+
+import { ForecastGraph } from "~components/atoms/ForecastGraph";
+
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const isTouchEnabled = () =>
+  "ontouchstart" in window ||
+  navigator.maxTouchPoints > 0 ||
+  navigator.msMaxTouchPoints > 0;
+
+const useResize = (myRef: any) => {
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(myRef.current.offsetWidth);
+      setHeight(myRef.current.offsetHeight);
+    };
+    window.addEventListener("resize", throttle(handleResize, 200));
+    return () => {
+      window.removeEventListener("resize", throttle(handleResize, 200));
+    };
+  }, [myRef]);
+  return { width, height };
+};
 
 export interface Props {
   predictions: DataByHour[];
@@ -31,6 +74,39 @@ export const ForecastTab: React.FC<Props> = ({
     { value: "waves", label: "Waves forecast" },
     { value: "weather", label: "Weather forecast" },
   ];
+
+  const graphContainer = useRef(null);
+  useResize(graphContainer);
+  const graphContainerWidth = graphContainer.current
+    ? graphContainer.current.offsetWidth
+    : 0;
+  const graphWidth: number = isTouchEnabled()
+    ? Math.max(800, graphContainerWidth)
+    : graphContainerWidth;
+
+  const currTime = predictions[currentPredictionId].time;
+
+  // DATA
+  const setPredictionFromMouseEvent = (e: any) =>
+    e == null || e.chartX == undefined
+      ? {}
+      : setCurrentPredictionId(
+          clamp(
+            Math.floor((e.chartX / graphWidth) * predictions.length),
+            0,
+            predictions.length - 1
+          )
+        );
+
+  const primaryCursorPosition =
+    (currentPredictionId / predictions.length) * graphWidth;
+  const secondaryCursorPosition =
+    (predictions.findIndex(
+      (item) => Math.abs(item.time.valueOf() - Date.now()) < oneHour
+    ) /
+      predictions.length) *
+    graphWidth;
+
   return (
     <div className="forecast-tab">
       <h2>
@@ -41,13 +117,61 @@ export const ForecastTab: React.FC<Props> = ({
           placeholder="Wind forecast"
         />
       </h2>
-      <ForecastGraph
-        graphType={graphType} // todo add other graph types
-        predictions={predictions}
-        currentPredictionId={currentPredictionId}
-        setCurrentPredictionId={setCurrentPredictionId}
-      />
-      <div className="time-info"></div>
+
+      <div className="graph-holder" ref={graphContainer}>
+        <div
+          className="cursor secondary"
+          style={{
+            left: secondaryCursorPosition.toFixed(0) + "px",
+          }}
+        ></div>
+        <div
+          className="cursor primary"
+          style={{
+            left: primaryCursorPosition.toFixed(0) + "px",
+          }}
+        ></div>
+        <ForecastGraph
+          predictions={predictions}
+          graphType={graphType}
+          graphWidth={graphWidth}
+          onMouseMove={setPredictionFromMouseEvent}
+          // onMouseMove={throttle(setPredictionFromMouseEvent, 70)}
+        />
+
+        <BoundedLabel
+          minX={0}
+          maxX={graphWidth}
+          centerX={secondaryCursorPosition}
+          className="graph-label"
+        >
+          <Magnet color="secondary">Now </Magnet>
+        </BoundedLabel>
+
+        <BoundedLabel
+          size={{ width: 120, height: 100 }} // non mandatory, prevents flickering
+          minX={0}
+          maxX={graphWidth}
+          centerX={primaryCursorPosition}
+          className="graph-label"
+        >
+          <Magnet>
+            {weekDays[(currTime.getDay() + 6) % 7] +
+              " " +
+              months[currTime.getMonth()].toLowerCase() +
+              " " +
+              currTime.getDate() +
+              ", " +
+              ("00" + currTime.getHours()).slice(-2) +
+              ":" +
+              ("00" + currTime.getMinutes()).slice(-2)}
+          </Magnet>
+          <br />
+          <label className="label">
+            {" (" + makeRelativeTimeLabel(currTime) + ")"}
+          </label>
+        </BoundedLabel>
+      </div>
     </div>
   );
 };

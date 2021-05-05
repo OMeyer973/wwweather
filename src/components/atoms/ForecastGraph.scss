@@ -1,0 +1,12 @@
+@import "/components/abstracts/mixins.scss";
+@import "/components/abstracts/variables.scss";
+
+.forecast-graph {
+  height: 75px;
+
+  .grid-labels,
+  .grid-label {
+    position: absolute;
+    margin-top: -1em;
+  }
+}
