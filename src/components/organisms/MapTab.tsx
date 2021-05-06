@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./MapTab.scss";
 
-import { WindData, WavesData } from "~components/abstracts/Types";
+import { Coordinates, WindData, WavesData } from "~components/abstracts/Types";
 
 import { Map } from "~/components/atoms/Map";
 import { Magnet } from "~/components/atoms/Magnet";
@@ -10,11 +10,16 @@ import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
 
 export interface Props {
+  coordinates: Coordinates;
   windData: WindData;
   wavesData: WavesData;
 }
 
-export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
+export const MapTab: React.FC<Props> = ({
+  coordinates,
+  windData,
+  wavesData,
+}) => {
   const [bearing, setBearing] = useState(0);
 
   const invertTags = () => {
@@ -137,7 +142,11 @@ export const MapTab: React.FC<Props> = ({ windData, wavesData }) => {
           </div>
 
           <div id="map-container">
-            <Map style={{ transform: rotateBearing }} onRotate={setBearing} />
+            <Map
+              coordinates={coordinates}
+              style={{ transform: rotateBearing }}
+              onRotate={setBearing}
+            />
           </div>
         </div>
       </div>

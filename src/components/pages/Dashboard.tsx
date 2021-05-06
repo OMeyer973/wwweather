@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./Dashboard.scss";
 
 import {
+  Coordinates,
   Timetable,
-  WeatherData,
-  WindData,
-  WavesData,
   DataByHour,
 } from "~/components/abstracts/Types";
 
@@ -68,9 +66,38 @@ const placeholderPredictions: DataByHour[] = [
   },
 ];
 
+// todo make dynamic
+const fetchLocationData = async () => {
+  const res = await fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/Cayenne.json?access_token=pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA`,
+    {}
+  );
+  const data = await res.json();
+  return data;
+};
+
+// then :
+//
+const getGpsCoordinates = async () => {
+  const locationDataFromServer = await fetchLocationData();
+  // console.log(locationDataFromServer);
+  if (
+    locationDataFromServer.features === undefined ||
+    locationDataFromServer.features[0] === undefined ||
+    locationDataFromServer.features[0].center === undefined
+  ) {
+    console.error("couldn't fetch location from map api");
+    // console.error(locationDataFromServer);
+
+    return;
+  }
+  const [lng, lat] = locationDataFromServer.features[0].center;
+  return { longitude: lng, latitude: lat };
+};
+
 const fetchWeatherData = async () => {
   const start = getStartDate().toISOString();
-  const lat = 5.168286;
+  const lat = 5.168286; // todo : make dynamic
   const lng = -52.6446239;
   const res = await fetch(
     `https://api.stormglass.io/v2/weather/point?start=${start}&lat=${lat}&lng=${lng}&params=${"airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,precipitation,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,waterTemperature,waveDirection,waveHeight,wavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m"}`,
@@ -85,47 +112,55 @@ const fetchWeatherData = async () => {
   return data;
 };
 
+const getWeatherPredictions = async () => {
+  //todo: re-activate
+  const weatherFromServer = {};
+  // const weatherFromServer = await fetchWeatherData();
+  if (weatherFromServer.hours === undefined) {
+    console.error(
+      "couldn't fetch data from weather api, fallback to dummy data"
+    );
+    // console.error(weatherFromServer);
+
+    // return;
+  }
+  // console.log(dummyRawWeatherData);
+  const rawWeatherData =
+    weatherFromServer.hours === undefined
+      ? dummyRawWeatherData
+      : weatherFromServer;
+
+  return rawWeatherData.hours.map((hour: any) => makeDataThisHour(hour));
+};
+
 export const Dashboard: React.FC = () => {
   const angleToCardinal = (angle: number) => {
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
     return directions[Math.round((angle % 360) / 45)];
   };
 
+  const [coordinates, setCoordinates]: [Coordinates, any] = useState({
+    latitude: 5.168286,
+    longitude: -52.6446239,
+  });
   const [predictions, setPredictions] = useState(placeholderPredictions);
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
-    const getTasks = async () => {
-      //todo: re-activate
-      // const weatherFromServer = {};
-      const weatherFromServer = await fetchWeatherData();
-      if (weatherFromServer.hours === undefined) {
-        console.error(
-          "couldn't fetch data from weather api, fallback to dummy data"
-        );
-        // console.error(weatherFromServer);
-
-        // return;
-      }
-      // console.log(dummyRawWeatherData);
-      const rawWeatherData =
-        weatherFromServer.hours === undefined
-          ? dummyRawWeatherData
-          : weatherFromServer;
-
-      const newPredictions = rawWeatherData.hours.map((hour: any) =>
-        makeDataThisHour(hour)
-      );
+    getWeatherPredictions().then((newPredictions) => {
       setPredictions(newPredictions);
-
       setCurrentPredictionId(
         newPredictions.findIndex(
           (item: DataByHour) =>
             Math.abs(item.time.valueOf() - Date.now()) < oneHour
         )
       );
-    };
-    getTasks();
+    });
+
+    getGpsCoordinates().then((coordinates) => {
+      console.log(coordinates);
+      setCoordinates(coordinates);
+    });
   }, []);
 
   return (
@@ -146,6 +181,7 @@ export const Dashboard: React.FC = () => {
           }
         />
         <MapTab
+          coordinates={coordinates}
           windData={predictions[currentPredictionId].windData}
           wavesData={predictions[currentPredictionId].wavesData}
         />

@@ -52,8 +52,8 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   rawHourlyData
 ) => {
   return {
-    time: new Date(rawHourlyData.time), // todo : restore
-    // time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
+    // time: new Date(rawHourlyData.time), // todo : restore
+    time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
     weatherData: {
       cloudCover: avg(rawHourlyData.cloudCover),
       riskOfRain: mmph2riskOfRainPercent(avg(rawHourlyData.precipitation)),
