@@ -20,9 +20,14 @@ export const MapTab: React.FC<Props> = ({ location, windData, wavesData }) => {
 
   const invertTags = () => {
     if (!wavesData || !windData) return false;
-    const wi = (windData.direction + bearing + 270) % 360;
-    const wa = (wavesData.direction + bearing + 270) % 360;
-    return (wa < wi && wi < 180) || (180 < wi && wi < wa);
+    const wi = (windData.direction - bearing + 360) % 360;
+    const wa = (wavesData.direction - bearing + 360) % 360;
+    return !(
+      (wa < wi && wi < 180) ||
+      (180 < wi && wi < wa) ||
+      ((wa < 90 || wa > 270) && 90 < wi && wi < 270)
+    );
+    // ;
   };
 
   const rotateBearing = "rotate(" + bearing + "deg)";
