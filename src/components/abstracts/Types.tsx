@@ -3,6 +3,12 @@ export interface Coordinates {
   longitude: number;
 }
 
+export interface LocationData {
+  point: Coordinates;
+  name: string;
+  region: string;
+}
+
 export interface Timetable {
   sunrise: string;
   sunset: string;

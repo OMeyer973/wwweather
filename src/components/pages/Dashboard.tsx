@@ -68,23 +68,23 @@ const placeholderPredictions: DataByHour[] = [
 
 // todo make dynamic
 const fetchLocationData = async () => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const location = queryParams.get("location");
+  if (location == null) return null;
   const res = await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/Cayenne.json?access_token=pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA`,
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA`,
     {}
   );
   const data = await res.json();
   return data;
 };
 
-// then :
-//
 const getGpsCoordinates = async () => {
   const locationDataFromServer = await fetchLocationData();
-  // console.log(locationDataFromServer);
+  console.log(locationDataFromServer);
   if (
     locationDataFromServer.features === undefined ||
-    locationDataFromServer.features[0] === undefined ||
-    locationDataFromServer.features[0].center === undefined
+    locationDataFromServer.features[0] === undefined
   ) {
     console.error("couldn't fetch location from map api");
     // console.error(locationDataFromServer);
@@ -95,16 +95,19 @@ const getGpsCoordinates = async () => {
   return { longitude: lng, latitude: lat };
 };
 
-const fetchWeatherData = async () => {
+const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
-  const lat = 5.168286; // todo : make dynamic
-  const lng = -52.6446239;
+  // const lat = 5.168286; // todo : make dynamic
+  // const lng = -52.6446239;
+  const lat = coordinates.latitude; // todo : make dynamic
+  const lng = coordinates.longitude;
   const res = await fetch(
     `https://api.stormglass.io/v2/weather/point?start=${start}&lat=${lat}&lng=${lng}&params=${"airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,precipitation,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,waterTemperature,waveDirection,waveHeight,wavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m"}`,
     {
       headers: {
         Authorization:
-          "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+          "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+        // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
       },
     }
   );
@@ -112,19 +115,21 @@ const fetchWeatherData = async () => {
   return data;
 };
 
-const getWeatherPredictions = async () => {
+const getWeatherPredictions: (coordinates: Coordinates) => any = async (
+  coordinates
+) => {
   //todo: re-activate
-  const weatherFromServer = {};
-  // const weatherFromServer = await fetchWeatherData();
+  // const weatherFromServer = {};
+  const weatherFromServer = await fetchWeatherData(coordinates);
   if (weatherFromServer.hours === undefined) {
     console.error(
       "couldn't fetch data from weather api, fallback to dummy data"
     );
     // console.error(weatherFromServer);
 
-    // return;
+    return;
   }
-  // console.log(dummyRawWeatherData);
+  console.log(weatherFromServer);
   const rawWeatherData =
     weatherFromServer.hours === undefined
       ? dummyRawWeatherData
@@ -139,29 +144,37 @@ export const Dashboard: React.FC = () => {
     return directions[Math.round((angle % 360) / 45)];
   };
 
-  const [coordinates, setCoordinates]: [Coordinates, any] = useState({
-    latitude: 5.168286,
-    longitude: -52.6446239,
-  });
+  const [coordinates, setCoordinates]: [Coordinates | null, any] = useState(
+    null
+    // {
+    // latitude: 5.168286,
+    // longitude: -52.6446239,
+    // }
+  );
   const [predictions, setPredictions] = useState(placeholderPredictions);
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
-    getWeatherPredictions().then((newPredictions) => {
-      setPredictions(newPredictions);
-      setCurrentPredictionId(
-        newPredictions.findIndex(
-          (item: DataByHour) =>
-            Math.abs(item.time.valueOf() - Date.now()) < oneHour
-        )
-      );
-    });
-
     getGpsCoordinates().then((coordinates) => {
-      console.log(coordinates);
       setCoordinates(coordinates);
     });
   }, []);
+
+  useEffect(() => {
+    if (coordinates != null) {
+      getWeatherPredictions(coordinates).then(
+        (newPredictions: DataByHour[]) => {
+          setPredictions(newPredictions);
+          setCurrentPredictionId(
+            newPredictions.findIndex(
+              (item: DataByHour) =>
+                Math.abs(item.time.valueOf() - Date.now()) < oneHour
+            )
+          );
+        }
+      );
+    }
+  }, [coordinates]);
 
   return (
     <>
@@ -220,36 +233,42 @@ export const Dashboard: React.FC = () => {
               }
             />
           </DirectionTab>
-          <DirectionTab
-            title="Waves"
-            icon={wavesArrow}
-            iconRotation={predictions[currentPredictionId].wavesData.direction}
-          >
-            <DataRow
-              label="Height"
-              value={
-                predictions[currentPredictionId].wavesData.height.toFixed(1) +
-                " m"
+          {!predictions[currentPredictionId].wavesData ? (
+            ""
+          ) : (
+            <DirectionTab
+              title="Waves"
+              icon={wavesArrow}
+              iconRotation={
+                predictions[currentPredictionId].wavesData.direction
               }
-            />
-            <DataRow
-              label="Tide"
-              value={predictions[currentPredictionId].wavesData.tide}
-            />
-            <DataRow
-              label="Direction"
-              value={
-                angleToCardinal(
-                  predictions[currentPredictionId].wavesData.direction
-                ) +
-                " / " +
-                predictions[currentPredictionId].wavesData.direction.toFixed(
-                  0
-                ) +
-                "°"
-              }
-            />
-          </DirectionTab>
+            >
+              <DataRow
+                label="Height"
+                value={
+                  predictions[currentPredictionId].wavesData.height.toFixed(1) +
+                  " m"
+                }
+              />
+              <DataRow
+                label="Tide"
+                value={predictions[currentPredictionId].wavesData.tide}
+              />
+              <DataRow
+                label="Direction"
+                value={
+                  angleToCardinal(
+                    predictions[currentPredictionId].wavesData.direction
+                  ) +
+                  " / " +
+                  predictions[currentPredictionId].wavesData.direction.toFixed(
+                    0
+                  ) +
+                  "°"
+                }
+              />
+            </DirectionTab>
+          )}
         </div>
         <ForecastTab
           predictions={predictions}

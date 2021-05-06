@@ -53,7 +53,6 @@
 
   .wind-waves-tab {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 0.125em;
     & .wind-waves-data {
       flex-direction: column;

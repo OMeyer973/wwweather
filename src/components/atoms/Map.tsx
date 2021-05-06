@@ -16,69 +16,50 @@ export interface Props {
   style?: CSS.Properties;
 }
 
-export const Map: React.FC<Props> = React.memo(
-  ({ coordinates, onRotate, style }) => {
-    const mapContainer = useRef();
-    const [mapObject, setMapObject]: [
-      mapboxgl.Map | undefined,
-      any
-    ] = useState();
+export const Map: React.FC<Props> = ({ coordinates, onRotate, style }) => {
+  const mapContainer = useRef();
+  const [mapObject, setMapObject]: [mapboxgl.Map | undefined, any] = useState();
 
-    useEffect(() => {
-      let map = new mapboxgl.Map({
-        container: mapContainer.current,
-        width: 400,
-        height: 400,
-        style: "mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe",
-        center: [coordinates.longitude, coordinates.latitude],
-        zoom: 12,
-      });
-      setMapObject(map);
+  useEffect(() => {
+    const lng = coordinates ? coordinates.longitude : 0;
+    const lat = coordinates ? coordinates.latitude : 0;
 
-      map.on("move", () => {
-        onRotate(map.getBearing());
-      });
+    let map = new mapboxgl.Map({
+      container: mapContainer.current,
+      width: 400,
+      height: 400,
+      style: "mapbox://styles/shamarkin/ckkgs8xvm0nyn17pdo4splpqe",
+      center: [lng, lat],
+      zoom: 12,
+    });
+    setMapObject(map);
 
-      // stay centered on point of interest
-      map.on("moveend", () => {
-        const currCenter = map.getCenter();
-        if (
-          Math.abs(currCenter.lng - coordinates.longitude) > eps &&
-          Math.abs(currCenter.lat - coordinates.latitude) > eps
-        )
-          map.setCenter([coordinates.longitude, coordinates.latitude]);
-      });
+    map.on("move", () => {
+      onRotate(map.getBearing());
+    });
 
-      //map.dragPan.disable();
-
-      // return () => map.remove();
-    }, []);
-
-    // test
-    useEffect(() => {
-      if (mapObject) {
-        console.log("setting map center");
-        console.log([coordinates.longitude, coordinates.latitude]);
-        mapObject.setCenter([coordinates.longitude, coordinates.latitude]);
-        mapObject.setCenter({
-          lon: coordinates.longitude,
-          lat: coordinates.latitude,
-        });
-        console.log(mapObject.getCenter());
-        console.log(mapObject);
+    // stay centered on point of interest
+    map.on("moveend", () => {
+      const currCenter = map.getCenter();
+      if (
+        Math.abs(currCenter.lng - coordinates.longitude) > eps &&
+        Math.abs(currCenter.lat - coordinates.latitude) > eps
+      ) {
+        map.setCenter([coordinates.longitude, coordinates.latitude]);
       }
-    }, [coordinates, mapObject]);
+    });
 
-    return (
-      <div
-        id="map"
-        ref={mapContainer}
-        style={style}
-        onClick={() => {
-          console.log("CLICK !");
-          mapObject.setCenter([10, 20]);
-        }}
-      />
-    );
-  }
-);
+    //map.dragPan.disable();
+
+    return () => map.remove();
+  }, [coordinates]);
+  //  ^^^ bad : shouldn't have any dependencies to prevent creating multiple map objects.
+  // right method : like below, but I can't get it to work...
+  // useEffect(() => {
+  //   if (mapObject) {
+  //     mapObject.setCenter([coordinates.longitude, coordinates.latitude]);
+  //   }
+  // }, [coordinates]);
+
+  return <div id="map" ref={mapContainer} style={style} />;
+};

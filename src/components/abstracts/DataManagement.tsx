@@ -18,12 +18,19 @@ export const clamp = (x: number, a: number, b: number) =>
 ////// parse weather server data
 
 // averages all the values of a given object (typescript abomination but very useful in our case)
-const avg: (data: any) => number = (data) =>
-  Object.values(data).reduce((average: any, value: any) =>
-    typeof value === "number"
-      ? average + value
-      : console.error("avg called on object with non number values")
-  ) / Object.values(data).length;
+const avg: (data: Object) => number = (data) => {
+  if (data == undefined || data == null) {
+    console.error("avg called on null or undefined");
+    return 0;
+  }
+  return (
+    Object.values(data).reduce((average: any, value: any) =>
+      typeof value === "number"
+        ? average + value
+        : console.error("avg called on object with non number values")
+    ) / Object.values(data).length
+  );
+};
 
 // meter per second to knots
 const mps2kts = (a: number) => a * 1.943844;
@@ -45,15 +52,34 @@ const meanAngleDeg = (arr: Array<number>) =>
   360;
 
 // averages all the angle values (in degree) of a given object
-const avgAngle = (data: any) => meanAngleDeg(Object.values(data));
+const avgAngle = (data: Object) => {
+  if (data == undefined || data == null) {
+    console.error("avgAngle called on null or undefined");
+    return 0;
+  }
+  return meanAngleDeg(Object.values(data));
+};
 
 // rawHourlyDataresult of a stormglass api fetch
 export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
   rawHourlyData
 ) => {
+  const wavesData =
+    rawHourlyData.waveDirection && rawHourlyData.waveHeight
+      ? {
+          direction: avgAngle(rawHourlyData.waveDirection),
+          height: avg(rawHourlyData.waveHeight),
+          seaLevel:
+            rawHourlyData.seaLevel === undefined
+              ? 0 // todo fixx !
+              : avg(rawHourlyData.seaLevel) * 20,
+          tide: "rising", // todo
+        }
+      : undefined;
+
   return {
-    // time: new Date(rawHourlyData.time), // todo : restore
-    time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
+    time: new Date(rawHourlyData.time), // todo : restore
+    // time: new Date(new Date(rawHourlyData.time).valueOf() + 360000000),
     weatherData: {
       cloudCover: avg(rawHourlyData.cloudCover),
       riskOfRain: mmph2riskOfRainPercent(avg(rawHourlyData.precipitation)),
@@ -64,15 +90,7 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
       speed: mps2kts(avg(rawHourlyData.windSpeed)),
       gusts: mps2kts(avg(rawHourlyData.gust)),
     },
-    wavesData: {
-      direction: avgAngle(rawHourlyData.waveDirection),
-      height: avg(rawHourlyData.waveHeight),
-      seaLevel:
-        rawHourlyData.seaLevel === undefined
-          ? 0 // todo fixx !
-          : avg(rawHourlyData.seaLevel) * 20,
-      tide: "rising", // todo
-    },
+    wavesData: wavesData;
   };
 };
 

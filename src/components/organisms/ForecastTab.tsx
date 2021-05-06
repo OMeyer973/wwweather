@@ -64,7 +64,9 @@ export const ForecastTab: React.FC<Props> = ({
 
   const options: { value: GraphType; label: string }[] = [
     { value: "wind", label: "Wind forecast" },
-    { value: "waves", label: "Waves forecast" },
+    ...(predictions[0].wavesData
+      ? [{ value: "waves" as "waves", label: "Waves forecast" }]
+      : []),
     { value: "weather", label: "Weather forecast" },
   ];
 

@@ -23,6 +23,7 @@ export const MapTab: React.FC<Props> = ({
   const [bearing, setBearing] = useState(0);
 
   const invertTags = () => {
+    if (!wavesData || !windData) return false;
     const wi = (windData.direction + bearing + 270) % 360;
     const wa = (wavesData.direction + bearing + 270) % 360;
     return (wa < wi && wi < 180) || (180 < wi && wi < wa);
@@ -115,31 +116,34 @@ export const MapTab: React.FC<Props> = ({
               Wind {windData.speed.toFixed(0)} kts
             </Magnet>
           </div>
-
-          <div
-            id="waves-arrow"
-            className="map__overlay"
-            style={{
-              transform:
-                "rotate(" + wavesData.direction + "deg) translateY(-25%)",
-            }}
-          >
-            <img src={wavesArrow} alt="waves-kite-arrow"></img>
-            <Magnet
-              color="secondary"
+          {!wavesData ? (
+            ""
+          ) : (
+            <div
+              id="waves-arrow"
+              className="map__overlay"
               style={{
-                gridArea: "1 / 1 / 2 / 2",
                 transform:
-                  "rotate(" +
-                  (bearing - wavesData.direction) +
-                  "deg) translateY(" +
-                  (invertTags() ? "" : "-") +
-                  "4em)",
+                  "rotate(" + wavesData.direction + "deg) translateY(-25%)",
               }}
             >
-              Waves {wavesData.height.toFixed(1)} m
-            </Magnet>
-          </div>
+              <img src={wavesArrow} alt="waves-kite-arrow"></img>
+              <Magnet
+                color="secondary"
+                style={{
+                  gridArea: "1 / 1 / 2 / 2",
+                  transform:
+                    "rotate(" +
+                    (bearing - wavesData.direction) +
+                    "deg) translateY(" +
+                    (invertTags() ? "" : "-") +
+                    "4em)",
+                }}
+              >
+                Waves {wavesData.height.toFixed(1)} m
+              </Magnet>
+            </div>
+          )}
 
           <div id="map-container">
             <Map
