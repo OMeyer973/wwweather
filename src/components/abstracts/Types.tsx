@@ -4,7 +4,7 @@ export interface Coordinates {
 }
 
 export interface LocationData {
-  point: Coordinates;
+  coordinates: Coordinates;
   name: string;
   region: string;
 }

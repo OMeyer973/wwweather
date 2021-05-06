@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Dashboard.scss";
 
 import {
+  LocationData,
   Coordinates,
   Timetable,
   DataByHour,
@@ -70,7 +71,7 @@ const placeholderPredictions: DataByHour[] = [
 const fetchLocationData = async () => {
   const queryParams = new URLSearchParams(window.location.search);
   const location = queryParams.get("location");
-  if (location == null) return null;
+  if (!location || location == "") return null;
   const res = await fetch(
     `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA`,
     {}
@@ -79,35 +80,56 @@ const fetchLocationData = async () => {
   return data;
 };
 
-const getGpsCoordinates = async () => {
+const getLocationData = async () => {
   const locationDataFromServer = await fetchLocationData();
-  console.log(locationDataFromServer);
   if (
+    !locationDataFromServer ||
     locationDataFromServer.features === undefined ||
     locationDataFromServer.features[0] === undefined
   ) {
     console.error("couldn't fetch location from map api");
     // console.error(locationDataFromServer);
 
-    return;
+    return undefined;
   }
+
+  const name: string = locationDataFromServer.features[0].text;
+  const context = locationDataFromServer.features[0].context;
+  const region: string = context
+    ? context.length > 0
+      ? context.length > 1
+        ? context[context.length - 1].text +
+          ", " +
+          context[context.length - 2].text
+        : context[context.length - 1].text
+      : ""
+    : name;
+
   const [lng, lat] = locationDataFromServer.features[0].center;
-  return { longitude: lng, latitude: lat };
+  return {
+    name: name,
+    region: region,
+    coordinates: { longitude: lng, latitude: lat },
+  };
 };
 
+const weatherKeys = [
+  // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+  // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+  "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
+  "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
+];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
   // const lat = 5.168286; // todo : make dynamic
   // const lng = -52.6446239;
-  const lat = coordinates.latitude; // todo : make dynamic
+  const lat = coordinates.latitude;
   const lng = coordinates.longitude;
   const res = await fetch(
     `https://api.stormglass.io/v2/weather/point?start=${start}&lat=${lat}&lng=${lng}&params=${"airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,precipitation,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,waterTemperature,waveDirection,waveHeight,wavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m"}`,
     {
       headers: {
-        Authorization:
-          "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
-        // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+        Authorization: weatherKeys[Date.now() % weatherKeys.length],
       },
     }
   );
@@ -125,11 +147,8 @@ const getWeatherPredictions: (coordinates: Coordinates) => any = async (
     console.error(
       "couldn't fetch data from weather api, fallback to dummy data"
     );
-    // console.error(weatherFromServer);
-
     return;
   }
-  console.log(weatherFromServer);
   const rawWeatherData =
     weatherFromServer.hours === undefined
       ? dummyRawWeatherData
@@ -144,25 +163,19 @@ export const Dashboard: React.FC = () => {
     return directions[Math.round((angle % 360) / 45)];
   };
 
-  const [coordinates, setCoordinates]: [Coordinates | null, any] = useState(
-    null
-    // {
-    // latitude: 5.168286,
-    // longitude: -52.6446239,
-    // }
-  );
-  const [predictions, setPredictions] = useState(placeholderPredictions);
+  const [location, setLocation]: [LocationData | null, any] = useState(null);
+  const [predictions, setPredictions] = useState(placeholderPredictions); // todo mke null & fix errors
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
-    getGpsCoordinates().then((coordinates) => {
-      setCoordinates(coordinates);
+    getLocationData().then((locationData: LocationData) => {
+      setLocation(locationData);
     });
   }, []);
 
   useEffect(() => {
-    if (coordinates != null) {
-      getWeatherPredictions(coordinates).then(
+    if (location && location.coordinates) {
+      getWeatherPredictions(location.coordinates).then(
         (newPredictions: DataByHour[]) => {
           setPredictions(newPredictions);
           setCurrentPredictionId(
@@ -174,13 +187,16 @@ export const Dashboard: React.FC = () => {
         }
       );
     }
-  }, [coordinates]);
+  }, [location]);
 
   return (
     <>
       <Header />
       <section className="dashboard">
-        <LocationTab location="Kourou" country="French Guiana" />
+        <LocationTab
+          location={location ? location.name : ""}
+          country={location ? location.region : ""}
+        />
         <TimeTab
           time={predictions[currentPredictionId].time}
           timetable={timetable}
@@ -194,7 +210,7 @@ export const Dashboard: React.FC = () => {
           }
         />
         <MapTab
-          coordinates={coordinates}
+          location={location}
           windData={predictions[currentPredictionId].windData}
           wavesData={predictions[currentPredictionId].wavesData}
         />

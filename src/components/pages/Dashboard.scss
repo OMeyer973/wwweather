@@ -52,8 +52,11 @@
   }
 
   .wind-waves-tab {
-    display: grid;
+    display: flex;
     gap: 0.125em;
+    & > * {
+      flex-grow: 1;
+    }
     & .wind-waves-data {
       flex-direction: column;
       align-items: baseline;
