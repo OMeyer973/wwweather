@@ -52,7 +52,7 @@
         outline: none;
         padding: 8px 52px 8px 10px;
         border-radius: 1.4rem;
-        margin-top: -8px;
+        background: $labelBgColor;
 
         transition: all 200ms ease;
 
@@ -67,42 +67,34 @@
         }
 
         .Dropdown-arrow {
-          border-color: #999 transparent transparent;
-          border-style: solid;
-          border-width: 5px 5px 0;
-          content: " ";
+          content: url("/components/atoms/icons/down-arrow.svg");
           display: block;
-          height: 0;
-          margin-top: -ceil(2.5);
           position: absolute;
           right: 10px;
-          top: 14px;
-          width: 0;
+          top: 10px;
+
+          transition: all 200ms ease;
         }
       }
       &.is-open {
         .Dropdown-control {
           border-radius: 1.4rem 1.4rem 0 0;
-          // @include focused // todo : findaway to use this
           box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
         }
         .Dropdown-arrow {
-          border-color: transparent transparent #999;
-          border-width: 0 5px 5px;
+          transform: rotate(180deg);
         }
       }
       .Dropdown-menu {
         border-radius: 0 0 1.4rem 1.4rem;
-        // @include focused; // todo : findaway to use this
         box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-        background-color: white;
+        background-color: $tabColor;
         box-sizing: border-box;
         max-height: 200px;
         overflow-y: auto;
         position: absolute;
         top: 100%;
-        width: 100%;
-        z-index: 1000;
+        z-index: 2;
         -webkit-overflow-scrolling: touch;
 
         & .Dropdown-group > .Dropdown-title {
