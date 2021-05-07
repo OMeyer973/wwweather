@@ -22,6 +22,9 @@
     &:focus {
       @include focused;
     }
+    &:hover {
+      @include focused;
+    }
     z-index: 100;
   }
 

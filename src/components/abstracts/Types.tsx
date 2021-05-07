@@ -3,7 +3,7 @@ export interface Coordinates {
   longitude: number;
 }
 
-export interface LocationData {
+export interface Location {
   coordinates: Coordinates;
   name: string;
   region: string;

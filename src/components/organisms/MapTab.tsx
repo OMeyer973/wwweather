@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./MapTab.scss";
 
-import { LocationData, WindData, WavesData } from "~components/abstracts/Types";
+import { Location, WindData, WavesData } from "~components/abstracts/Types";
 
 import { Map } from "~/components/atoms/Map";
 import { Magnet } from "~/components/atoms/Magnet";
@@ -10,7 +10,7 @@ import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
 
 export interface Props {
-  location: LocationData;
+  location: Location;
   windData: WindData;
   wavesData: WavesData;
 }

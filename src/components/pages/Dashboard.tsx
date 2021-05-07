@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Dashboard.scss";
 
 import {
-  LocationData,
+  Location,
   Coordinates,
   Timetable,
   DataByHour,
@@ -67,7 +67,6 @@ const placeholderPredictions: DataByHour[] = [
   },
 ];
 
-// todo make dynamic
 const fetchLocationData = async () => {
   const queryParams = new URLSearchParams(window.location.search);
   const location = queryParams.get("location");
@@ -80,7 +79,7 @@ const fetchLocationData = async () => {
   return data;
 };
 
-const getLocationData = async () => {
+const getLocation = async () => {
   const locationDataFromServer = await fetchLocationData();
   if (
     !locationDataFromServer ||
@@ -121,8 +120,6 @@ const weatherKeys = [
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
-  // const lat = 5.168286; // todo : make dynamic
-  // const lng = -52.6446239;
   const lat = coordinates.latitude;
   const lng = coordinates.longitude;
   const res = await fetch(
@@ -157,18 +154,54 @@ const getWeatherPredictions: (coordinates: Coordinates) => any = async (
   return rawWeatherData.hours.map((hour: any) => makeDataThisHour(hour));
 };
 
+const fetchAstroData = async (coordinates: Coordinates) => {
+  const startDate = getStartDate();
+  const endDate = new Date(startDate.valueOf() + 9 * oneDay + oneHour);
+  const lat = coordinates.latitude;
+  const lng = coordinates.longitude;
+  const res = await fetch(
+    `https://api.stormglass.io/v2/astronomy/point?start=${startDate.toISOString()}&end=${endDate.toISOString()}&lat=${lat}&lng=${lng}`,
+    {
+      headers: {
+        Authorization: weatherKeys[Date.now() % weatherKeys.length],
+      },
+    }
+  );
+  const data = await res.json();
+  console.log(data);
+  return data;
+};
+
+const fetchTideData = async (coordinates: Coordinates) => {
+  const startDate = getStartDate();
+  const endDate = new Date(startDate.valueOf() + 9 * oneDay + oneHour);
+  const lat = coordinates.latitude;
+  const lng = coordinates.longitude;
+  const res = await fetch(
+    `https://api.stormglass.io/v2/tide/extremes/point?start=${startDate.toISOString()}&end=${endDate.toISOString()}&lat=${lat}&lng=${lng}`,
+    {
+      headers: {
+        Authorization: weatherKeys[Date.now() % weatherKeys.length],
+      },
+    }
+  );
+  const data = await res.json();
+  console.log(data);
+  return data;
+};
+
 export const Dashboard: React.FC = () => {
   const angleToCardinal = (angle: number) => {
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
     return directions[Math.round((angle % 360) / 45)];
   };
 
-  const [location, setLocation]: [LocationData | null, any] = useState(null);
-  const [predictions, setPredictions] = useState(placeholderPredictions); // todo mke null & fix errors
+  const [location, setLocation]: [Location | null, any] = useState(null);
+  const [predictions, setPredictions] = useState(placeholderPredictions); // todo make null & fix errors
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
 
   useEffect(() => {
-    getLocationData().then((locationData: LocationData) => {
+    getLocation().then((locationData) => {
       setLocation(locationData);
     });
   }, []);
@@ -186,6 +219,10 @@ export const Dashboard: React.FC = () => {
           );
         }
       );
+
+      // todo : put in timetable
+      // fetchAstroData(location.coordinates);
+      // fetchTideData(location.coordinates);
     }
   }, [location]);
 
