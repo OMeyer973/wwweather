@@ -2,12 +2,13 @@ import React from "react";
 import ReactDom from "react-dom";
 import "./index.scss";
 
-import { Dashboard } from "~components/pages/Dashboard";
+import { Wwweather } from "~components/pages/Wwweather";
 // import reportWebVitals from "./reportWebVitals";
 
 ReactDom.render(
   //<React.StrictMode>
-    <Dashboard />,
+
+  <Wwweather />,
   //</React.StrictMode>,
   document.getElementById("root")
 );

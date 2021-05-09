@@ -1,10 +1,12 @@
 @import "/components/abstracts/variables.scss";
+@import "/components/abstracts/mixins.scss";
 
 .header {
   background-color: $titleColor;
   padding: 0 2em;
   div {
-    max-width: 1200px;
+    @include flex;
+    max-width: 900px;
     margin: auto;
     padding-top: 14px;
     padding-bottom: 14px;

@@ -17,7 +17,7 @@ export const LocationTab: React.FC<Props> = ({ location, country }) => {
         <br />
         <Value flavor="slim">{country}</Value>
       </div>
-      <SearchBar label="Search Location" />
+      {/* todo : "share" button ? */}
     </div>
   );
 };

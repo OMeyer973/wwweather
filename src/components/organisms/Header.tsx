@@ -1,11 +1,15 @@
 import React from "react";
 import "./Header.scss";
 
+import { SearchBar } from "~components/molecules/SearchBar";
+
 const Header: React.FC = () => {
   return (
     <header className="header">
-      <div className="flex flex--horizontal">
+      <div>
         <h1 className="header__title">WWWeather</h1>
+        <SearchBar label="Find a spot" />
+        {/* todo: "settings" button ? */}
       </div>
     </header>
   );

@@ -6,7 +6,6 @@ import { clamp } from "~/components/abstracts/DataManagement";
 
 import { DataColumn } from "~components/molecules/DataColumn";
 
-// todo : make dynamic
 import dayCloud0 from "~/components/atoms/icons/weather/day-cloud-0.svg";
 import dayCloud1 from "~/components/atoms/icons/weather/day-cloud-1.svg";
 import dayCloud2 from "~/components/atoms/icons/weather/day-cloud-2.svg";

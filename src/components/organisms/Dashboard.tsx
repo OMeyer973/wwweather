@@ -11,8 +11,6 @@ import {
 import { oneDay, oneHour } from "~components/abstracts/DataManagement";
 import { makeDataThisHour } from "~/components/abstracts/DataManagement";
 
-import Header from "~/components/organisms/Header";
-
 import { LocationTab } from "~components/organisms/LocationTab";
 import { TimeTab } from "~components/organisms/TimeTab";
 import { MapTab } from "~components/organisms/MapTab";
@@ -67,54 +65,9 @@ const placeholderPredictions: DataByHour[] = [
   },
 ];
 
-const fetchLocationData = async () => {
-  const queryParams = new URLSearchParams(window.location.search);
-  const location = queryParams.get("location");
-  if (!location || location == "") return null;
-  const res = await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=pk.eyJ1Ijoic2hhbWFya2luIiwiYSI6ImNra2d2aGxydjAzYTUyb21tY3IzazNzamkifQ.lahFmUNO07-YoSdAFi0ZSA`,
-    {}
-  );
-  const data = await res.json();
-  return data;
-};
-
-const getLocation = async () => {
-  const locationDataFromServer = await fetchLocationData();
-  if (
-    !locationDataFromServer ||
-    locationDataFromServer.features === undefined ||
-    locationDataFromServer.features[0] === undefined
-  ) {
-    console.error("couldn't fetch location from map api");
-    // console.error(locationDataFromServer);
-
-    return undefined;
-  }
-
-  const name: string = locationDataFromServer.features[0].text;
-  const context = locationDataFromServer.features[0].context;
-  const region: string = context
-    ? context.length > 0
-      ? context.length > 1
-        ? context[context.length - 1].text +
-          ", " +
-          context[context.length - 2].text
-        : context[context.length - 1].text
-      : ""
-    : name;
-
-  const [lng, lat] = locationDataFromServer.features[0].center;
-  return {
-    name: name,
-    region: region,
-    coordinates: { longitude: lng, latitude: lat },
-  };
-};
-
 const weatherKeys = [
-  // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
-  // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+  "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+  "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
   "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
   "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
 ];
@@ -137,8 +90,6 @@ const fetchWeatherData = async (coordinates: Coordinates) => {
 const getWeatherPredictions: (coordinates: Coordinates) => any = async (
   coordinates
 ) => {
-  //todo: re-activate
-  // const weatherFromServer = {};
   const weatherFromServer = await fetchWeatherData(coordinates);
   if (weatherFromServer.hours === undefined) {
     console.error(
@@ -190,21 +141,18 @@ const fetchTideData = async (coordinates: Coordinates) => {
   return data;
 };
 
-export const Dashboard: React.FC = () => {
-  const angleToCardinal = (angle: number) => {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
-    return directions[Math.round((angle % 360) / 45)];
-  };
+const angleToCardinal = (angle: number) => {
+  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
+  return directions[Math.round((angle % 360) / 45)];
+};
 
-  const [location, setLocation]: [Location | null, any] = useState(null);
+export interface Props {
+  location: Location | null;
+}
+
+export const Dashboard: React.FC<Props> = ({ location }) => {
   const [predictions, setPredictions] = useState(placeholderPredictions); // todo make null & fix errors
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
-
-  useEffect(() => {
-    getLocation().then((locationData) => {
-      setLocation(locationData);
-    });
-  }, []);
 
   useEffect(() => {
     if (location && location.coordinates) {
@@ -228,7 +176,6 @@ export const Dashboard: React.FC = () => {
 
   return (
     <>
-      <Header />
       <section className="dashboard">
         <LocationTab
           location={location ? location.name : ""}

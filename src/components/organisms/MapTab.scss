@@ -138,13 +138,11 @@
 
   #cardinals-primary > .cardinal-point {
     color: $titleColor;
-    /* todo */
   }
 
   #cardinals-secondary > .cardinal-point {
     transform: rotate(45deg);
     color: $titleColor;
-    // color: $labelColor;
     font-weight: normal;
   }
 

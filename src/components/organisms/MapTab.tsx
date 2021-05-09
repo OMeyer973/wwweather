@@ -10,7 +10,7 @@ import windArrow from "~/components/atoms/icons/wind-kite-arrow.svg";
 import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
 
 export interface Props {
-  location: Location;
+  location: Location | null;
   windData: WindData;
   wavesData: WavesData;
 }

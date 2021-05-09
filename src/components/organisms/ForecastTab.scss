@@ -34,13 +34,9 @@
   }
 
   h2 {
-    // .Dropdown-root {
-    //   float: left;
-    // }
     font-size: 1.5em;
     margin-bottom: 1em;
 
-    // todo : fixdropdown
     .Dropdown-root {
       position: relative;
 
@@ -59,7 +55,6 @@
         &:hover {
           @include focused;
 
-          // box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
           cursor: pointer;
         }
         &:focus-within {
