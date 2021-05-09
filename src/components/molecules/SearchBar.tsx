@@ -4,17 +4,17 @@ import "./SearchBar.scss";
 import { Label } from "~components/atoms/Label";
 
 interface Props {
-  label: string;
+  placeholder: string;
   value?: string;
 }
 
-export const SearchBar: React.FC<Props> = ({ label, value }) => {
+export const SearchBar: React.FC<Props> = ({ placeholder, value }) => {
   return (
     <form className="search-bar">
       <input
         type="text"
         name="location"
-        placeholder={label}
+        placeholder={placeholder}
         required
         size={20}
       />

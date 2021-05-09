@@ -9,16 +9,40 @@
   align-items: center;
   justify-content: center;
 
-  h1 {
-    text-align: right;
-    width: auto;
-    font-size: 6rem;
-    font-weight: 900;
-    line-height: 5rem;
-    margin-bottom: 1em;
+  .title {
+    margin-bottom: 6rem;
+    p {
+      margin-top: 1em;
+      font-size: 1.25rem;
+      height: 1.15em;
+      line-height: 1.15;
+
+      // text-align: justify;
+      letter-spacing: 0.08ch;
+      text-align: right;
+      &:after {
+        display: inline-block;
+        width: 100%;
+        height: 0;
+        content: "";
+      }
+    }
+
+    h1 {
+      text-align: right;
+      width: auto;
+      font-size: min(16vw, 5rem);
+      font-weight: 900;
+      line-height: 0.85em;
+    }
   }
   .container {
     @include tab;
     border-radius: 1.4rem;
+    .label {
+      display: block;
+      padding-left: 0.4em;
+      margin-bottom: 0.4em;
+    }
   }
 }

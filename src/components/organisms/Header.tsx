@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     <header className="header">
       <div>
         <h1 className="header__title">WWWeather</h1>
-        <SearchBar label="Find a spot" />
+        <SearchBar placeholder="Find a spot" />
         {/* todo: "settings" button ? */}
       </div>
     </header>

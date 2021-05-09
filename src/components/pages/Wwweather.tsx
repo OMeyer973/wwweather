@@ -4,6 +4,8 @@ import "./Wwweather.scss";
 import Header from "~/components/organisms/Header";
 import { Dashboard } from "~components/organisms/Dashboard";
 import { SearchBar } from "~components/molecules/SearchBar";
+import { Label } from "~components/atoms/Label";
+import { Br } from "~components/atoms/Br";
 
 const fetchLocationData = async () => {
   const queryParams = new URLSearchParams(window.location.search);
@@ -66,16 +68,25 @@ export const Wwweather: React.FC = () => {
     </>
   ) : (
     <div className="home">
-      <h1>
-        Wind
-        <br />
-        Waves
-        <br />
-        Weather
-      </h1>
+      <div className="title">
+        <h1>
+          Wind
+          <br />
+          Waves
+          <br />
+          Weather
+        </h1>
+        <p>
+          <Label>
+            get forecast quick, <Br under="small" />
+            go ride now!
+          </Label>
+        </p>
+      </div>
 
       <div className="container">
-        <SearchBar label="Find a spot" />
+        <Label>Find a spot</Label>
+        <SearchBar placeholder="Kourou" />
       </div>
     </div>
   );
