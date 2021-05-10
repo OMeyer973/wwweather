@@ -28,21 +28,25 @@ import dummyRawWeatherData from "~components/abstracts/dummyRawWeatherData.json"
 // start yesterday at midnight (local time)
 const getStartDate = () => new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
 
-const timetable: Timetable = {
-  sunrise: "06:47",
-  sunset: "06:47",
+const placeholderTimetables: Timetable[] = [
+  {
+    day: new Date("06:47"),
 
-  firstLowTide: "06:47",
-  secondLowTide: "06:47",
-  firstHighTide: "06:47",
-  secondHighTide: "06:47",
+    dusk: new Date("06:47"),
+    dawn: new Date("06:47"),
 
-  fastestWind: "06:47",
-  slowestWind: "06:47",
+    firstLowTide: new Date("06:47"),
+    secondLowTide: new Date("06:47"),
+    firstHighTide: new Date("06:47"),
+    secondHighTide: new Date("06:47"),
 
-  highestWaves: "06:47",
-  lowestWaves: "06:47",
-};
+    fastestWind: new Date("06:47"),
+    slowestWind: new Date("06:47"),
+
+    highestWaves: new Date("06:47"),
+    lowestWaves: new Date("06:47"),
+  },
+];
 
 const placeholderPredictions: DataByHour[] = [
   {
@@ -119,7 +123,6 @@ const fetchAstroData = async (coordinates: Coordinates) => {
     }
   );
   const data = await res.json();
-  console.log(data);
   return data;
 };
 
@@ -137,8 +140,30 @@ const fetchTideData = async (coordinates: Coordinates) => {
     }
   );
   const data = await res.json();
-  console.log(data);
   return data;
+};
+
+const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
+  astroData,
+  tideData
+) => {
+  return astroData.data.map((item: any, id: number, array: any[]) => ({
+    day: new Date(item.time),
+
+    dusk: new Date(item.civilDusk),
+    dawn: new Date(item.civilDawn),
+
+    firstLowTide: new Date(0), // todo
+    secondLowTide: new Date(0),
+    firstHighTide: new Date(0),
+    secondHighTide: new Date(0),
+
+    fastestWind: new Date(0),
+    slowestWind: new Date(0),
+
+    highestWaves: new Date(0),
+    lowestWaves: new Date(0),
+  }));
 };
 
 const angleToCardinal = (angle: number) => {
@@ -153,6 +178,8 @@ export interface Props {
 export const Dashboard: React.FC<Props> = ({ location }) => {
   const [predictions, setPredictions] = useState(placeholderPredictions); // todo make null & fix errors
   const [currentPredictionId, setCurrentPredictionId] = useState(0);
+  const [timetables, setTimetables] = useState(placeholderTimetables);
+  const [currentTimetableId, setCurrentTimetableId] = useState(0);
 
   useEffect(() => {
     if (location && location.coordinates) {
@@ -169,10 +196,29 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
       );
 
       // todo : put in timetable
-      // fetchAstroData(location.coordinates);
-      // fetchTideData(location.coordinates);
+      fetchAstroData(location.coordinates).then((astroData) =>
+        fetchTideData(location.coordinates).then((tideData) =>
+          setTimetables(makeTimeTables(astroData, astroData))
+        )
+      );
     }
   }, [location]);
+
+  useEffect(() => {
+    if (
+      !timetables[currentTimetableId] ||
+      predictions[currentPredictionId].time.toDateString() !=
+        timetables[currentTimetableId].day.toDateString()
+    ) {
+      setCurrentTimetableId(
+        timetables.findIndex(
+          (timetable) =>
+            timetable.day.toDateString() ==
+            predictions[currentPredictionId].time.toDateString()
+        )
+      );
+    }
+  }, [currentPredictionId, timetables]);
 
   return (
     <>
@@ -183,7 +229,7 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
         />
         <TimeTab
           time={predictions[currentPredictionId].time}
-          timetable={timetable}
+          timetable={timetables[currentTimetableId]}
           onMinus3hours={() => {
             setCurrentPredictionId(Math.max(0, currentPredictionId - 3));
           }}
@@ -193,6 +239,7 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
             )
           }
         />
+
         <MapTab
           location={location}
           windData={predictions[currentPredictionId].windData}

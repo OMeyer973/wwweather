@@ -10,19 +10,21 @@ export interface Location {
 }
 
 export interface Timetable {
-  sunrise: string;
-  sunset: string;
+  day: Date;
 
-  firstLowTide: string;
-  secondLowTide: string;
-  firstHighTide: string;
-  secondHighTide: string;
+  dusk: Date;
+  dawn: Date;
 
-  fastestWind: string;
-  slowestWind: string;
+  firstLowTide: Date;
+  secondLowTide: Date;
+  firstHighTide: Date;
+  secondHighTide: Date;
 
-  highestWaves: string;
-  lowestWaves: string;
+  fastestWind: Date;
+  slowestWind: Date;
+
+  highestWaves: Date;
+  lowestWaves: Date;
 }
 
 export interface WeatherData {

@@ -104,73 +104,111 @@ export const TimeTab: React.FC<Props> = ({
           +3h
         </Button>
       </div>
-      <Button
-        color="secondary"
-        onClick={() => setShowTimetable(!showTimetable)}
-        className="show-timetable"
-      >
-        {`${showTimetable ? "hide" : "show"} timetable`}
-      </Button>
+      {!timetable ? (
+        ""
+      ) : (
+        <>
+          <Button
+            color="secondary"
+            onClick={() => setShowTimetable(!showTimetable)}
+            className="show-timetable"
+          >
+            {`${showTimetable ? "hide" : "show"} timetable`}
+          </Button>
 
-      <div
-        id="timetable"
-        className={`timetable ${showTimetable ? "" : "hidden"}`}
-      >
-        <div>
-          <div>
-            <p>
-              <Label>Sunrise</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.sunrise}</Value>
-            </p>
-            <p>
-              <Label>Sunset</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.sunset}</Value>
-            </p>
+          <div
+            id="timetable"
+            className={`timetable ${showTimetable ? "" : "hidden"}`}
+          >
+            <div>
+              <div>
+                <p>
+                  <Label>Dusk</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.dusk.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+                <p>
+                  <Label>Dawn</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.dawn.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+              </div>
+              <div>
+                <p>
+                  <Label>Low Tide</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.firstLowTide.toLocaleTimeString().slice(0, 5)}
+                  </Value>{" "}
+                  |
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.secondLowTide.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+                <p>
+                  <Label>High Tide</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.firstHighTide.toLocaleTimeString().slice(0, 5)}
+                  </Value>{" "}
+                  |
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.secondLowTide.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p>
+                  <Label>Fastest Wind</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.fastestWind.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+                <p>
+                  <Label>Slowest Wind</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.fastestWind.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+              </div>
+              <div>
+                <p>
+                  <Label>Highest Waves</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.highestWaves.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+                <p>
+                  <Label>Lowest Waves</Label>
+                  <Br under="tiny" />
+                  <Value flavor="small">
+                    {" "}
+                    {timetable.lowestWaves.toLocaleTimeString().slice(0, 5)}
+                  </Value>
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p>
-              <Label>Low Tide</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.firstLowTide}</Value> |
-              <Value flavor="small"> {timetable.secondLowTide}</Value>
-            </p>
-            <p>
-              <Label>High Tide</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.firstHighTide}</Value> |
-              <Value flavor="small"> {timetable.secondLowTide}</Value>
-            </p>
-          </div>
-        </div>
-        <div>
-          <div>
-            <p>
-              <Label>Fastest Wind</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.fastestWind}</Value>
-            </p>
-            <p>
-              <Label>Slowest Wind</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.fastestWind}</Value>
-            </p>
-          </div>
-          <div>
-            <p>
-              <Label>Highest Waves</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.highestWaves}</Value>
-            </p>
-            <p>
-              <Label>Lowest Waves</Label>
-              <Br under="tiny" />
-              <Value flavor="small"> {timetable.lowestWaves}</Value>
-            </p>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
