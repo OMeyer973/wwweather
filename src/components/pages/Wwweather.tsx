@@ -78,7 +78,7 @@ export const Wwweather: React.FC = () => {
         </h1>
         <p>
           <Label>
-            get forecast quick, <Br under="small" />
+            get forecast quick, <Br under="tiny" />
             go ride now!
           </Label>
         </p>
@@ -87,6 +87,12 @@ export const Wwweather: React.FC = () => {
       <div className="container">
         <Label>Find a spot</Label>
         <SearchBar placeholder="Kourou" />
+      </div>
+
+      <div>
+        <p>
+          Made with &#127940; by <a href="http://myrograph.github.io">Myro</a>
+        </p>
       </div>
     </div>
   );
