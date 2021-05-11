@@ -99,6 +99,15 @@ export const isSameDay: (a: Date, b: Date) => boolean = (a, b) => {
   return res;
 };
 
+export const minMax: (
+  array: any[],
+  fn: (a: any, b: any) => boolean
+) => { min: any; max: any } = (array, fn) =>
+  array.reduce((item, acc, arr) => ({
+    min: fn(item, acc.min) ? item : acc.min,
+    max: fn(acc.max, item) ? item : acc.min,
+  }));
+
 //unused misc
 
 //downloads json data on the clients computer

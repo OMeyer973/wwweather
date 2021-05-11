@@ -12,6 +12,7 @@ import { oneDay, oneHour } from "~components/abstracts/DataManagement";
 import {
   makeDataThisHour,
   isSameDay,
+  minMax,
 } from "~/components/abstracts/DataManagement";
 
 import { LocationTab } from "~components/organisms/LocationTab";
@@ -71,14 +72,16 @@ const placeholderPredictions: DataByHour[] = [
 ];
 
 const weatherKeys = [
-  // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
-  // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
-  // "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
-  // "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
-  // "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
-  // "941a0b2a-b1e6-11eb-8d12-0242ac130002-941a0ba2-b1e6-11eb-8d12-0242ac130002",
-  // "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
+  "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+  "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+  "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
+  "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
+  "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
+  "941a0b2a-b1e6-11eb-8d12-0242ac130002-941a0ba2-b1e6-11eb-8d12-0242ac130002",
+  "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
   "bfd056a6-b1f6-11eb-8d12-0242ac130002-bfd0571e-b1f6-11eb-8d12-0242ac130002",
+  "5393b808-b1fa-11eb-8d12-0242ac130002-5393b880-b1fa-11eb-8d12-0242ac130002",
+  "3ebcf5e6-b1fc-11eb-80d0-0242ac130002-3ebcf65e-b1fc-11eb-80d0-0242ac130002",
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
@@ -149,11 +152,13 @@ const fetchTideData = async (coordinates: Coordinates) => {
   return data;
 };
 
-const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
-  astroData,
-  tideData
-) =>
-  astroData.data.map((astroItem: any) => {
+const makeTimeTables: (
+  astroData: any[],
+  tideData: any[],
+  predictions: Prediction[]
+) => Timetable[] = (astroData, tideData, predictions) => {
+  // console.log(predictions);
+  return astroData.data.map((astroItem: any) => {
     const lowTideTimes: Date[] = tideData.data
       .filter(
         (tideItem: any) =>
@@ -170,6 +175,10 @@ const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
       )
       .map((item) => new Date(item.time));
 
+    const todaysPredictions = predictions.filter((item) =>
+      isSameDay(item.time, new Date(astroItem.time))
+    );
+    // console.log(todaysPredictions);
     return {
       day: new Date(astroItem.time),
 
@@ -179,14 +188,18 @@ const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
       lowTides: lowTideTimes,
       highTides: highTideTimes,
 
-      fastestWind: new Date(0),
-      slowestWind: new Date(0),
+      fastestWind: new Date(),
+      // todo
+      // fastestWind: todaysPredictions.reduce(function (prev, current) {
+      //   return prev.widData.speed > current.windData.speed ? prev : current;
+      // }, todaysPredictions[0]).windData.speed,
+      slowestWind: new Date(),
 
       highestWaves: new Date(0),
       lowestWaves: new Date(0),
     };
   });
-
+};
 const angleToCardinal = (angle: number) => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
   return directions[Math.round((angle % 360) / 45)];
@@ -216,10 +229,9 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
         }
       );
 
-      // todo : put in timetable
       fetchAstroData(location.coordinates).then((astroData) =>
         fetchTideData(location.coordinates).then((tideData) =>
-          setTimetables(makeTimeTables(astroData, tideData))
+          setTimetables(makeTimeTables(astroData, tideData, predictions))
         )
       );
     }
