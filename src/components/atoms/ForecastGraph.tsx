@@ -3,7 +3,7 @@ import "./ForecastGraph.scss";
 import { AreaChart, XAxis, YAxis, CartesianGrid, Area } from "recharts";
 import Color from "color";
 
-import { DataByHour } from "~/components/abstracts/Types";
+import { WWWData } from "~/components/abstracts/Types";
 import { Gradient } from "~/components/abstracts/Gradient";
 
 export type GraphType = "wind" | "waves" | "weather";
@@ -129,7 +129,7 @@ const temperatureColorScheme: GraphColorScheme = {
 
 export interface Props {
   graphType: GraphType;
-  predictions: DataByHour[];
+  predictions: WWWData[];
   graphWidth: number;
   onMouseMove?: any;
 }

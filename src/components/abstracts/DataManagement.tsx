@@ -4,7 +4,7 @@ import {
   WeatherData,
   WindData,
   WavesData,
-  DataByHour,
+  WWWData,
 } from "~/components/abstracts/Types";
 
 ////// Constants
@@ -61,7 +61,7 @@ const avgAngle = (data: Object) => {
 };
 
 // rawHourlyDataresult of a stormglass api fetch
-export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
+export const makeDataThisHour: (rawHourlyData: any) => WWWData = (
   rawHourlyData
 ) => {
   const wavesData =

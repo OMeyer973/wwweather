@@ -5,7 +5,7 @@ import {
   Location,
   Coordinates,
   Timetable,
-  DataByHour,
+  WWWData,
 } from "~/components/abstracts/Types";
 
 import { oneDay, oneHour } from "~components/abstracts/DataManagement";
@@ -33,7 +33,7 @@ import dummyRawWeatherData from "~components/abstracts/dummyRawWeatherData.json"
 const startDate = new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
 const numberDaysPredicted = 10;
 
-const placeholderWeatherPredictionsByHour: DataByHour[] = [
+const placeholderWeatherPredictionsByHour: WWWData[] = [
   {
     time: startDate,
     weatherData: {
@@ -59,12 +59,13 @@ const weatherKeys = [
   // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
   // "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
   // "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
-  "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
+  // "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
   // "941a0b2a-b1e6-11eb-8d12-0242ac130002-941a0ba2-b1e6-11eb-8d12-0242ac130002",
   // "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
   // "bfd056a6-b1f6-11eb-8d12-0242ac130002-bfd0571e-b1f6-11eb-8d12-0242ac130002",
   // "5393b808-b1fa-11eb-8d12-0242ac130002-5393b880-b1fa-11eb-8d12-0242ac130002",
   // "3ebcf5e6-b1fc-11eb-80d0-0242ac130002-3ebcf65e-b1fc-11eb-80d0-0242ac130002",
+  "c85bc6b4-b2a7-11eb-80d0-0242ac130002-c85bc72c-b2a7-11eb-80d0-0242ac130002",
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const lat = coordinates.latitude;
@@ -156,11 +157,11 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
   useEffect(() => {
     if (location && location.coordinates) {
       getWeatherPredictions(location.coordinates).then(
-        (newPredictions: DataByHour[]) => {
+        (newPredictions: WWWData[]) => {
           setWeatherPredictionsByHour(newPredictions);
           setCurrentHourId(
             newPredictions.findIndex(
-              (item: DataByHour) =>
+              (item: WWWData) =>
                 Math.abs(item.time.valueOf() - Date.now()) < oneHour
             )
           );

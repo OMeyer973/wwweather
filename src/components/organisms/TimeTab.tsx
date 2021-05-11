@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./timeTab.scss";
 
-import { Timetable, DataByHour } from "~/components/abstracts/Types";
+import { Timetable, WWWData } from "~/components/abstracts/Types";
 import { Button } from "~components/atoms/Button";
 import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
+
+import { AstroData, TideData } from "~/components/abstracts/Types";
 
 import {
   oneDay,
@@ -82,9 +84,9 @@ export const makeRelativeTimeLabel = (time: Date) => {
 };
 
 const makeTimeTables: (
-  astroData: any[],
-  tideData: any[],
-  predictions: DataByHour[]
+  astroData: AstroData[],
+  tideData: TideData[],
+  predictions: WWWData[]
 ) => Timetable[] = (astroData, tideData, predictions) => {
   // console.log(predictions);
   return astroData.map((astroItem: any) => {
@@ -150,38 +152,43 @@ const makeTimeTables: (
 
 const makeAstroTimesByDay: (astroData: any[]) => any[] = (astroData) =>
   // todo: type
-  // console.log(predictions);
-  astroData.map((astroItem: any) => ({
-    dusk: new Date(astroItem.civilDusk),
-    dawn: new Date(astroItem.civilDawn),
-  }));
-
-const makeTideTimesByDay: (astroData: any[], tideData: any[]) => any[] = (
-  astroData,
-  tideData
-) =>
+  {
+    console.log("astroData");
+    console.log(astroData);
+    return astroData.map((astroItem: any) => ({
+      dusk: new Date(astroItem.civilDusk),
+      dawn: new Date(astroItem.civilDawn),
+    }));
+  };
+const makeTideTimesByDay: (
+  astroData: AstroData[],
+  tideData: TideData[]
+) => any[] = (astroData, tideData) =>
   // todo : type, todo : don't use astroData as time reference
-  astroData.map((astroItem: any) => ({
-    lowTides: tideData
-      .filter(
-        (tideItem: any) =>
-          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
-          tideItem.type == "low"
-      )
-      .map((item) => new Date(item.time)),
+  {
+    console.log("tideData");
+    console.log(tideData);
+    return astroData.map((astroItem: any) => ({
+      lowTides: tideData
+        .filter(
+          (tideItem: any) =>
+            isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+            tideItem.type == "low"
+        )
+        .map((item) => new Date(item.time)),
 
-    highTides: tideData
-      .filter(
-        (tideItem: any) =>
-          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
-          tideItem.type == "high"
-      )
-      .map((item) => new Date(item.time)),
-  }));
-
+      highTides: tideData
+        .filter(
+          (tideItem: any) =>
+            isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+            tideItem.type == "high"
+        )
+        .map((item) => new Date(item.time)),
+    }));
+  };
 const makeMinmaxTimesByDay: (
-  astroData: any[],
-  predictions: DataByHour[]
+  astroData: AstroData[],
+  predictions: WWWData[]
 ) => any[] = (astroData, predictions) =>
   // todo : type, todo : don't use astroData as time reference
   astroData.map((astroItem: any) => {
@@ -232,7 +239,7 @@ export interface Props {
   currentHourId: number;
   astroData: any[];
   tideData: any[];
-  weatherPredictionsByHour: DataByHour[];
+  weatherPredictionsByHour: WWWData[];
   onMinus3hours: () => void;
   onPlus3hours: () => void;
 }
@@ -262,28 +269,28 @@ export const TimeTab: React.FC<Props> = ({
   }, [weatherPredictionsByHour, astroData, tideData]);
 
   // todo : reactvate & finish refacto
-  // useEffect(() => {
-  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
-  //   if (astroData) {
-  //     setAstroTimesByDay(makeAstroTimesByDay(astroData));
-  //   }
-  // }, [astroData]);
+  useEffect(() => {
+    // todo predictions.length > 2 prevents crashes at initialisation, fix
+    if (astroData) {
+      setAstroTimesByDay(makeAstroTimesByDay(astroData));
+    }
+  }, [astroData]);
 
-  // useEffect(() => {
-  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
-  //   if (astroData && tideData) {
-  //     setTideTimesByDay(makeTideTimesByDay(astroData, tideData));
-  //   }
-  // }, [tideData, astroData]);
+  useEffect(() => {
+    // todo predictions.length > 2 prevents crashes at initialisation, fix
+    if (astroData && tideData) {
+      setTideTimesByDay(makeTideTimesByDay(astroData, tideData));
+    }
+  }, [tideData, astroData]);
 
-  // useEffect(() => {
-  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
-  //   if (astroData && weatherPredictionsByHour) {
-  //     setTideTimesByDay(
-  //       makeMinmaxTimesByDay(astroData, weatherPredictionsByHour)
-  //     );
-  //   }
-  // }, [weatherPredictionsByHour, astroData]);
+  useEffect(() => {
+    // todo predictions.length > 2 prevents crashes at initialisation, fix
+    if (astroData && weatherPredictionsByHour) {
+      setTideTimesByDay(
+        makeMinmaxTimesByDay(astroData, weatherPredictionsByHour)
+      );
+    }
+  }, [weatherPredictionsByHour, astroData]);
 
   useEffect(() => {
     if (

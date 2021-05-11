@@ -45,9 +45,42 @@ export interface WavesData {
   tide: Tide;
 }
 
-export interface DataByHour {
+// wind, waves, weather data
+export interface WWWData {
   time: Date;
   weatherData: WeatherData;
   windData: WindData;
   wavesData: WavesData;
+}
+
+type ISODate = string;
+
+export interface MoonPhase {
+  text: string;
+  time: ISODate;
+}
+
+export interface AstroData {
+  astronomicalDawn: ISODate;
+  astronomicalDusk: ISODate;
+  civilDawn: ISODate;
+  civilDusk: ISODate;
+  moonFraction: number;
+  moonPhase: {
+    closest: MoonPhase;
+    current: MoonPhase;
+  };
+  moonrise: ISODate;
+  moonset: ISODate;
+  nauticalDawn: ISODate;
+  nauticalDusk: ISODate;
+  sunrise: ISODate;
+  sunset: ISODate;
+  time: ISODate;
+}
+
+export interface TideData {
+  height: number;
+  time: ISODate;
+  type: Tide;
 }
