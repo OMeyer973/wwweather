@@ -148,52 +148,161 @@ const makeTimeTables: (
   });
 };
 
+const makeAstroTimesByDay: (astroData: any[]) => any[] = (astroData) =>
+  // todo: type
+  // console.log(predictions);
+  astroData.map((astroItem: any) => ({
+    dusk: new Date(astroItem.civilDusk),
+    dawn: new Date(astroItem.civilDawn),
+  }));
+
+const makeTideTimesByDay: (astroData: any[], tideData: any[]) => any[] = (
+  astroData,
+  tideData
+) =>
+  // todo : type, todo : don't use astroData as time reference
+  astroData.map((astroItem: any) => ({
+    lowTides: tideData
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "low"
+      )
+      .map((item) => new Date(item.time)),
+
+    highTides: tideData
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "high"
+      )
+      .map((item) => new Date(item.time)),
+  }));
+
+const makeMinmaxTimesByDay: (
+  astroData: any[],
+  predictions: DataByHour[]
+) => any[] = (astroData, predictions) =>
+  // todo : type, todo : don't use astroData as time reference
+  astroData.map((astroItem: any) => {
+    const todaysPredictions = predictions.filter((item) =>
+      isSameDay(item.time, new Date(astroItem.time))
+    );
+    // console.log(todaysPredictions);
+    return {
+      fastestWind: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.windData.gusts + prev.windData.speed >=
+          current.windData.speed + current.windData.gusts
+            ? prev
+            : current,
+        todaysPredictions[0]
+          ? todaysPredictions[0]
+          : { windData: { speed: 0, gusts: 0 }, time: new Date(0) } // todo change type & rm Date(0)
+      ).time,
+      slowestWind: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.windData.gusts + prev.windData.speed <=
+          current.windData.speed + current.windData.gusts
+            ? prev
+            : current,
+        todaysPredictions[0]
+          ? todaysPredictions[0]
+          : { windData: { speed: 0, gusts: 0 }, time: new Date(0) } // todo change type & rm Date(0)
+      ).time,
+
+      highestWaves: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.wavesData.height >= current.wavesData.height ? prev : current,
+        todaysPredictions[0]
+          ? todaysPredictions[0]
+          : { wavesData: { height: 0 }, time: new Date(0) } // todo change type & rm Date(0)
+      ).time,
+      lowestWaves: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.wavesData.height <= current.wavesData.height ? prev : current,
+        todaysPredictions[0]
+          ? todaysPredictions[0]
+          : { wavesData: { height: 0 }, time: new Date(0) } // todo change type & rm Date(0)
+      ).time,
+    };
+  });
+
 export interface Props {
-  currentPredictionId: number;
+  currentHourId: number;
   astroData: any[];
   tideData: any[];
-  predictions: DataByHour[];
+  weatherPredictionsByHour: DataByHour[];
   onMinus3hours: () => void;
   onPlus3hours: () => void;
 }
 
 export const TimeTab: React.FC<Props> = ({
-  currentPredictionId, // do we really need this ? can we replace it w time ? => more calculations required
+  currentHourId, // do we really need this ? can we replace it w time ? => more calculations required
   astroData,
   tideData,
-  predictions,
+  weatherPredictionsByHour,
   onMinus3hours,
   onPlus3hours,
 }) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
   const [timetables, setTimetables] = useState(placeholderTimetables);
-  const [currentTimetableId, setCurrentTimetableId] = useState(0);
+  const [astroTimesByDay, setAstroTimesByDay] = useState([]);
+  const [tideTimesByDay, setTideTimesByDay] = useState([]);
+  const [minmaxTimesByDay, setminmaxTimesByDay] = useState([]);
+  const [currentDayId, setCurrentDayId] = useState(0);
 
   useEffect(() => {
     // todo predictions.length > 2 prevents crashes at initialisation, fix
-    if (astroData && tideData && predictions.length > 2) {
-      setTimetables(makeTimeTables(astroData, tideData, predictions));
+    if (astroData && tideData && weatherPredictionsByHour.length > 2) {
+      setTimetables(
+        makeTimeTables(astroData, tideData, weatherPredictionsByHour)
+      );
     }
-  }, [predictions, astroData, tideData]);
+  }, [weatherPredictionsByHour, astroData, tideData]);
+
+  // todo : reactvate & finish refacto
+  // useEffect(() => {
+  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
+  //   if (astroData) {
+  //     setAstroTimesByDay(makeAstroTimesByDay(astroData));
+  //   }
+  // }, [astroData]);
+
+  // useEffect(() => {
+  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
+  //   if (astroData && tideData) {
+  //     setTideTimesByDay(makeTideTimesByDay(astroData, tideData));
+  //   }
+  // }, [tideData, astroData]);
+
+  // useEffect(() => {
+  //   // todo predictions.length > 2 prevents crashes at initialisation, fix
+  //   if (astroData && weatherPredictionsByHour) {
+  //     setTideTimesByDay(
+  //       makeMinmaxTimesByDay(astroData, weatherPredictionsByHour)
+  //     );
+  //   }
+  // }, [weatherPredictionsByHour, astroData]);
 
   useEffect(() => {
     if (
-      !timetables[currentTimetableId] ||
+      !timetables[currentDayId] ||
       !isSameDay(
-        predictions[currentPredictionId].time,
-        timetables[currentTimetableId].day
+        weatherPredictionsByHour[currentHourId].time,
+        timetables[currentDayId].day
       )
     ) {
-      setCurrentTimetableId(
+      setCurrentDayId(
         timetables.findIndex((timetable) =>
-          isSameDay(timetable.day, predictions[currentPredictionId].time)
+          isSameDay(timetable.day, weatherPredictionsByHour[currentHourId].time)
         )
       );
     }
-  }, [currentPredictionId, timetables]);
+  }, [currentHourId, timetables]);
 
-  const time = predictions[currentPredictionId].time;
-  const timetable = timetables[currentTimetableId];
+  const time = weatherPredictionsByHour[currentHourId].time;
+  const timetable = timetables[currentDayId];
 
   return (
     <div className="time-tab">
