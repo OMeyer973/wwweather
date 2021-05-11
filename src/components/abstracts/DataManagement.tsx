@@ -11,6 +11,25 @@ import {
 export const oneDay = 86400000;
 export const oneHour = 3600000;
 
+export const placeholderWWWData: WWWData = {
+  time: new Date(),
+  weatherData: {
+    cloudCover: 0,
+    riskOfRain: 0,
+    temperature: 0,
+  },
+  windData: {
+    direction: 0,
+    speed: 0,
+    gusts: 0,
+  },
+  wavesData: {
+    direction: 180,
+    height: 0,
+    tide: "low",
+  },
+};
+
 ////// utils
 export const clamp = (x: number, a: number, b: number) =>
   Math.max(a, Math.min(x, b));
@@ -61,9 +80,7 @@ const avgAngle = (data: Object) => {
 };
 
 // rawHourlyDataresult of a stormglass api fetch
-export const makeDataThisHour: (rawHourlyData: any) => WWWData = (
-  rawHourlyData
-) => {
+export const makeWWWData: (rawHourlyData: any) => WWWData = (rawHourlyData) => {
   const wavesData =
     rawHourlyData.waveDirection && rawHourlyData.waveHeight
       ? {

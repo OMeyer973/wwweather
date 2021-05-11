@@ -7,11 +7,17 @@ import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
 
-import { AstroData, TideData } from "~/components/abstracts/Types";
+import {
+  AstroData,
+  TideData,
+  TidesToday,
+  WindWavesMinMax,
+} from "~/components/abstracts/Types";
 
 import {
   oneDay,
   oneHour,
+  placeholderWWWData,
   isSameDay,
 } from "~/components/abstracts/DataManagement";
 
@@ -88,7 +94,6 @@ const makeTimeTables: (
   tideData: TideData[],
   predictions: WWWData[]
 ) => Timetable[] = (astroData, tideData, predictions) => {
-  // console.log(predictions);
   return astroData.map((astroItem: any) => {
     const lowTideTimes: Date[] = tideData
       .filter(
@@ -150,52 +155,34 @@ const makeTimeTables: (
   });
 };
 
-const makeAstroTimesByDay: (astroData: any[]) => any[] = (astroData) =>
-  // todo: type
-  {
-    console.log("astroData");
-    console.log(astroData);
-    return astroData.map((astroItem: any) => ({
-      dusk: new Date(astroItem.civilDusk),
-      dawn: new Date(astroItem.civilDawn),
-    }));
-  };
-const makeTideTimesByDay: (
+const makeTidesByDay: (
   astroData: AstroData[],
   tideData: TideData[]
-) => any[] = (astroData, tideData) =>
-  // todo : type, todo : don't use astroData as time reference
-  {
-    console.log("tideData");
-    console.log(tideData);
-    return astroData.map((astroItem: any) => ({
-      lowTides: tideData
-        .filter(
-          (tideItem: any) =>
-            isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
-            tideItem.type == "low"
-        )
-        .map((item) => new Date(item.time)),
+) => TidesToday[] = (astroData, tideData) =>
+  // todo : don't use astroData as time reference
+  astroData.map((astroItem: any) => ({
+    lowTides: tideData.filter(
+      (tideItem: any) =>
+        isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+        tideItem.type == "low"
+    ),
 
-      highTides: tideData
-        .filter(
-          (tideItem: any) =>
-            isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
-            tideItem.type == "high"
-        )
-        .map((item) => new Date(item.time)),
-    }));
-  };
-const makeMinmaxTimesByDay: (
+    highTides: tideData.filter(
+      (tideItem: any) =>
+        isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+        tideItem.type == "high"
+    ),
+  }));
+
+const makeWindWavesMinmaxsByDay: (
   astroData: AstroData[],
   predictions: WWWData[]
-) => any[] = (astroData, predictions) =>
-  // todo : type, todo : don't use astroData as time reference
+) => WindWavesMinMax[] = (astroData, predictions) =>
+  // todo : don't use astroData as time reference
   astroData.map((astroItem: any) => {
     const todaysPredictions = predictions.filter((item) =>
       isSameDay(item.time, new Date(astroItem.time))
     );
-    // console.log(todaysPredictions);
     return {
       fastestWind: todaysPredictions.reduce(
         (prev, current) =>
@@ -203,49 +190,41 @@ const makeMinmaxTimesByDay: (
           current.windData.speed + current.windData.gusts
             ? prev
             : current,
-        todaysPredictions[0]
-          ? todaysPredictions[0]
-          : { windData: { speed: 0, gusts: 0 }, time: new Date(0) } // todo change type & rm Date(0)
-      ).time,
+        todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
+      ),
       slowestWind: todaysPredictions.reduce(
         (prev, current) =>
           prev.windData.gusts + prev.windData.speed <=
           current.windData.speed + current.windData.gusts
             ? prev
             : current,
-        todaysPredictions[0]
-          ? todaysPredictions[0]
-          : { windData: { speed: 0, gusts: 0 }, time: new Date(0) } // todo change type & rm Date(0)
-      ).time,
+        todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
+      ),
 
       highestWaves: todaysPredictions.reduce(
         (prev, current) =>
           prev.wavesData.height >= current.wavesData.height ? prev : current,
-        todaysPredictions[0]
-          ? todaysPredictions[0]
-          : { wavesData: { height: 0 }, time: new Date(0) } // todo change type & rm Date(0)
-      ).time,
+        todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
+      ),
       lowestWaves: todaysPredictions.reduce(
         (prev, current) =>
           prev.wavesData.height <= current.wavesData.height ? prev : current,
-        todaysPredictions[0]
-          ? todaysPredictions[0]
-          : { wavesData: { height: 0 }, time: new Date(0) } // todo change type & rm Date(0)
-      ).time,
+        todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
+      ),
     };
   });
 
 export interface Props {
   currentHourId: number;
-  astroData: any[];
-  tideData: any[];
+  astroData: AstroData[];
+  tideData: TideData[];
   weatherPredictionsByHour: WWWData[];
   onMinus3hours: () => void;
   onPlus3hours: () => void;
 }
 
 export const TimeTab: React.FC<Props> = ({
-  currentHourId, // do we really need this ? can we replace it w time ? => more calculations required
+  currentHourId,
   astroData,
   tideData,
   weatherPredictionsByHour,
@@ -254,9 +233,6 @@ export const TimeTab: React.FC<Props> = ({
 }) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
   const [timetables, setTimetables] = useState(placeholderTimetables);
-  const [astroTimesByDay, setAstroTimesByDay] = useState([]);
-  const [tideTimesByDay, setTideTimesByDay] = useState([]);
-  const [minmaxTimesByDay, setminmaxTimesByDay] = useState([]);
   const [currentDayId, setCurrentDayId] = useState(0);
 
   useEffect(() => {
@@ -267,30 +243,6 @@ export const TimeTab: React.FC<Props> = ({
       );
     }
   }, [weatherPredictionsByHour, astroData, tideData]);
-
-  // todo : reactvate & finish refacto
-  useEffect(() => {
-    // todo predictions.length > 2 prevents crashes at initialisation, fix
-    if (astroData) {
-      setAstroTimesByDay(makeAstroTimesByDay(astroData));
-    }
-  }, [astroData]);
-
-  useEffect(() => {
-    // todo predictions.length > 2 prevents crashes at initialisation, fix
-    if (astroData && tideData) {
-      setTideTimesByDay(makeTideTimesByDay(astroData, tideData));
-    }
-  }, [tideData, astroData]);
-
-  useEffect(() => {
-    // todo predictions.length > 2 prevents crashes at initialisation, fix
-    if (astroData && weatherPredictionsByHour) {
-      setTideTimesByDay(
-        makeMinmaxTimesByDay(astroData, weatherPredictionsByHour)
-      );
-    }
-  }, [weatherPredictionsByHour, astroData]);
 
   useEffect(() => {
     if (
@@ -308,7 +260,15 @@ export const TimeTab: React.FC<Props> = ({
     }
   }, [currentHourId, timetables]);
 
+  const astroDataByDay = astroData;
+  const tidesByDay = makeTidesByDay(astroData, tideData);
+  const minmaxsByDay = makeWindWavesMinmaxsByDay(
+    astroData,
+    weatherPredictionsByHour
+  );
+
   const time = weatherPredictionsByHour[currentHourId].time;
+
   const timetable = timetables[currentDayId];
 
   return (
@@ -356,87 +316,112 @@ export const TimeTab: React.FC<Props> = ({
             className={`timetable ${showTimetable ? "" : "hidden"}`}
           >
             <div>
-              <div>
-                <p>
-                  <Label>Dusk</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.dusk.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
-                <p>
-                  <Label>Dawn</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.dawn.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
-              </div>
-              <div>
-                <p>
-                  <Label>Low Tide</Label>
-                  <Br under="tiny" />{" "}
-                  <Value flavor="small">
-                    {timetable.lowTides.map(
-                      (item, id, array) =>
-                        item.toLocaleTimeString().slice(0, 5) +
-                        (id < array.length - 1 ? " | " : "")
-                    )}
-                  </Value>
-                </p>
-                <p>
-                  <Label>High Tide</Label>
-                  <Br under="tiny" />{" "}
-                  <Value flavor="small">
-                    {timetable.highTides.map(
-                      (item, id, array) =>
-                        item.toLocaleTimeString().slice(0, 5) +
-                        (id < array.length - 1 ? " | " : "")
-                    )}
-                  </Value>
-                </p>
-              </div>
+              {!astroDataByDay[currentDayId] ? (
+                ""
+              ) : (
+                <div>
+                  <p>
+                    <Label>Dawn</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(astroData[currentDayId].civilDawn)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                  <p>
+                    <Label>Dusk</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(astroData[currentDayId].civilDusk)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                </div>
+              )}
+              {!tidesByDay[currentDayId] ? (
+                ""
+              ) : (
+                <div>
+                  <p>
+                    <Label>Low Tide</Label>
+                    <Br under="tiny" />{" "}
+                    <Value flavor="small">
+                      {tidesByDay[currentDayId].lowTides.map(
+                        (item, id, array) =>
+                          new Date(item.time).toLocaleTimeString().slice(0, 5) +
+                          (id < array.length - 1 ? " | " : "")
+                      )}
+                    </Value>
+                  </p>
+                  <p>
+                    <Label>High Tide</Label>
+                    <Br under="tiny" />{" "}
+                    <Value flavor="small">
+                      {" "}
+                      {tidesByDay[currentDayId].highTides.map(
+                        (item, id, array) =>
+                          new Date(item.time).toLocaleTimeString().slice(0, 5) +
+                          (id < array.length - 1 ? " | " : "")
+                      )}
+                    </Value>
+                  </p>
+                </div>
+              )}
             </div>
-            <div>
+            {!minmaxsByDay[currentDayId] ? (
+              ""
+            ) : (
               <div>
-                <p>
-                  <Label>Fastest Wind</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.fastestWind.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
-                <p>
-                  <Label>Slowest Wind</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.slowestWind.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
+                <div>
+                  <p>
+                    <Label>Fastest Wind</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(minmaxsByDay[currentDayId].fastestWind.time)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                  <p>
+                    <Label>Slowest Wind</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(minmaxsByDay[currentDayId].slowestWind.time)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    <Label>Highest Waves</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(minmaxsByDay[currentDayId].highestWaves.time)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                  <p>
+                    <Label>Lowest Waves</Label>
+                    <Br under="tiny" />
+                    <Value flavor="small">
+                      {" "}
+                      {new Date(minmaxsByDay[currentDayId].lowestWaves.time)
+                        .toLocaleTimeString()
+                        .slice(0, 5)}
+                    </Value>
+                  </p>
+                </div>
               </div>
-              <div>
-                <p>
-                  <Label>Highest Waves</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.highestWaves.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
-                <p>
-                  <Label>Lowest Waves</Label>
-                  <Br under="tiny" />
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.lowestWaves.toLocaleTimeString().slice(0, 5)}
-                  </Value>
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </>
       )}

@@ -8,9 +8,13 @@ import {
   WWWData,
 } from "~/components/abstracts/Types";
 
-import { oneDay, oneHour } from "~components/abstracts/DataManagement";
 import {
-  makeDataThisHour,
+  oneDay,
+  oneHour,
+  placeholderWWWData,
+} from "~components/abstracts/DataManagement";
+import {
+  makeWWWData,
   isSameDay,
   minMax,
 } from "~/components/abstracts/DataManagement";
@@ -33,26 +37,7 @@ import dummyRawWeatherData from "~components/abstracts/dummyRawWeatherData.json"
 const startDate = new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
 const numberDaysPredicted = 10;
 
-const placeholderWeatherPredictionsByHour: WWWData[] = [
-  {
-    time: startDate,
-    weatherData: {
-      cloudCover: 0,
-      riskOfRain: 0,
-      temperature: 0,
-    },
-    windData: {
-      direction: 0,
-      speed: 0,
-      gusts: 0,
-    },
-    wavesData: {
-      direction: 180,
-      height: 0,
-      tide: "low",
-    },
-  },
-];
+const placeholderWeatherPredictionsByHour: WWWData[] = [placeholderWWWData];
 
 const weatherKeys = [
   // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
@@ -65,11 +50,13 @@ const weatherKeys = [
   // "bfd056a6-b1f6-11eb-8d12-0242ac130002-bfd0571e-b1f6-11eb-8d12-0242ac130002",
   // "5393b808-b1fa-11eb-8d12-0242ac130002-5393b880-b1fa-11eb-8d12-0242ac130002",
   // "3ebcf5e6-b1fc-11eb-80d0-0242ac130002-3ebcf65e-b1fc-11eb-80d0-0242ac130002",
-  "c85bc6b4-b2a7-11eb-80d0-0242ac130002-c85bc72c-b2a7-11eb-80d0-0242ac130002",
+  // "c85bc6b4-b2a7-11eb-80d0-0242ac130002-c85bc72c-b2a7-11eb-80d0-0242ac130002",
+  "03ccbf6e-b2ad-11eb-849d-0242ac130002-03ccbffa-b2ad-11eb-849d-0242ac130002",
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const lat = coordinates.latitude;
   const lng = coordinates.longitude;
+  // console.log("fetching WWW Data");
   const res = await fetch(
     `https://api.stormglass.io/v2/weather/point?start=${startDate.toISOString()}&lat=${lat}&lng=${lng}&params=${"airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,precipitation,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellPeriod,secondarySwellDirection,secondarySwellHeight,waterTemperature,waveDirection,waveHeight,wavePeriod,windDirection,windDirection20m,windDirection30m,windDirection40m,windDirection50m,windDirection80m,windDirection100m,windSpeed,windSpeed20m,windSpeed30m,windSpeed40m,windSpeed50m,windSpeed80m,windSpeed100m"}`,
     {
@@ -97,7 +84,7 @@ const getWeatherPredictions: (coordinates: Coordinates) => any = async (
       ? dummyRawWeatherData
       : weatherFromServer;
 
-  return rawWeatherData.hours.map((hour: any) => makeDataThisHour(hour));
+  return rawWeatherData.hours.map((hour: any) => makeWWWData(hour));
 };
 
 const fetchAstroData = async (coordinates: Coordinates) => {
@@ -106,6 +93,7 @@ const fetchAstroData = async (coordinates: Coordinates) => {
   );
   const lat = coordinates.latitude;
   const lng = coordinates.longitude;
+  // console.log("fetching astro Data");
   const res = await fetch(
     `https://api.stormglass.io/v2/astronomy/point?start=${startDate.toISOString()}&end=${endDate.toISOString()}&lat=${lat}&lng=${lng}`,
     {
@@ -125,6 +113,7 @@ const fetchTideData = async (coordinates: Coordinates) => {
   );
   const lat = coordinates.latitude;
   const lng = coordinates.longitude;
+  // console.log("fetching tide Data");
   const res = await fetch(
     `https://api.stormglass.io/v2/tide/extremes/point?start=${startDate.toISOString()}&end=${endDate.toISOString()}&lat=${lat}&lng=${lng}`,
     {

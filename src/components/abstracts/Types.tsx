@@ -84,3 +84,15 @@ export interface TideData {
   time: ISODate;
   type: Tide;
 }
+
+export interface TidesToday {
+  lowTides: TideData[];
+  highTides: TideData[];
+}
+
+export interface WindWavesMinMax {
+  fastestWind: WWWData;
+  slowestWind: WWWData;
+  highestWaves: WWWData;
+  lowestWaves: WWWData;
+}
