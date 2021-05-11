@@ -15,10 +15,8 @@ export interface Timetable {
   dusk: Date;
   dawn: Date;
 
-  firstLowTide: Date;
-  secondLowTide: Date;
-  firstHighTide: Date;
-  secondHighTide: Date;
+  lowTides: Date[];
+  highTides: Date[];
 
   fastestWind: Date;
   slowestWind: Date;

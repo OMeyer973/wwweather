@@ -7,6 +7,7 @@
     "dev": "parcel ./src/index.html",
     "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html --public-url ./",
+    "clean": "del dist",
     "predeploy": "del dist && npm run build",
     "deploy": "gh-pages -d dist"
   },

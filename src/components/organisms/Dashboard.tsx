@@ -38,10 +38,8 @@ const placeholderTimetables: Timetable[] = [
     dusk: new Date(),
     dawn: new Date(),
 
-    firstLowTide: new Date(),
-    secondLowTide: new Date(),
-    firstHighTide: new Date(),
-    secondHighTide: new Date(),
+    lowTides: [new Date()],
+    highTides: [new Date()],
 
     fastestWind: new Date(),
     slowestWind: new Date(),
@@ -79,7 +77,8 @@ const weatherKeys = [
   // "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
   // "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
   // "941a0b2a-b1e6-11eb-8d12-0242ac130002-941a0ba2-b1e6-11eb-8d12-0242ac130002",
-  "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
+  // "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
+  "bfd056a6-b1f6-11eb-8d12-0242ac130002-bfd0571e-b1f6-11eb-8d12-0242ac130002",
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
@@ -155,21 +154,21 @@ const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
   tideData
 ) =>
   astroData.data.map((astroItem: any) => {
-    const lowTideTimes: any[] = tideData.data
+    const lowTideTimes: Date[] = tideData.data
       .filter(
         (tideItem: any) =>
           isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
           tideItem.type == "low"
       )
-      .map((item) => item.time);
+      .map((item) => new Date(item.time));
 
-    const highTideTimes: any[] = tideData.data
+    const highTideTimes: Date[] = tideData.data
       .filter(
         (tideItem: any) =>
           isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
           tideItem.type == "high"
       )
-      .map((item) => item.time);
+      .map((item) => new Date(item.time));
 
     return {
       day: new Date(astroItem.time),
@@ -177,10 +176,8 @@ const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
       dusk: new Date(astroItem.civilDusk),
       dawn: new Date(astroItem.civilDawn),
 
-      firstLowTide: new Date(lowTideTimes[0]),
-      secondLowTide: new Date(lowTideTimes[1]),
-      firstHighTide: new Date(highTideTimes[0]),
-      secondHighTide: new Date(highTideTimes[1]),
+      lowTides: lowTideTimes,
+      highTides: highTideTimes,
 
       fastestWind: new Date(0),
       slowestWind: new Date(0),

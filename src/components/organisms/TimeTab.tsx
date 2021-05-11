@@ -142,47 +142,25 @@ export const TimeTab: React.FC<Props> = ({
               <div>
                 <p>
                   <Label>Low Tide</Label>
-                  <Br under="tiny" />
+                  <Br under="tiny" />{" "}
                   <Value flavor="small">
-                    {" "}
-                    {timetable.firstLowTide
-                      ? timetable.firstLowTide.toLocaleTimeString().slice(0, 5)
-                      : ""}
-                  </Value>{" "}
-                  {timetable.secondLowTide.toString() === "Invalid Date" ? (
-                    ""
-                  ) : (
-                    <>
-                      |
-                      <Value flavor="small">
-                        {" "}
-                        {timetable.secondLowTide
-                          .toLocaleTimeString()
-                          .slice(0, 5)}
-                      </Value>
-                    </>
-                  )}
+                    {timetable.lowTides.map(
+                      (item, id, array) =>
+                        item.toLocaleTimeString().slice(0, 5) +
+                        (id < array.length - 1 ? " | " : "")
+                    )}
+                  </Value>
                 </p>
                 <p>
                   <Label>High Tide</Label>
-                  <Br under="tiny" />
+                  <Br under="tiny" />{" "}
                   <Value flavor="small">
-                    {" "}
-                    {timetable.firstHighTide.toLocaleTimeString().slice(0, 5)}
-                  </Value>{" "}
-                  {timetable.secondHighTide.toString() === "Invalid Date" ? (
-                    ""
-                  ) : (
-                    <>
-                      |
-                      <Value flavor="small">
-                        {" "}
-                        {timetable.secondHighTide
-                          .toLocaleTimeString()
-                          .slice(0, 5)}
-                      </Value>
-                    </>
-                  )}
+                    {timetable.highTides.map(
+                      (item, id, array) =>
+                        item.toLocaleTimeString().slice(0, 5) +
+                        (id < array.length - 1 ? " | " : "")
+                    )}
+                  </Value>
                 </p>
               </div>
             </div>
