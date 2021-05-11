@@ -9,7 +9,10 @@ import {
 } from "~/components/abstracts/Types";
 
 import { oneDay, oneHour } from "~components/abstracts/DataManagement";
-import { makeDataThisHour } from "~/components/abstracts/DataManagement";
+import {
+  makeDataThisHour,
+  isSameDay,
+} from "~/components/abstracts/DataManagement";
 
 import { LocationTab } from "~components/organisms/LocationTab";
 import { TimeTab } from "~components/organisms/TimeTab";
@@ -30,21 +33,21 @@ const getStartDate = () => new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
 
 const placeholderTimetables: Timetable[] = [
   {
-    day: new Date("06:47"),
+    day: new Date(),
 
-    dusk: new Date("06:47"),
-    dawn: new Date("06:47"),
+    dusk: new Date(),
+    dawn: new Date(),
 
-    firstLowTide: new Date("06:47"),
-    secondLowTide: new Date("06:47"),
-    firstHighTide: new Date("06:47"),
-    secondHighTide: new Date("06:47"),
+    firstLowTide: new Date(),
+    secondLowTide: new Date(),
+    firstHighTide: new Date(),
+    secondHighTide: new Date(),
 
-    fastestWind: new Date("06:47"),
-    slowestWind: new Date("06:47"),
+    fastestWind: new Date(),
+    slowestWind: new Date(),
 
-    highestWaves: new Date("06:47"),
-    lowestWaves: new Date("06:47"),
+    highestWaves: new Date(),
+    lowestWaves: new Date(),
   },
 ];
 
@@ -70,10 +73,13 @@ const placeholderPredictions: DataByHour[] = [
 ];
 
 const weatherKeys = [
-  "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
-  "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
-  "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
-  "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
+  // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+  // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+  // "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
+  // "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
+  // "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
+  // "941a0b2a-b1e6-11eb-8d12-0242ac130002-941a0ba2-b1e6-11eb-8d12-0242ac130002",
+  "0b3a1686-b1f2-11eb-849d-0242ac130002-0b3a16fe-b1f2-11eb-849d-0242ac130002",
 ];
 const fetchWeatherData = async (coordinates: Coordinates) => {
   const start = getStartDate().toISOString();
@@ -128,7 +134,8 @@ const fetchAstroData = async (coordinates: Coordinates) => {
 
 const fetchTideData = async (coordinates: Coordinates) => {
   const startDate = getStartDate();
-  const endDate = new Date(startDate.valueOf() + 9 * oneDay + oneHour);
+  // further end date than astro data bc astro returns one data object per day vs one per tide here
+  const endDate = new Date(startDate.valueOf() + 10 * oneDay + oneHour);
   const lat = coordinates.latitude;
   const lng = coordinates.longitude;
   const res = await fetch(
@@ -146,25 +153,42 @@ const fetchTideData = async (coordinates: Coordinates) => {
 const makeTimeTables: (astroData: any[], tideData: any[]) => Timetable[] = (
   astroData,
   tideData
-) => {
-  return astroData.data.map((item: any, id: number, array: any[]) => ({
-    day: new Date(item.time),
+) =>
+  astroData.data.map((astroItem: any) => {
+    const lowTideTimes: any[] = tideData.data
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "low"
+      )
+      .map((item) => item.time);
 
-    dusk: new Date(item.civilDusk),
-    dawn: new Date(item.civilDawn),
+    const highTideTimes: any[] = tideData.data
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "high"
+      )
+      .map((item) => item.time);
 
-    firstLowTide: new Date(0), // todo
-    secondLowTide: new Date(0),
-    firstHighTide: new Date(0),
-    secondHighTide: new Date(0),
+    return {
+      day: new Date(astroItem.time),
 
-    fastestWind: new Date(0),
-    slowestWind: new Date(0),
+      dusk: new Date(astroItem.civilDusk),
+      dawn: new Date(astroItem.civilDawn),
 
-    highestWaves: new Date(0),
-    lowestWaves: new Date(0),
-  }));
-};
+      firstLowTide: new Date(lowTideTimes[0]),
+      secondLowTide: new Date(lowTideTimes[1]),
+      firstHighTide: new Date(highTideTimes[0]),
+      secondHighTide: new Date(highTideTimes[1]),
+
+      fastestWind: new Date(0),
+      slowestWind: new Date(0),
+
+      highestWaves: new Date(0),
+      lowestWaves: new Date(0),
+    };
+  });
 
 const angleToCardinal = (angle: number) => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
@@ -198,7 +222,7 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
       // todo : put in timetable
       fetchAstroData(location.coordinates).then((astroData) =>
         fetchTideData(location.coordinates).then((tideData) =>
-          setTimetables(makeTimeTables(astroData, astroData))
+          setTimetables(makeTimeTables(astroData, tideData))
         )
       );
     }
@@ -207,14 +231,14 @@ export const Dashboard: React.FC<Props> = ({ location }) => {
   useEffect(() => {
     if (
       !timetables[currentTimetableId] ||
-      predictions[currentPredictionId].time.toDateString() !=
-        timetables[currentTimetableId].day.toDateString()
+      !isSameDay(
+        predictions[currentPredictionId].time,
+        timetables[currentTimetableId].day
+      )
     ) {
       setCurrentTimetableId(
-        timetables.findIndex(
-          (timetable) =>
-            timetable.day.toDateString() ==
-            predictions[currentPredictionId].time.toDateString()
+        timetables.findIndex((timetable) =>
+          isSameDay(timetable.day, predictions[currentPredictionId].time)
         )
       );
     }

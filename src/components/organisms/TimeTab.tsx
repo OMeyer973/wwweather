@@ -145,13 +145,23 @@ export const TimeTab: React.FC<Props> = ({
                   <Br under="tiny" />
                   <Value flavor="small">
                     {" "}
-                    {timetable.firstLowTide.toLocaleTimeString().slice(0, 5)}
+                    {timetable.firstLowTide
+                      ? timetable.firstLowTide.toLocaleTimeString().slice(0, 5)
+                      : ""}
                   </Value>{" "}
-                  |
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.secondLowTide.toLocaleTimeString().slice(0, 5)}
-                  </Value>
+                  {timetable.secondLowTide.toString() === "Invalid Date" ? (
+                    ""
+                  ) : (
+                    <>
+                      |
+                      <Value flavor="small">
+                        {" "}
+                        {timetable.secondLowTide
+                          .toLocaleTimeString()
+                          .slice(0, 5)}
+                      </Value>
+                    </>
+                  )}
                 </p>
                 <p>
                   <Label>High Tide</Label>
@@ -160,11 +170,19 @@ export const TimeTab: React.FC<Props> = ({
                     {" "}
                     {timetable.firstHighTide.toLocaleTimeString().slice(0, 5)}
                   </Value>{" "}
-                  |
-                  <Value flavor="small">
-                    {" "}
-                    {timetable.secondLowTide.toLocaleTimeString().slice(0, 5)}
-                  </Value>
+                  {timetable.secondHighTide.toString() === "Invalid Date" ? (
+                    ""
+                  ) : (
+                    <>
+                      |
+                      <Value flavor="small">
+                        {" "}
+                        {timetable.secondHighTide
+                          .toLocaleTimeString()
+                          .slice(0, 5)}
+                      </Value>
+                    </>
+                  )}
                 </p>
               </div>
             </div>

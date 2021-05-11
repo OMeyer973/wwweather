@@ -89,8 +89,14 @@ export const makeDataThisHour: (rawHourlyData: any) => DataByHour = (
       speed: mps2kts(avg(rawHourlyData.windSpeed)),
       gusts: mps2kts(avg(rawHourlyData.gust)),
     },
-    wavesData: wavesData;
+    wavesData: wavesData,
   };
+};
+
+export const isSameDay: (a: Date, b: Date) => boolean = (a, b) => {
+  if (!a || !b) console.error("isSameDay got bad inputs");
+  const res = a && b && a.toDateString() == b.toDateString();
+  return res;
 };
 
 //unused misc
