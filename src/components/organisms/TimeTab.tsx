@@ -1,15 +1,17 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./timeTab.scss";
 
-import { Timetable } from "~components/abstracts/Types";
-
+import { Timetable, DataByHour } from "~/components/abstracts/Types";
 import { Button } from "~components/atoms/Button";
 import { Label } from "~components/atoms/Label";
 import { Value } from "~components/atoms/Value";
 import { Br } from "~components/atoms/Br";
 
-import { oneDay, oneHour } from "~components/abstracts/DataManagement";
+import {
+  oneDay,
+  oneHour,
+  isSameDay,
+} from "~/components/abstracts/DataManagement";
 
 const weekDays = [
   "Monday",
@@ -38,6 +40,24 @@ const months = [
 
 const nth = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
 
+const placeholderTimetables: Timetable[] = [
+  {
+    day: new Date(),
+
+    dusk: new Date(),
+    dawn: new Date(),
+
+    lowTides: [new Date()],
+    highTides: [new Date()],
+
+    fastestWind: new Date(),
+    slowestWind: new Date(),
+
+    highestWaves: new Date(),
+    lowestWaves: new Date(),
+  },
+];
+
 export const makeRelativeTimeLabel = (time: Date) => {
   const hoursDifference = Math.round(
     (new Date(time).valueOf() - new Date().valueOf()) / oneHour
@@ -61,20 +81,119 @@ export const makeRelativeTimeLabel = (time: Date) => {
   if (daysDifference < -1) return (-daysDifference).toFixed(0) + " days ago";
 };
 
+const makeTimeTables: (
+  astroData: any[],
+  tideData: any[],
+  predictions: DataByHour[]
+) => Timetable[] = (astroData, tideData, predictions) => {
+  // console.log(predictions);
+  return astroData.map((astroItem: any) => {
+    const lowTideTimes: Date[] = tideData
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "low"
+      )
+      .map((item) => new Date(item.time));
+
+    const highTideTimes: Date[] = tideData
+      .filter(
+        (tideItem: any) =>
+          isSameDay(new Date(tideItem.time), new Date(astroItem.time)) &&
+          tideItem.type == "high"
+      )
+      .map((item) => new Date(item.time));
+
+    const todaysPredictions = predictions.filter((item) =>
+      isSameDay(item.time, new Date(astroItem.time))
+    );
+
+    return {
+      day: new Date(astroItem.time),
+
+      dusk: new Date(astroItem.civilDusk),
+      dawn: new Date(astroItem.civilDawn),
+
+      lowTides: lowTideTimes,
+      highTides: highTideTimes,
+
+      fastestWind: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.windData.gusts + prev.windData.speed >=
+          current.windData.speed + current.windData.gusts
+            ? prev
+            : current,
+        todaysPredictions[0]
+      ).time,
+      slowestWind: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.windData.gusts + prev.windData.speed <=
+          current.windData.speed + current.windData.gusts
+            ? prev
+            : current,
+        todaysPredictions[0]
+      ).time,
+
+      highestWaves: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.wavesData.height >= current.wavesData.height ? prev : current,
+        todaysPredictions[0]
+      ).time,
+      lowestWaves: todaysPredictions.reduce(
+        (prev, current) =>
+          prev.wavesData.height <= current.wavesData.height ? prev : current,
+        todaysPredictions[0]
+      ).time,
+    };
+  });
+};
+
 export interface Props {
-  time: Date;
-  timetable: Timetable;
+  currentPredictionId: number;
+  astroData: any[];
+  tideData: any[];
+  predictions: DataByHour[];
   onMinus3hours: () => void;
   onPlus3hours: () => void;
 }
 
 export const TimeTab: React.FC<Props> = ({
-  time,
-  timetable,
+  currentPredictionId, // do we really need this ? can we replace it w time ? => more calculations required
+  astroData,
+  tideData,
+  predictions,
   onMinus3hours,
   onPlus3hours,
 }) => {
   const [showTimetable, setShowTimetable] = useState<boolean>(false);
+  const [timetables, setTimetables] = useState(placeholderTimetables);
+  const [currentTimetableId, setCurrentTimetableId] = useState(0);
+
+  useEffect(() => {
+    // todo predictions.length > 2 prevents crashes at initialisation, fix
+    if (astroData && tideData && predictions.length > 2) {
+      setTimetables(makeTimeTables(astroData, tideData, predictions));
+    }
+  }, [predictions, astroData, tideData]);
+
+  useEffect(() => {
+    if (
+      !timetables[currentTimetableId] ||
+      !isSameDay(
+        predictions[currentPredictionId].time,
+        timetables[currentTimetableId].day
+      )
+    ) {
+      setCurrentTimetableId(
+        timetables.findIndex((timetable) =>
+          isSameDay(timetable.day, predictions[currentPredictionId].time)
+        )
+      );
+    }
+  }, [currentPredictionId, timetables]);
+
+  const time = predictions[currentPredictionId].time;
+  const timetable = timetables[currentTimetableId];
 
   return (
     <div className="time-tab">
