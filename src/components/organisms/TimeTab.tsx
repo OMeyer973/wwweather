@@ -179,7 +179,7 @@ export const TimeTab: React.FC<Props> = ({
                   <Br under="tiny" />
                   <Value flavor="small">
                     {" "}
-                    {timetable.fastestWind.toLocaleTimeString().slice(0, 5)}
+                    {timetable.slowestWind.toLocaleTimeString().slice(0, 5)}
                   </Value>
                 </p>
               </div>
