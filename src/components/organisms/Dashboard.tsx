@@ -40,8 +40,8 @@ import dummyRawWeatherData from "~components/abstracts/dummyRawWeatherData.json"
 const placeholderWeatherPredictionsByHour: WWWData[] = [placeholderWWWData];
 
 const weatherKeys = [
-  "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
-  // "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
+  // "8ea1e1a8-ae72-11eb-849d-0242ac130002-8ea1e248-ae72-11eb-849d-0242ac130002",
+  "746e3610-6106-11eb-8ed6-0242ac130002-746e367e-6106-11eb-8ed6-0242ac130002",
   // "66b43972-ae8e-11eb-8d12-0242ac130002-66b439ea-ae8e-11eb-8d12-0242ac130002",
   // "2c7517f8-ae8f-11eb-9f40-0242ac130002-2c7518fc-ae8f-11eb-9f40-0242ac130002",
   // "025354a6-b1e3-11eb-9f40-0242ac130002-0253551e-b1e3-11eb-9f40-0242ac130002",
