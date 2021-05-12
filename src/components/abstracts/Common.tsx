@@ -5,11 +5,15 @@ import {
   WindData,
   WavesData,
   WWWData,
+  Tide,
 } from "~/components/abstracts/Types";
 
 ////// Constants
 export const oneDay = 86400000;
 export const oneHour = 3600000;
+
+export const startDate = new Date(new Date().setHours(0, 0, 0, 0) - oneDay);
+export const numberDaysPredicted = 10;
 
 export const placeholderWWWData: WWWData = {
   time: new Date(),
@@ -86,11 +90,11 @@ export const makeWWWData: (rawHourlyData: any) => WWWData = (rawHourlyData) => {
       ? {
           direction: avgAngle(rawHourlyData.waveDirection),
           height: avg(rawHourlyData.waveHeight),
-          seaLevel:
-            rawHourlyData.seaLevel === undefined
-              ? 0 // todo fixx !
-              : avg(rawHourlyData.seaLevel) * 20,
-          tide: "rising", // todo
+          // seaLevel:
+          //   rawHourlyData.seaLevel === undefined
+          //     ? 0 // todo fixx !
+          //     : avg(rawHourlyData.seaLevel) * 20,
+          tide: "rising" as Tide, // todo
         }
       : undefined;
 

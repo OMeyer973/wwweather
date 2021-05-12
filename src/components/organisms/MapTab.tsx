@@ -12,7 +12,7 @@ import wavesArrow from "~/components/atoms/icons/waves-kite-arrow.svg";
 export interface Props {
   location: Location | null;
   windData: WindData;
-  wavesData: WavesData;
+  wavesData: WavesData | undefined;
 }
 
 export const MapTab: React.FC<Props> = ({ location, windData, wavesData }) => {

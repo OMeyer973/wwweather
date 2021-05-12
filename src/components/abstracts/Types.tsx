@@ -37,7 +37,7 @@ export interface WindData {
   gusts: number;
 }
 
-type Tide = "low" | "rising" | "high" | "lowering";
+export type Tide = "low" | "rising" | "high" | "lowering";
 
 export interface WavesData {
   direction: number;
@@ -50,7 +50,7 @@ export interface WWWData {
   time: Date;
   weatherData: WeatherData;
   windData: WindData;
-  wavesData: WavesData;
+  wavesData: WavesData | undefined;
 }
 
 type ISODate = string;
@@ -90,9 +90,12 @@ export interface TidesToday {
   highTides: TideData[];
 }
 
-export interface WindWavesMinMax {
+export interface WindMinMax {
   fastestWind: WWWData;
   slowestWind: WWWData;
+}
+
+export interface WavesMinMax {
   highestWaves: WWWData;
   lowestWaves: WWWData;
 }

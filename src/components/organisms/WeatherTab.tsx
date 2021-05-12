@@ -2,7 +2,7 @@ import React from "react";
 import "./WeatherTab.scss";
 
 import { WeatherData } from "~/components/abstracts/Types";
-import { clamp } from "~/components/abstracts/DataManagement";
+import { clamp } from "~components/abstracts/Common";
 
 import { DataColumn } from "~components/molecules/DataColumn";
 

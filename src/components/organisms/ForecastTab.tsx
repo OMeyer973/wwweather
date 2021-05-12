@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
 import Dropdown from "react-dropdown";
-import { DataByHour } from "~/components/abstracts/Types";
-import { oneHour, clamp, throttle } from "~components/abstracts/DataManagement";
+import { WWWData } from "~/components/abstracts/Types";
+import { oneHour, clamp, throttle } from "~components/abstracts/Common";
 import BoundedLabel from "~components/atoms/BoundedLabel";
 import { Magnet } from "~components/atoms/Magnet";
 import { ForecastGraph } from "~components/atoms/ForecastGraph";
@@ -50,7 +50,7 @@ const useResize = (myRef: any) => {
 };
 
 export interface Props {
-  predictions: DataByHour[];
+  predictions: WWWData[];
   currentPredictionId: number;
   setCurrentPredictionId: React.Dispatch<React.SetStateAction<number>>;
 }
