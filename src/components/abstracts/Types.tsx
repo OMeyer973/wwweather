@@ -9,22 +9,6 @@ export interface Location {
   region: string;
 }
 
-export interface Timetable {
-  day: Date;
-
-  dusk: Date;
-  dawn: Date;
-
-  lowTides: Date[];
-  highTides: Date[];
-
-  fastestWind: Date;
-  slowestWind: Date;
-
-  highestWaves: Date;
-  lowestWaves: Date;
-}
-
 export interface WeatherData {
   cloudCover: number;
   riskOfRain: number;

@@ -30,23 +30,6 @@
     }
   }
 
-  .timetable {
-    order: 1;
-    width: 100%;
-    > div {
-      display: grid;
-      // gap: 3em;
-      grid-template-columns: 1fr 1fr;
-      // justify-content: space-around;
-      // justify-content: space-between;
-      @include breakpoint(tiny) {
-      }
-
-      margin-bottom: 1.5em;
-      text-align: center;
-    }
-  }
-
   @include tab;
   background: $tabColorSecondary;
   @include flex;

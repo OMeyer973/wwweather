@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.scss";
 
-import {
-  Location,
-  Coordinates,
-  Timetable,
-  WWWData,
-} from "~/components/abstracts/Types";
+import { Location, Coordinates, WWWData } from "~/components/abstracts/Types";
 
 import {
   oneDay,

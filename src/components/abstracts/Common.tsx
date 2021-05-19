@@ -1,6 +1,6 @@
 import { maxParallelImageRequests } from "mapbox-gl";
 import {
-  Timetable,
+  TimetableData,
   WeatherData,
   WindData,
   WavesData,
