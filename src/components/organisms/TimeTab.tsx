@@ -84,55 +84,53 @@ export const TimeTab: React.FC<Props> = ({
   }, [currentHourId]);
 
   const time = weatherPredictionsByHour[currentHourId].time;
-  return React.useMemo(() => {
-    return (
-      <div className="time-tab">
-        <div className="main">
-          <div className="time-info">
-            <Value flavor="slim">
-              {weekDays[(time.getDay() + 6) % 7] +
-                ", " +
-                months[time.getMonth()].toLowerCase() +
-                " " +
-                time.getDate() +
-                nth[time.getDate() % 10]}
-            </Value>
-            <br />
-            <Value>
-              {("00" + time.getHours()).slice(-2) +
-                ":" +
-                ("00" + time.getMinutes()).slice(-2)}
-            </Value>
-            <br />
-            <Value flavor="slim">({makeRelativeTimeLabel(time)})</Value>
-          </div>
-          <Button className="btn-minus-3h" onClick={onMinus3hours}>
-            -3h
-          </Button>
-          <Button className="btn-plus-3h" onClick={onPlus3hours}>
-            +3h
-          </Button>
+  return (
+    <div className="time-tab">
+      <div className="main">
+        <div className="time-info">
+          <Value flavor="slim">
+            {weekDays[(time.getDay() + 6) % 7] +
+              ", " +
+              months[time.getMonth()].toLowerCase() +
+              " " +
+              time.getDate() +
+              nth[time.getDate() % 10]}
+          </Value>
+          <br />
+          <Value>
+            {("00" + time.getHours()).slice(-2) +
+              ":" +
+              ("00" + time.getMinutes()).slice(-2)}
+          </Value>
+          <br />
+          <Value flavor="slim">({makeRelativeTimeLabel(time)})</Value>
         </div>
-        <>
-          <Button
-            color="secondary"
-            onClick={() => setShowTimetable(!showTimetable)}
-            className="show-timetable"
-          >
-            {`${showTimetable ? "hide" : "show"} timetable`}
-          </Button>
-          {showTimetable ? (
-            <Timetable
-              currentHourId={currentHourId}
-              astroData={astroData}
-              tideData={tideData}
-              weatherPredictionsByHour={weatherPredictionsByHour}
-            />
-          ) : (
-            ""
-          )}
-        </>
+        <Button className="btn-minus-3h" onClick={onMinus3hours}>
+          -3h
+        </Button>
+        <Button className="btn-plus-3h" onClick={onPlus3hours}>
+          +3h
+        </Button>
       </div>
-    );
-  }, [currentDayId, showTimetable]);
+      <>
+        <Button
+          color="secondary"
+          onClick={() => setShowTimetable(!showTimetable)}
+          className="show-timetable"
+        >
+          {`${showTimetable ? "hide" : "show"} timetable`}
+        </Button>
+        {showTimetable ? (
+          <Timetable
+            currentHourId={currentHourId}
+            astroData={astroData}
+            tideData={tideData}
+            weatherPredictionsByHour={weatherPredictionsByHour}
+          />
+        ) : (
+          ""
+        )}
+      </>
+    </div>
+  );
 };
