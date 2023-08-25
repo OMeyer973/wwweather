@@ -123,9 +123,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(astroData[currentDayId].civilDawn)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    astroData[currentDayId].civilDawn
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
               <p>
@@ -133,9 +136,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(astroData[currentDayId].civilDusk)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    astroData[currentDayId].civilDusk
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
             </div>
@@ -150,8 +156,10 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Value flavor="small">
                   {tidesByDay[currentDayId].lowTides.map(
                     (item, id, array) =>
-                      new Date(item.time).toLocaleTimeString().slice(0, 5) +
-                      (id < array.length - 1 ? " | " : "")
+                      new Date(item.time).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }) + (id < array.length - 1 ? " | " : "")
                   )}
                 </Value>
               </p>
@@ -162,8 +170,10 @@ export const Timetable: React.FC<Props> = React.memo(
                   {" "}
                   {tidesByDay[currentDayId].highTides.map(
                     (item, id, array) =>
-                      new Date(item.time).toLocaleTimeString().slice(0, 5) +
-                      (id < array.length - 1 ? " | " : "")
+                      new Date(item.time).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }) + (id < array.length - 1 ? " | " : "")
                   )}
                 </Value>
               </p>
@@ -180,9 +190,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(windMinmaxsByDay[currentDayId].fastestWind.time)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    windMinmaxsByDay[currentDayId].fastestWind.time
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
               <p>
@@ -190,9 +203,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(windMinmaxsByDay[currentDayId].slowestWind.time)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    windMinmaxsByDay[currentDayId].slowestWind.time
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
             </div>
@@ -206,9 +222,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(wavesMinmaxsByDay[currentDayId].highestWaves.time)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    wavesMinmaxsByDay[currentDayId].highestWaves.time
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
               <p>
@@ -216,9 +235,12 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />
                 <Value flavor="small">
                   {" "}
-                  {new Date(wavesMinmaxsByDay[currentDayId].lowestWaves.time)
-                    .toLocaleTimeString()
-                    .slice(0, 5)}
+                  {new Date(
+                    wavesMinmaxsByDay[currentDayId].lowestWaves.time
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Value>
               </p>
             </div>

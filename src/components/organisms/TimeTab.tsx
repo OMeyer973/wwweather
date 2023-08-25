@@ -98,9 +98,10 @@ export const TimeTab: React.FC<Props> = ({
           </Value>
           <br />
           <Value>
-            {("00" + time.getHours()).slice(-2) +
-              ":" +
-              ("00" + time.getMinutes()).slice(-2)}
+            {time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </Value>
           <br />
           <Value flavor="slim">({makeRelativeTimeLabel(time)})</Value>
