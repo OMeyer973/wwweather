@@ -29,12 +29,12 @@ const daysPredicted = Array(numberDaysPredicted)
 
 const makeTidesByDay: (tideData: TideData[]) => TidesToday[] = (tideData) =>
   daysPredicted.map((date: Date) => ({
-    lowTides: tideData.filter(
+    lowTides: tideData?.filter(
       (tideItem: TideData) =>
         isSameDay(new Date(tideItem.time), date) && tideItem.type == "low"
     ),
 
-    highTides: tideData.filter(
+    highTides: tideData?.filter(
       (tideItem: TideData) =>
         isSameDay(new Date(tideItem.time), date) && tideItem.type == "high"
     ),
@@ -44,11 +44,11 @@ const makeWindMinmaxsByDay: (predictions: WWWData[]) => WindMinMax[] = (
   predictions
 ) =>
   daysPredicted.map((date: Date) => {
-    const todaysPredictions = predictions.filter((item) =>
+    const todaysPredictions = predictions?.filter((item) =>
       isSameDay(item.time, date)
     );
     return {
-      fastestWind: todaysPredictions.reduce(
+      fastestWind: todaysPredictions?.reduce(
         (prev, current) =>
           prev.windData.gusts + prev.windData.speed >=
           current.windData.speed + current.windData.gusts
@@ -56,7 +56,7 @@ const makeWindMinmaxsByDay: (predictions: WWWData[]) => WindMinMax[] = (
             : current,
         todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
       ),
-      slowestWind: todaysPredictions.reduce(
+      slowestWind: todaysPredictions?.reduce(
         (prev, current) =>
           prev.windData.gusts + prev.windData.speed <=
           current.windData.speed + current.windData.gusts
@@ -72,16 +72,16 @@ const makeWavesMinmaxsByDay: (predictions: WWWData[]) => WavesMinMax[] = (
 ) => {
   if (!predictions || !predictions[0] || !predictions[0].wavesData) return [];
   return daysPredicted.map((date: Date) => {
-    const todaysPredictions = predictions.filter((item) =>
+    const todaysPredictions = predictions?.filter((item) =>
       isSameDay(item.time, date)
     );
     return {
-      highestWaves: todaysPredictions.reduce(
+      highestWaves: todaysPredictions?.reduce(
         (prev, current) =>
           prev.wavesData.height >= current.wavesData.height ? prev : current,
         todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
       ),
-      lowestWaves: todaysPredictions.reduce(
+      lowestWaves: todaysPredictions?.reduce(
         (prev, current) =>
           prev.wavesData.height <= current.wavesData.height ? prev : current,
         todaysPredictions[0] ? todaysPredictions[0] : placeholderWWWData
@@ -154,7 +154,7 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Label>Low Tide</Label>
                 <Br under="tiny" />{" "}
                 <Value flavor="small">
-                  {tidesByDay[currentDayId].lowTides.map(
+                  {tidesByDay[currentDayId].lowTides?.map(
                     (item, id, array) =>
                       new Date(item.time).toLocaleTimeString([], {
                         hour: "2-digit",
@@ -168,7 +168,7 @@ export const Timetable: React.FC<Props> = React.memo(
                 <Br under="tiny" />{" "}
                 <Value flavor="small">
                   {" "}
-                  {tidesByDay[currentDayId].highTides.map(
+                  {tidesByDay[currentDayId].highTides?.map(
                     (item, id, array) =>
                       new Date(item.time).toLocaleTimeString([], {
                         hour: "2-digit",
