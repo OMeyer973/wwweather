@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./ForecastTab.scss";
-import Dropdown from "react-dropdown";
+import Dropdown from "react-select";
 import { WWWData } from "~/components/abstracts/Types";
 import { oneHour, clamp, throttle } from "~components/abstracts/Common";
 import BoundedLabel from "~components/atoms/BoundedLabel";

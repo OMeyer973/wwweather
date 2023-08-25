@@ -3,7 +3,11 @@
 
 .forecast-tab {
   @include tab;
+  h2 {
+    z-index: 1;
+  }
   .graph-holder {
+    z-index: 0;
     height: 140px;
     overflow-x: scroll;
     position: relative;
